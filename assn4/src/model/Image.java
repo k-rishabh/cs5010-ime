@@ -18,7 +18,23 @@ public interface Image {
    * @param destination
    * @throws IOException
    */
-  void saveImage(String filename, File destination) throws IOException;
+  void saveAsPPM(String filename, File destination) throws IOException;
+
+  /**
+   *
+   * @param filename
+   * @param destination
+   * @throws IOException
+   */
+  void saveAsJPG(String filename, File destination) throws IOException;
+
+  /**
+   *
+   * @param filename
+   * @param destination
+   * @throws IOException
+   */
+  void saveAsPNG(String filename, File destination) throws IOException;
 
   int[][] getImageValue();
 

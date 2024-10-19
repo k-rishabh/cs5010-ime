@@ -10,10 +10,10 @@ import static javax.imageio.ImageIO.read;
  * Abstract class that represents an image in red, blue, and green pixels.
  * Contains implementation for
  */
-public abstract class AbstractImage implements Image {
-  protected int[][] red;
-  protected int[][] green;
-  protected int[][] blue;
+public class RGBImage implements Image {
+  private int[][] red;
+  private int[][] green;
+  private int[][] blue;
 
   /**
    * Initializes the red, green, and blue pixels of the image with the given height and width.
@@ -22,7 +22,7 @@ public abstract class AbstractImage implements Image {
    * @param width the height of the image
    * @param height the width of the image
    */
-  AbstractImage(int height, int width) {
+  RGBImage(int height, int width) {
     red = new int[height][width];
     green = new int[height][width];
     blue = new int[height][width];
@@ -36,7 +36,20 @@ public abstract class AbstractImage implements Image {
   }
 
   @Override
-  abstract public void saveImage(String filename, File destination);
+  public void saveAsPPM(String filename, File destination) throws IOException {
+
+  }
+
+  @Override
+  public void saveAsJPG(String filename, File destination) throws IOException {
+
+  }
+
+  @Override
+  public void saveAsPNG(String filename, File destination) throws IOException {
+
+  }
+
 
   @Override
   public int[][] getImageValue() {
@@ -50,5 +63,15 @@ public abstract class AbstractImage implements Image {
     }
 
     return values;
+  }
+
+  @Override
+  public int getImageIntensity() {
+    return 0;
+  }
+
+  @Override
+  public int getImageLuma() {
+    return 0;
   }
 }
