@@ -53,4 +53,7 @@ public abstract class AbstractImage implements Image {
 
   @Override
   abstract public Image[] split();
+
+  @Override
+  abstract public void setPixel(Pixel p,int y, int x);
 }

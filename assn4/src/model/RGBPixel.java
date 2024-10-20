@@ -68,4 +68,9 @@ public class RGBPixel implements Pixel {
   public int getMinComponent() {
     return Math.min(red, Math.min(green, blue));
   }
+
+  @Override
+  public int getAvgComponent() {
+    return (red + green + blue) / 2;
+  }
 }

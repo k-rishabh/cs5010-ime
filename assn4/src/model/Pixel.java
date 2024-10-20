@@ -8,4 +8,7 @@ public interface Pixel {
   public int getMaxComponent();
 
   public int getMinComponent();
+
+  public int getAvgComponent();
 }
+
