@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public interface Image {
+
   /**
    * Loads an image from a given file path.
    *
@@ -18,27 +19,25 @@ public interface Image {
    * @param destination
    * @throws IOException
    */
-  void saveAsPPM(String filename, File destination) throws IOException;
+  void saveImage(String filename, File destination) throws IOException;
 
-  /**
-   *
-   * @param filename
-   * @param destination
-   * @throws IOException
-   */
-  void saveAsJPG(String filename, File destination) throws IOException;
+  Image valueComponent();
 
-  /**
-   *
-   * @param filename
-   * @param destination
-   * @throws IOException
-   */
-  void saveAsPNG(String filename, File destination) throws IOException;
+  Image intensityComponent();
 
-  int[][] getImageValue();
+  Image lumaComponent();
 
-  int getImageIntensity();
+  Image horizontalFlip();
 
-  int getImageLuma();
+  Image verticalFlip();
+
+  Image brighten(int val);
+
+  Image[] split();
+
+  Image blur(float val);
+
+  Image sharpen(float val);
+
+  Image sepia();
 }
