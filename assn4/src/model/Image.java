@@ -10,7 +10,7 @@ public interface Image {
    * @param f the file path of the image
    * @throws IOException if the image is not found
    */
-  void loadImage(File f) throws IOException;
+  void loadImage(File f, String imageName) throws IOException;
 
   /**
    *
@@ -36,9 +36,25 @@ public interface Image {
    */
   void saveAsPNG(String filename, File destination) throws IOException;
 
-  int[][] getImageValue();
 
-  int getImageIntensity();
+  Image getValueComponent();
 
-  int getImageLuma();
+  Image brightenImage(int constant, String destinationImageName);
+
+  void setRed(int height, int width, int value);
+
+  void setBlue(int height, int width, int value);
+
+  Image flipImage(String destinationImageName);
+
+  Image getImageIntensity();
+
+  int[][] getRed();
+  int[][] getGreen();
+
+  void setGreen(int height, int width, int value);
+
+  int[][] getBlue();
+
+  Image getImageLuma();
 }
