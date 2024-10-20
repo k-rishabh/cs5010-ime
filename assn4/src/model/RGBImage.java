@@ -64,7 +64,7 @@ public class RGBImage implements Image {
     for (int y = 0; y < red.length; y++) {
       for (int x = 0; x < red[0].length; x++) {
         Color color = new Color(red[y][x], green[y][x], blue[y][x]);
-        image.setRGB(red[y][x], y, color.getRGB());
+        image.setRGB(x, y, color.getRGB());
       }
     }
 
@@ -77,7 +77,7 @@ public class RGBImage implements Image {
     for (int y = 0; y < red.length; y++) {
       for (int x = 0; x < red[0].length; x++) {
         Color color = new Color(red[y][x], green[y][x], blue[y][x]);
-        image.setRGB(red[y][x], y, color.getRGB());
+        image.setRGB(x, y, color.getRGB());
       }
     }
 
