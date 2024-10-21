@@ -3,7 +3,7 @@ package model;
 /**
  * Class that represents an RGB pixel in a 2-D image.
  */
-public class RGBPixel implements Pixel {
+public class RGBPixel implements PixelADT {
   private int red;
   private int green;
   private int blue;
@@ -19,30 +19,82 @@ public class RGBPixel implements Pixel {
     this.red = red;
     this.green = green;
     this.blue = blue;
+
+    this.clampValues();
+  }
+
+  private void clampValues() {
+    this.red = Math.max(0, Math.min(255, this.red));
+    this.green = Math.max(0, Math.min(255, this.green));
+    this.blue = Math.max(0, Math.min(255, this.blue));
   }
 
   @Override
-  public Pixel addAllComponents(int val) {
-    return new RGBPixel(red + val, green + val, blue + val);
+  public void brighten(int val) {
+    this.red += val;
+    this.green += val;
+    this.blue += val;
+
+    this.clampValues();
   }
 
   @Override
-  public Pixel mulAllComponents(float val) {
-    return new RGBPixel((int) (red * val), (int) (green * val), (int) (blue * val));
+  public void applyFilter(double val) {
+    this.red = (int) (this.red * val);
+    this.green = (int) (this.green * val);
+    this.blue = (int) (this.blue * val);
+
+    this.clampValues();
   }
 
   @Override
-  public int getMaxComponent() {
-    return Math.max(red, Math.max(green, blue));
+  public void applySepia() {
+    this.red = (int) ((this.red * 0.393) + (this.green * 0.769) + (this.blue * 0.189));
+    this.green = (int) ((this.red * 0.349) + (this.green * 0.686) + (this.blue * 0.168));
+    this.blue = (int) ((this.red * 0.272) + (this.green * 0.534) + (this.blue * 0.131));
+
+    this.clampValues();
   }
 
   @Override
-  public int getMinComponent() {
-    return Math.min(red, Math.min(green, blue));
+  public void applyRedTint() {
+    this.green = 0;
+    this.blue = 0;
   }
 
   @Override
-  public int getAvgComponent() {
-    return (red + green + blue) / 3;
+  public void applyGreenTint() {
+    this.red = 0;
+    this.blue = 0;
+  }
+
+  @Override
+  public void applyBlueTint() {
+    this.red = 0;
+    this.green = 0;
+  }
+
+  @Override
+  public void showValue() {
+    int max = Math.max(this.red, Math.max(this.green, this.blue));
+    this.red = max;
+    this.green = max;
+    this.blue = max;
+  }
+
+  @Override
+  public void showIntensity() {
+    int avg = (this.red + this.green + this.blue) / 3;
+    this.red = avg;
+    this.green = avg;
+    this.blue = avg;
+  }
+
+  @Override
+  public void showLuma() {
+    int luma = (int) ((0.2126 * this.red) + (0.7152 * this.green) + (0.0722 * this.blue));
+    this.red = luma;
+    this.green = luma;
+    this.blue = luma;
   }
 }

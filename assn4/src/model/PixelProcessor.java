@@ -3,13 +3,11 @@ package model;
 import java.util.function.Consumer;
 
 public class PixelProcessor {
-  public static <T> Pixel[][] apply(Pixel[][] pixels, Consumer<Pixel> func) {
-    for (Pixel[] pixelRow : pixels) {
-      for (Pixel pixel : pixelRow) {
+  public static void apply(PixelADT[][] pixels, Consumer<PixelADT> func) {
+    for (PixelADT[] pixelRow : pixels) {
+      for (PixelADT pixel : pixelRow) {
         func.accept(pixel);
       }
     }
-
-    return pixels;
   }
 }

@@ -3,43 +3,64 @@ package model;
 import java.io.File;
 import java.io.IOException;
 
-public interface Image {
+public abstract class Image implements ImageADT {
+  protected PixelADT[][] pixels;
 
-  void setPixel(int i, int j, Pixel pixel);
+  protected void setPixel(int i, int j, PixelADT pixel) {
+    this.pixels[i][j] = pixel;
+  }
 
-  /**
-   * Loads an image from a given file path.
-   *
-   * @param f the file path of the image
-   * @throws IOException if the image is not found
-   */
-  void loadImage(File f) throws IOException;
+  @Override
+  public void valueComponent(){
+    PixelProcessor.apply(pixels, p -> p.showValue());
+  }
 
-  /**
-   *
-   * @param filename
-   * @param destination
-   * @throws IOException
-   */
-  void saveImage(String filename, File destination) throws IOException;
+  @Override
+  public void intensityComponent(){
+    PixelProcessor.apply(pixels, p -> p.showIntensity());
+  }
 
-  Image valueComponent();
+  @Override
+  public void lumaComponent(){
+    PixelProcessor.apply(pixels, p -> p.showLuma());
+  }
 
-  Image intensityComponent();
+  @Override
+  public void horizontalFlip() {
 
-  Image lumaComponent();
+  }
 
-  Image horizontalFlip();
+  @Override
+  public void verticalFlip() {
 
-  Image verticalFlip();
+  }
 
-  Image brighten(int val);
+  @Override
+  public void brighten(int val) {
+    PixelProcessor.apply(pixels, p -> p.brighten(val));
+  }
 
-  Image[] split();
+  @Override
+  public void blur(double[][] filter) {
 
-  Image blur(float val);
+  }
 
-  Image sharpen(float val);
+  @Override
+  public void sharpen(double[][] filter) {
 
-  Image sepia();
+  }
+
+  @Override
+  public void sepia() {
+    PixelProcessor.apply(pixels, p -> p.applySepia());
+  }
+
+  @Override
+  abstract public void loadImage(File f) throws IOException;
+
+  @Override
+  abstract public void saveImage(String filename, File destination) throws IOException;
+
+  @Override
+  abstract public Image[] split();
 }
