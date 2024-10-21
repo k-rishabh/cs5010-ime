@@ -6,9 +6,17 @@ import java.io.IOException;
 public abstract class AbstractImage implements Image {
   protected Pixel[][] pixels;
 
+  public void setPixel(int i, int j, Pixel pixel) {
+    this.pixels[i][j] = pixel;
+  }
+
   @Override
   public Image horizontalFlip() {
-    return null;
+    Image result = this;
+
+    PixelProcessor.apply(result.pixels, p -> p.addAllComponents(50));
+
+    return result;
   }
 
   @Override
@@ -53,7 +61,4 @@ public abstract class AbstractImage implements Image {
 
   @Override
   abstract public Image[] split();
-
-  @Override
-  abstract public void setPixel(Pixel p,int y, int x);
 }

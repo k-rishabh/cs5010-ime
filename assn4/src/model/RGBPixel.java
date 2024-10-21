@@ -4,9 +4,9 @@ package model;
  * Class that represents an RGB pixel in a 2-D image.
  */
 public class RGBPixel implements Pixel {
-  private final int red;
-  private final int green;
-  private final int blue;
+  private int red;
+  private int green;
+  private int blue;
 
   /**
    * Constructor function to initialize the red, green, and blue values of the pixel.
@@ -20,34 +20,6 @@ public class RGBPixel implements Pixel {
     this.green = green;
     this.blue = blue;
   }
-
-  /**
-   * Returns the red component of the pixel.
-   *
-   * @return the red value
-   */
-  public int getRed() {
-    return red;
-  }
-
-  /**
-   * Returns the green component of the pixel.
-   *
-   * @return the green value
-   */
-  public int getGreen() {
-    return green;
-  }
-
-  /**
-   * Returns the blue component of the pixel.
-   *
-   * @return the blue value
-   */
-  public int getBlue() {
-    return blue;
-  }
-
 
   @Override
   public Pixel addAllComponents(int val) {
@@ -71,6 +43,6 @@ public class RGBPixel implements Pixel {
 
   @Override
   public int getAvgComponent() {
-    return (red + green + blue) / 2;
+    return (red + green + blue) / 3;
   }
 }

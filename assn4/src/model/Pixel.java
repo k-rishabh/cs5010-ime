@@ -11,4 +11,3 @@ public interface Pixel {
 
   public int getAvgComponent();
 }
-

@@ -5,6 +5,8 @@ import java.io.IOException;
 
 public interface Image {
 
+  void setPixel(int i, int j, Pixel pixel);
+
   /**
    * Loads an image from a given file path.
    *
@@ -40,6 +42,4 @@ public interface Image {
   Image sharpen(float val);
 
   Image sepia();
-
-  void setPixel(Pixel p,int y,int x);
 }
