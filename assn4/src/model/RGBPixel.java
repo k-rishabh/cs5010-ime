@@ -112,4 +112,9 @@ public class RGBPixel implements PixelADT {
     this.green = luma;
     this.blue = luma;
   }
+
+  @Override
+  public PixelADT copy() {
+    return new RGBPixel(this.red, this.green, this.blue);
+  }
 }

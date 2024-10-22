@@ -1,23 +1,22 @@
 package model;
 
-import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class Image implements ImageADT {
   protected PixelADT[][] pixels;
 
   @Override
-  public int getHeight(){
+  public int getHeight() {
     return pixels.length;
   }
 
   @Override
-  public int getWidth(){
+  public int getWidth() {
     return pixels[0].length;
   }
 
   @Override
-  public PixelADT getPixel(int i, int j){
+  public PixelADT getPixel(int i, int j) {
     return pixels[i][j];
   }
 
@@ -27,17 +26,17 @@ public abstract class Image implements ImageADT {
   }
 
   @Override
-  public void valueComponent(){
+  public void valueComponent() {
     PixelProcessor.apply(pixels, p -> p.showValue());
   }
 
   @Override
-  public void intensityComponent(){
+  public void intensityComponent() {
     PixelProcessor.apply(pixels, p -> p.showIntensity());
   }
 
   @Override
-  public void lumaComponent(){
+  public void lumaComponent() {
     PixelProcessor.apply(pixels, p -> p.showLuma());
   }
 
@@ -91,4 +90,13 @@ public abstract class Image implements ImageADT {
 
   @Override
   abstract public Image[] split();
+
+  @Override
+  abstract public Image combine();
+
+  public abstract Image copy();
+
+  public void setPixels(PixelADT[][] newPixels) {
+    this.pixels = newPixels;
+  }
 }

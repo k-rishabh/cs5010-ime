@@ -32,4 +32,10 @@ public interface ImageADT {
   PixelADT getPixel(int i, int j);
 
   void setPixel(int i, int j, PixelADT pixel);
+
+  // Deep copy method
+  Image copy();
+
+  Image combine();
+
 }

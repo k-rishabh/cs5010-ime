@@ -24,4 +24,6 @@ public interface PixelADT {
   public void showIntensity();
 
   public void showLuma();
+
+  PixelADT copy();
 }

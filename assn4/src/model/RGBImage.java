@@ -29,15 +29,37 @@ public class RGBImage extends Image {
 
   @Override
   public Image[] split() {
-    Image redTint = new RGBImage(pixels);
-    Image greenTint = new RGBImage(pixels);
-    Image blueTint = new RGBImage(pixels);
+
+
+    Image redTint = this.copy();
+    Image greenTint = this.copy();
+    Image blueTint = this.copy();
 
     PixelProcessor.apply(redTint.pixels, p -> p.applyRedTint());
     PixelProcessor.apply(greenTint.pixels, p -> p.applyGreenTint());
     PixelProcessor.apply(blueTint.pixels, p -> p.applyBlueTint());
 
-    return new Image[] {redTint, blueTint, greenTint};
+    return new Image[] {redTint, greenTint, blueTint};
+  }
+
+
+
+  @Override
+  public Image copy() {
+    RGBImage copyImage = new RGBImage(new PixelADT[getHeight()][getWidth()]);
+
+    for (int i = 0; i < getHeight(); i++) {
+      for (int j = 0; j < getWidth(); j++) {
+        copyImage.setPixel(i, j, this.getPixel(i, j).copy());
+      }
+    }
+
+    return copyImage;
+  }
+
+  @Override
+  public Image combine() {
+    return null;
   }
 
 }
