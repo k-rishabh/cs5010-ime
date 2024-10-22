@@ -6,8 +6,24 @@ import java.io.IOException;
 public abstract class Image implements ImageADT {
   protected PixelADT[][] pixels;
 
-  protected void setPixel(int i, int j, PixelADT pixel) {
-    this.pixels[i][j] = pixel;
+  @Override
+  public int getHeight(){
+    return pixels.length;
+  }
+
+  @Override
+  public int getWidth(){
+    return pixels[0].length;
+  }
+
+  @Override
+  public PixelADT getPixel(int i, int j){
+    return pixels[i][j];
+  }
+
+  @Override
+  public void setPixel(int i, int j, PixelADT pixel) {
+    pixels[i][j] = pixel;
   }
 
   @Override
@@ -28,11 +44,29 @@ public abstract class Image implements ImageADT {
   @Override
   public void horizontalFlip() {
 
+    int width = pixels[0].length;
+    int height = pixels.length;
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width / 2; j++) {
+        PixelADT temp = pixels[i][j];
+        pixels[i][j] = pixels[i][width - 1 - j];
+        pixels[i][width - 1 - j] = temp;
+      }
+    }
   }
 
   @Override
   public void verticalFlip() {
 
+    int width = pixels[0].length;
+    int height = pixels.length;
+
+    for (int i = 0; i < height / 2; i++) {
+      PixelADT[] temp = pixels[i];
+      pixels[i] = pixels[height - 1 - i];
+      pixels[height - 1 - i] = temp;
+    }
   }
 
   @Override
@@ -54,12 +88,6 @@ public abstract class Image implements ImageADT {
   public void sepia() {
     PixelProcessor.apply(pixels, p -> p.applySepia());
   }
-
-  @Override
-  abstract public void loadImage(File f) throws IOException;
-
-  @Override
-  abstract public void saveImage(String filename, File destination) throws IOException;
 
   @Override
   abstract public Image[] split();

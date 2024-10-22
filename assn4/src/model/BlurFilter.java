@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 public class BlurFilter extends Filter {
   BlurFilter() {

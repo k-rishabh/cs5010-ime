@@ -11,6 +11,12 @@ public interface PixelADT {
 
   public void applyGreenTint();
 
+  public int getRed();
+
+  public int getGreen();
+
+  public int getBlue();
+
   public void applyBlueTint();
 
   public void showValue();

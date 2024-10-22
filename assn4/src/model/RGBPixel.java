@@ -69,6 +69,21 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
+  public int getRed() {
+    return this.red;
+  }
+
+  @Override
+  public int getGreen() {
+    return this.green;
+  }
+
+  @Override
+  public int getBlue() {
+    return this.blue;
+  }
+
+  @Override
   public void applyBlueTint() {
     this.red = 0;
     this.green = 0;

@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 public abstract class Filter implements FilterADT {
   protected double[][] filter;
