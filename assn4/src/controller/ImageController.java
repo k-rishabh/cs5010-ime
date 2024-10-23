@@ -9,9 +9,9 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 import model.Image;
-import model.PixelADT;
+import model.pixel.PixelADT;
 import model.RGBImage;
-import model.RGBPixel;
+import model.pixel.RGBPixel;
 
 import static javax.imageio.ImageIO.read;
 
@@ -28,15 +28,16 @@ public class ImageController {
 
     int width = img.getWidth();
     int height = img.getHeight();
-    Image img1 = new RGBImage(height,width);
+
+    PixelADT[][] pixels = new PixelADT[height][width];
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int pixel = img.getRGB(x, y);
-
-        RGBPixel rgb_pixel = new RGBPixel((pixel >> 16) & 0xFF,(pixel >> 8) & 0xFF,pixel & 0xFF);
-        img1.setPixel(y,x,rgb_pixel);
+        pixels[y][x] = new RGBPixel(pixel);
       }
     }
+
+    Image img1 = new RGBImage(pixels);
     this.imageMap.put(imageName,img1);
   }
 
@@ -90,7 +91,7 @@ public class ImageController {
         if (parts.length == 4) {
           int value = Integer.parseInt(parts[1]);
           Image imageToBeBrightened = imageMap.get(parts[2]);
-          Image brightenedImageCopy = imageToBeBrightened.copy();
+          Image brightenedImageCopy = imageToBeBrightened.deepCopy();
 
           brightenedImageCopy.brighten(value);
           imageMap.put(parts[3],brightenedImageCopy);
@@ -101,7 +102,7 @@ public class ImageController {
       case "vertical-flip":
         if (parts.length == 3) {
           Image imageToBeVerticallyFlipped = imageMap.get(parts[1]);
-          Image verticallyFlippedImageCopy = imageToBeVerticallyFlipped.copy();
+          Image verticallyFlippedImageCopy = imageToBeVerticallyFlipped.deepCopy();
           verticallyFlippedImageCopy.verticalFlip();
           imageMap.put(parts[2],verticallyFlippedImageCopy);
         } else {
@@ -111,7 +112,7 @@ public class ImageController {
       case "horizontal-flip":
         if (parts.length == 3) {
           Image imageToBeHorizontallyFlipped = imageMap.get(parts[1]);
-          Image horizontallyFlippedImageCopy = imageToBeHorizontallyFlipped.copy();
+          Image horizontallyFlippedImageCopy = imageToBeHorizontallyFlipped.deepCopy();
           horizontallyFlippedImageCopy.verticalFlip();
           imageMap.put(parts[2],horizontallyFlippedImageCopy);
         } else {
@@ -121,7 +122,7 @@ public class ImageController {
       case "value-component":
         if (parts.length == 3) {
           Image imageValue = imageMap.get(parts[1]);
-          Image imageValueCopy = imageValue.copy();
+          Image imageValueCopy = imageValue.deepCopy();
           imageValueCopy.valueComponent();
           imageMap.put(parts[2],imageValueCopy);
         } else {
@@ -138,6 +139,28 @@ public class ImageController {
           System.out.println(imageMap.toString());
         } else {
           System.out.println("Invalid rgb-split command!");
+        }
+        break;
+      case "blur":
+        if (parts.length == 3) {
+          Image imageBlur = imageMap.get(parts[1]);
+          Image imageBlurCopy = imageBlur.deepCopy();
+
+          imageBlurCopy.blur();
+          imageMap.put(parts[2],imageBlurCopy);
+        } else{
+          System.out.println("Invalid blur command!");
+        }
+        break;
+      case "sharpen":
+        if(parts.length == 3){
+          Image imageSharpen = imageMap.get(parts[1]);
+          Image imageSharpenCopy = imageSharpen.deepCopy();
+          imageSharpenCopy.sharpen();
+          imageMap.put(parts[2],imageSharpenCopy);
+        }
+        else{
+          System.out.println("Invalid sharpen command!");
         }
         break;
 //      case "rgb-combine":

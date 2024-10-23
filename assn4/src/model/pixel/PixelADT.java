@@ -3,7 +3,7 @@ package model.pixel;
 public interface PixelADT {
   void brighten(int val);
 
-  void applyFilter(double val);
+  int[] applyFilter(double val);
 
   void applySepia();
 
@@ -20,4 +20,10 @@ public interface PixelADT {
   void showLuma();
 
   PixelADT deepCopy();
+
+  int getRed();
+
+  int getGreen();
+
+  int getBlue();
 }

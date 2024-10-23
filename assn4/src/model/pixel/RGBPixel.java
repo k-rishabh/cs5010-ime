@@ -27,6 +27,7 @@ public class RGBPixel implements PixelADT {
     this((packedRGB >> 16) & 0xFF,(packedRGB >> 8) & 0xFF,packedRGB & 0xFF);
   }
 
+
   private void clampValues() {
     this.red = Math.max(0, Math.min(255, this.red));
     this.green = Math.max(0, Math.min(255, this.green));
@@ -43,12 +44,8 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
-  public void applyFilter(double val) {
-    this.red = (int) (this.red * val);
-    this.green = (int) (this.green * val);
-    this.blue = (int) (this.blue * val);
-
-    this.clampValues();
+  public int[] applyFilter(double val) {
+    return new int[]{(int) (this.red * val), (int) (this.green * val), (int) (this.blue * val)};
   }
 
   @Override
@@ -105,5 +102,20 @@ public class RGBPixel implements PixelADT {
   @Override
   public PixelADT deepCopy() {
     return new RGBPixel(this.red, this.green, this.blue);
+  }
+
+  @Override
+  public int getRed() {
+    return this.red;
+  }
+
+  @Override
+  public int getGreen() {
+    return this.green;
+  }
+
+  @Override
+  public int getBlue() {
+    return this.blue;
   }
 }

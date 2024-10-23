@@ -24,11 +24,11 @@ public interface ImageADT {
 
   void sepia();
 
-//  int getHeight();
-//
-//  int getWidth();
-//
-//  PixelADT getPixel(int i, int j);
+  int getHeight();
+
+  int getWidth();
+
+  PixelADT getPixel(int i, int j);
 //
 //  void setPixel(int i, int j, PixelADT pixel);
 
