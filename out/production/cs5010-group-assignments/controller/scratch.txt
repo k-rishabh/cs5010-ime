@@ -1,8 +1,0 @@
-load /Users/hariharasudan/CS5010/group/cs5010-group-assignments/assn4/images/paint_new.png og-img
-rgb-split og-img img-red img-green img-blue
-save /Users/hariharasudan/CS5010/group/cs5010-group-assignments/assn4/images/paint_new_og.png og-img
-save /Users/hariharasudan/CS5010/group/cs5010-group-assignments/assn4/images/paint_new_red.png img-red
-save /Users/hariharasudan/CS5010/group/cs5010-group-assignments/assn4/images/paint_new_green.png img-green
-save /Users/hariharasudan/CS5010/group/cs5010-group-assignments/assn4/images/paint_new_blue.png img-blue
-sharpen og-img img-sharpen
-save /Users/hariharasudan/CS5010/group/cs5010-group-assignments/assn4/images/paint_new_sharpen.png img-sharpen
