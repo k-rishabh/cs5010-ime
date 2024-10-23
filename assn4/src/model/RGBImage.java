@@ -19,6 +19,19 @@ public class RGBImage extends Image {
     this.pixels = pixels;
   }
 
+  public RGBImage(int[][] packedPixels) {
+    int height = packedPixels.length;
+    int width = packedPixels[0].length;
+
+    this.pixels = new PixelADT[height][width];
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        this.pixels[i][j] = new RGBPixel(packedPixels[i][j]);
+      }
+    }
+  }
+
   protected void applyFilter(Filter filter) {
     double[][] matrix = filter.getFilter();
 
@@ -63,7 +76,7 @@ public class RGBImage extends Image {
     PixelProcessor.apply(greenTint.pixels, p -> p.applyGreenTint());
     PixelProcessor.apply(blueTint.pixels, p -> p.applyBlueTint());
 
-    return new Image[] {redTint, greenTint, blueTint};
+    return new Image[]{redTint, greenTint, blueTint};
   }
 
   @Override

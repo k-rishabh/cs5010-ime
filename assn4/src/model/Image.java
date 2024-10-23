@@ -24,8 +24,8 @@ public abstract class Image implements ImageADT {
   }
 
   @Override
-  public PixelADT getPixel(int i, int j) {
-    return pixels[i][j];
+  public int getPackedPixel(int i, int j) {
+    return pixels[i][j].getPacked();
   }
 //
 //  @Override

@@ -105,17 +105,7 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
-  public int getRed() {
-    return this.red;
-  }
-
-  @Override
-  public int getGreen() {
-    return this.green;
-  }
-
-  @Override
-  public int getBlue() {
-    return this.blue;
+  public int getPacked() {
+    return (this.red << 16) | (this.green << 8) | (this.blue);
   }
 }

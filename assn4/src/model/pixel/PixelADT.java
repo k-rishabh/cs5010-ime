@@ -21,9 +21,5 @@ public interface PixelADT {
 
   PixelADT deepCopy();
 
-  int getRed();
-
-  int getGreen();
-
-  int getBlue();
+  int getPacked();
 }

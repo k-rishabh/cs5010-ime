@@ -29,25 +29,22 @@ public class ImageController {
     int width = img.getWidth();
     int height = img.getHeight();
 
-    PixelADT[][] pixels = new PixelADT[height][width];
+    int[][] pixels = new int[height][width];
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int pixel = img.getRGB(x, y);
-        pixels[y][x] = new RGBPixel(pixel);
+        pixels[y][x] = img.getRGB(x, y);
       }
     }
 
     Image img1 = new RGBImage(pixels);
-    this.imageMap.put(imageName,img1);
+    this.imageMap.put(imageName, img1);
   }
 
-  public void saveImage(Image imageToBeSaved,String destinationFilename) throws IOException {
+  public void saveImage(Image imageToBeSaved, String destinationFilename) throws IOException {
     BufferedImage image = new BufferedImage(imageToBeSaved.getWidth(), imageToBeSaved.getHeight(), BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < imageToBeSaved.getHeight(); y++) {
       for (int x = 0; x < imageToBeSaved.getWidth(); x++) {
-        PixelADT rgb_pixel = imageToBeSaved.getPixel(y,x);
-        int rgb_pixel_int = (rgb_pixel.getRed() <<16) | (rgb_pixel.getGreen() <<8) | (rgb_pixel.getBlue());
-        image.setRGB(x, y, rgb_pixel_int);
+        image.setRGB(x, y, imageToBeSaved.getPackedPixel(y, x));
       }
     }
 
@@ -80,7 +77,7 @@ public class ImageController {
         break;
       case "save":
         if (parts.length == 3) {
-          String imageName =  parts[2];
+          String imageName = parts[2];
           Image imageToBeSaved = imageMap.get(imageName);
           saveImage(imageToBeSaved, parts[1]);
         } else {
@@ -94,7 +91,7 @@ public class ImageController {
           Image brightenedImageCopy = imageToBeBrightened.deepCopy();
 
           brightenedImageCopy.brighten(value);
-          imageMap.put(parts[3],brightenedImageCopy);
+          imageMap.put(parts[3], brightenedImageCopy);
         } else {
           System.out.println("Invalid brighten command!");
         }
@@ -104,7 +101,7 @@ public class ImageController {
           Image imageToBeVerticallyFlipped = imageMap.get(parts[1]);
           Image verticallyFlippedImageCopy = imageToBeVerticallyFlipped.deepCopy();
           verticallyFlippedImageCopy.verticalFlip();
-          imageMap.put(parts[2],verticallyFlippedImageCopy);
+          imageMap.put(parts[2], verticallyFlippedImageCopy);
         } else {
           System.out.println("Invalid vertical-flip command!");
         }
@@ -114,7 +111,7 @@ public class ImageController {
           Image imageToBeHorizontallyFlipped = imageMap.get(parts[1]);
           Image horizontallyFlippedImageCopy = imageToBeHorizontallyFlipped.deepCopy();
           horizontallyFlippedImageCopy.verticalFlip();
-          imageMap.put(parts[2],horizontallyFlippedImageCopy);
+          imageMap.put(parts[2], horizontallyFlippedImageCopy);
         } else {
           System.out.println("Invalid horizontal-flip command!");
         }
@@ -124,7 +121,7 @@ public class ImageController {
           Image imageValue = imageMap.get(parts[1]);
           Image imageValueCopy = imageValue.deepCopy();
           imageValueCopy.valueComponent();
-          imageMap.put(parts[2],imageValueCopy);
+          imageMap.put(parts[2], imageValueCopy);
         } else {
           System.out.println("Invalid value-component command!");
         }
@@ -133,9 +130,9 @@ public class ImageController {
         if (parts.length == 5) {
           Image imageSplit = imageMap.get(parts[1]);
           Image[] result = imageSplit.split();
-          imageMap.put(parts[2],result[0]);
-          imageMap.put(parts[3],result[1]);
-          imageMap.put(parts[4],result[2]);
+          imageMap.put(parts[2], result[0]);
+          imageMap.put(parts[3], result[1]);
+          imageMap.put(parts[4], result[2]);
           System.out.println(imageMap.toString());
         } else {
           System.out.println("Invalid rgb-split command!");
@@ -147,19 +144,18 @@ public class ImageController {
           Image imageBlurCopy = imageBlur.deepCopy();
 
           imageBlurCopy.blur();
-          imageMap.put(parts[2],imageBlurCopy);
-        } else{
+          imageMap.put(parts[2], imageBlurCopy);
+        } else {
           System.out.println("Invalid blur command!");
         }
         break;
       case "sharpen":
-        if(parts.length == 3){
+        if (parts.length == 3) {
           Image imageSharpen = imageMap.get(parts[1]);
           Image imageSharpenCopy = imageSharpen.deepCopy();
           imageSharpenCopy.sharpen();
-          imageMap.put(parts[2],imageSharpenCopy);
-        }
-        else{
+          imageMap.put(parts[2], imageSharpenCopy);
+        } else {
           System.out.println("Invalid sharpen command!");
         }
         break;
