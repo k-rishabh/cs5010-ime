@@ -5,7 +5,6 @@ import model.filter.BlurFilter;
 import model.filter.SharpenFilter;
 
 import model.pixel.PixelADT;
-import model.pixel.PixelProcessor;
 
 public abstract class Image implements ImageADT {
   protected PixelADT[][] pixels;

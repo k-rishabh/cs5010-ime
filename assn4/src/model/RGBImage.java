@@ -2,7 +2,6 @@ package model;
 
 import model.filter.Filter;
 import model.pixel.PixelADT;
-import model.pixel.PixelProcessor;
 import model.pixel.RGBPixel;
 
 /**

@@ -18,7 +18,9 @@ public class ScriptRunner {
 
     while (sc.hasNextLine()) {
       String line = sc.nextLine().trim();
-      CommandInterpreter.execute(line);
+      if (!line.isEmpty()) {
+        CommandInterpreter.execute(line);
+      }
     }
   }
 }
