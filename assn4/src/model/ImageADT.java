@@ -1,7 +1,6 @@
 package model;
 
-import java.io.File;
-import java.io.IOException;
+import model.pixel.PixelADT;
 
 public interface ImageADT {
 
@@ -19,23 +18,21 @@ public interface ImageADT {
 
   Image[] split();
 
-  void blur(double[][] filter);
+  void blur();
 
-  void sharpen(double[][] filter);
+  void sharpen();
 
   void sepia();
 
-  int getHeight();
+//  int getHeight();
+//
+//  int getWidth();
+//
+//  PixelADT getPixel(int i, int j);
+//
+//  void setPixel(int i, int j, PixelADT pixel);
 
-  int getWidth();
-
-  PixelADT getPixel(int i, int j);
-
-  void setPixel(int i, int j, PixelADT pixel);
-
-  // Deep copy method
-  Image copy();
+  Image deepCopy();
 
   Image combine();
-
 }

@@ -1,10 +1,7 @@
 package model;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import static javax.imageio.ImageIO.read;
+import model.pixel.PixelADT;
+import model.pixel.PixelProcessor;
 
 /**
  * Abstract class that represents an image in red, blue, and green pixels.
@@ -16,24 +13,11 @@ public class RGBImage extends Image {
     this.pixels = new PixelADT[height][width];
   }
 
-  private RGBImage(PixelADT[][] pixels) {
-    this.pixels = new PixelADT[pixels.length][pixels[0].length];
-
-    for(int i=0; i<pixels.length; i++) {
-      for(int j=0; j<pixels[0].length; j++) {
-        this.pixels[i][j] = pixels[i][j];
-      }
-    }
-  }
-
-
   @Override
   public Image[] split() {
-
-
-    Image redTint = this.copy();
-    Image greenTint = this.copy();
-    Image blueTint = this.copy();
+    Image redTint = this.deepCopy();
+    Image greenTint = this.deepCopy();
+    Image blueTint = this.deepCopy();
 
     PixelProcessor.apply(redTint.pixels, p -> p.applyRedTint());
     PixelProcessor.apply(greenTint.pixels, p -> p.applyGreenTint());
@@ -42,15 +26,16 @@ public class RGBImage extends Image {
     return new Image[] {redTint, greenTint, blueTint};
   }
 
-
-
   @Override
-  public Image copy() {
-    RGBImage copyImage = new RGBImage(new PixelADT[getHeight()][getWidth()]);
+  public Image deepCopy() {
+    int height = this.pixels.length;
+    int width = this.pixels[0].length;
 
-    for (int i = 0; i < getHeight(); i++) {
-      for (int j = 0; j < getWidth(); j++) {
-        copyImage.setPixel(i, j, this.getPixel(i, j).copy());
+    Image copyImage = new RGBImage(height, width);
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        copyImage.pixels[i][j] = pixels[i][j].deepCopy();
       }
     }
 

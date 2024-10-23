@@ -1,29 +1,23 @@
-package model;
+package model.pixel;
 
 public interface PixelADT {
-  public void brighten(int val);
+  void brighten(int val);
 
-  public void applyFilter(double val);
+  void applyFilter(double val);
 
-  public void applySepia();
+  void applySepia();
 
-  public void applyRedTint();
+  void applyRedTint();
 
-  public void applyGreenTint();
+  void applyGreenTint();
 
-  public int getRed();
+  void applyBlueTint();
 
-  public int getGreen();
+  void showValue();
 
-  public int getBlue();
+  void showIntensity();
 
-  public void applyBlueTint();
+  void showLuma();
 
-  public void showValue();
-
-  public void showIntensity();
-
-  public void showLuma();
-
-  PixelADT copy();
+  PixelADT deepCopy();
 }

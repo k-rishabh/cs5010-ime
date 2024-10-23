@@ -1,7 +1,7 @@
-package model;
+package model.filter;
 
 public interface FilterADT {
-  public void setFilter(double[][] newFilter);
+  void setFilter(double[][] newFilter);
 
-  public double[][] getFilter();
+  double[][] getFilter();
 }

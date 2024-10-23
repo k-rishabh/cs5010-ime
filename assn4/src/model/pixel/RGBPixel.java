@@ -1,4 +1,4 @@
-package model;
+package model.pixel;
 
 /**
  * Class that represents an RGB pixel in a 2-D image.
@@ -23,19 +23,8 @@ public class RGBPixel implements PixelADT {
     this.clampValues();
   }
 
-  @Override
-  public int getRed() {
-    return this.red;
-  }
-
-  @Override
-  public int getGreen() {
-    return this.green;
-  }
-
-  @Override
-  public int getBlue() {
-    return this.blue;
+  public RGBPixel(int packedRGB) {
+    this((packedRGB >> 16) & 0xFF,(packedRGB >> 8) & 0xFF,packedRGB & 0xFF);
   }
 
   private void clampValues() {
@@ -114,7 +103,7 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
-  public PixelADT copy() {
+  public PixelADT deepCopy() {
     return new RGBPixel(this.red, this.green, this.blue);
   }
 }

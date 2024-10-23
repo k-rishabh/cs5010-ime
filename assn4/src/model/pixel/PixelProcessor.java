@@ -1,4 +1,4 @@
-package model;
+package model.pixel;
 
 import java.util.function.Consumer;
 
