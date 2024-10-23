@@ -1,6 +1,8 @@
 package controller;
 
 public class CommandInterpreter {
+  static ImageHandler images = new ImageHandler();
+
   public static void execute(String command) {
     command = command.toLowerCase();
 
@@ -10,7 +12,6 @@ public class CommandInterpreter {
     }
 
     String[] words = command.split(" ");
-    ImageHandler images = new ImageHandler();
 
     switch (words[0]) {
       case "exit":

@@ -33,7 +33,7 @@ public class ImageUtil {
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        pixels[i][j] = img.getRGB(i, j);
+        pixels[i][j] = img.getRGB(j, i);
       }
     }
 

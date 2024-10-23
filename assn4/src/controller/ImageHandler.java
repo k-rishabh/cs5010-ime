@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
 
 import model.Image;
@@ -15,9 +16,9 @@ public class ImageHandler {
   public void loadImage(String filePath, String imageName) {
     String extension = filePath.substring(filePath.lastIndexOf('.'));
 
-    if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+    if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".png")) {
       this.images.put(imageName, ImageUtil.loadImageRaster(filePath));
-    } else if (extension.equalsIgnoreCase("ppm")) {
+    } else if (extension.equalsIgnoreCase(".ppm")) {
       this.images.put(imageName, ImageUtil.loadImageRaw(filePath));
     }
   }
@@ -177,7 +178,7 @@ public class ImageHandler {
       return;
     }
 
-    Image destImg = images.get(destName).deepCopy();
+    Image destImg = images.get(srcName).deepCopy();
     destImg.blur();
     this.images.put(destName, destImg);
   }
@@ -188,7 +189,7 @@ public class ImageHandler {
       return;
     }
 
-    Image destImg = images.get(destName).deepCopy();
+    Image destImg = images.get(srcName).deepCopy();
     destImg.sharpen();
     this.images.put(destName, destImg);
   }
@@ -199,7 +200,7 @@ public class ImageHandler {
       return;
     }
 
-    Image destImg = images.get(destName).deepCopy();
+    Image destImg = images.get(srcName).deepCopy();
     destImg.sepia();
     this.images.put(destName, destImg);
   }
