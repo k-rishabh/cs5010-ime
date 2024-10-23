@@ -33,9 +33,9 @@ public class ImageHandler {
 
     String extension = filePath.substring(filePath.lastIndexOf('.')).toLowerCase();
 
-    if (extension.equals("jpg") || extension.equals("png")) {
+    if (extension.equals(".jpg") || extension.equals(".png")) {
       ImageUtil.saveImageRaster(filePath, img);
-    } else if (extension.equalsIgnoreCase("ppm")) {
+    } else if (extension.equalsIgnoreCase(".ppm")) {
       ImageUtil.saveImageRaw(filePath, img);
     }
   }

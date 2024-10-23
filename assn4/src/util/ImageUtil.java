@@ -92,12 +92,12 @@ public class ImageUtil {
 
     for (int i = 0; i < img.getHeight(); i++) {
       for (int j = 0; j < img.getWidth(); j++) {
-        buffImg.setRGB(i, j, img.getPackedPixel(i, j));
+        buffImg.setRGB(j, i, img.getPackedPixel(i, j));
       }
     }
 
     try {
-      write(buffImg, filePath.substring(filePath.lastIndexOf('.')), new File(filePath));
+      write(buffImg, filePath.substring(filePath.lastIndexOf('.') + 1), new File(filePath));
     } catch (IOException e) {
       System.out.println("Failed to save raster image!");
     }
