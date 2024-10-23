@@ -16,10 +16,13 @@ public class ScriptRunner {
       return;
     }
 
+    int lineNo = 0;
     while (sc.hasNextLine()) {
       String line = sc.nextLine().trim();
+      lineNo++;
+
       if (!line.isEmpty()) {
-        CommandInterpreter.execute(line);
+        CommandInterpreter.execute(line, lineNo);
       }
     }
   }

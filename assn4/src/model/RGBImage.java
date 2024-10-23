@@ -68,13 +68,13 @@ public class RGBImage extends Image {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
 
-        int redVal = 0;
-        int greenVal = 0;
-        int blueVal = 0;
+        double redVal = 0;
+        double greenVal = 0;
+        double blueVal = 0;
 
         for (int x = Math.max(0, c / 2 - i); x < Math.min(c, height + c / 2 - i); x++) {
           for (int y = Math.max(0, c / 2 - j); y < Math.min(c, width + c / 2 - j); y++) {
-            int[] filterValues =
+            double[] filterValues =
                     this.pixels[x + i - c / 2][y + j - c / 2].applyFilter(matrix[x][y]);
 
             redVal += filterValues[0];
@@ -83,7 +83,7 @@ public class RGBImage extends Image {
           }
         }
 
-        temp[i][j] = new RGBPixel(redVal, greenVal, blueVal);
+        temp[i][j] = new RGBPixel((int) redVal, (int) greenVal, (int) blueVal);
       }
     }
 

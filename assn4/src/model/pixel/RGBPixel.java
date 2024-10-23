@@ -120,15 +120,19 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
-  public int[] applyFilter(double val) {
-    return new int[]{(int) (this.red * val), (int) (this.green * val), (int) (this.blue * val)};
+  public double[] applyFilter(double val) {
+    return new double[]{this.red * val, this.green * val, this.blue * val};
   }
 
   @Override
   public void applySepia() {
-    this.red = (int) ((this.red * 0.393) + (this.green * 0.769) + (this.blue * 0.189));
-    this.green = (int) ((this.red * 0.349) + (this.green * 0.686) + (this.blue * 0.168));
-    this.blue = (int) ((this.red * 0.272) + (this.green * 0.534) + (this.blue * 0.131));
+    int tempRed = (int) ((this.red * 0.393) + (this.green * 0.769) + (this.blue * 0.189));
+    int tempGreen = (int) ((this.red * 0.349) + (this.green * 0.686) + (this.blue * 0.168));
+    int tempBlue = (int) ((this.red * 0.272) + (this.green * 0.534) + (this.blue * 0.131));
+
+    this.red = tempRed;
+    this.green = tempGreen;
+    this.blue = tempBlue;
 
     this.clampValues();
   }

@@ -28,7 +28,7 @@ public interface PixelADT {
 
   void addComponent(PixelADT pixel);
 
-  int[] applyFilter(double val);
+  double[] applyFilter(double val);
 
   void applySepia();
 

@@ -3,7 +3,7 @@ package controller;
 public class CommandInterpreter {
   static ImageHandler images = new ImageHandler();
 
-  public static void execute(String command) {
+  public static void execute(String command, int lineNo) {
     command = command.toLowerCase();
 
     // ignore if command is comment
@@ -22,7 +22,7 @@ public class CommandInterpreter {
         if (words.length == 3) {
           images.loadImage(words[1], words[2]);
         } else {
-          System.out.println("Invalid load command!");
+          System.out.printf("Invalid load command on line %d!\n", lineNo);
         }
         break;
 
@@ -30,119 +30,161 @@ public class CommandInterpreter {
         if (words.length == 3) {
           images.saveImage(words[1], words[2]);
         } else {
-          System.out.println("Invalid save command!");
+          System.out.printf("Invalid save command on line %d!\n", lineNo);
         }
         break;
 
       case "red-component":
         if (words.length == 3) {
-          images.redComponent(words[1], words[2]);
+          int fail = images.redComponent(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid red-component command!");
+          System.out.printf("Invalid red-component command on line %d!\n", lineNo);
         }
         break;
 
       case "green-component":
         if (words.length == 3) {
-          images.greenComponent(words[1], words[2]);
+          int fail = images.greenComponent(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid green-component command!");
+          System.out.printf("Invalid green-component command on line %d!\n", lineNo);
         }
         break;
 
       case "blue-component":
         if (words.length == 3) {
-          images.blueComponent(words[1], words[2]);
+          int fail = images.blueComponent(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid blue-component command!");
+          System.out.printf("Invalid blue-component command on line %d!\n", lineNo);
         }
         break;
 
       case "value-component":
         if (words.length == 3) {
-          images.valueComponent(words[1], words[2]);
+          int fail = images.valueComponent(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid value-component command!");
+          System.out.printf("Invalid value-component command on line %d!\n", lineNo);
         }
         break;
 
       case "intensity-component":
         if (words.length == 3) {
-          images.intensityComponent(words[1], words[2]);
+          int fail = images.intensityComponent(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid intensity-component command!");
+          System.out.printf("Invalid intensity-component command on line %d!\n", lineNo);
         }
         break;
 
       case "luma-component":
         if (words.length == 3) {
-          images.lumaComponent(words[1], words[2]);
+          int fail = images.lumaComponent(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid luma-component command!");
+          System.out.printf("Invalid luma-component command on line %d!\n", lineNo);
         }
         break;
 
       case "horizontal-flip":
         if (words.length == 3) {
-          images.horizontalFlip(words[1], words[2]);
+          int fail = images.horizontalFlip(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid horizontal-flip command!");
+          System.out.printf("Invalid horizontal-flip command on line %d!\n", lineNo);
         }
         break;
 
       case "vertical-flip":
         if (words.length == 3) {
-          images.verticalFlip(words[1], words[2]);
+          int fail = images.verticalFlip(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid vertical-flip command!");
+          System.out.printf("Invalid vertical-flip command on line %d!\n", lineNo);
         }
         break;
 
       case "brighten":
         if (words.length == 4) {
-          images.brighten(Integer.parseInt(words[1]), words[2], words[3]);
+          int fail = images.brighten(Integer.parseInt(words[1]), words[2], words[3]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid brighten command!");
+          System.out.printf("Invalid brighten command on line %d!\n", lineNo);
         }
         break;
 
       case "rgb-split":
         if (words.length == 5) {
-          images.rgbSplit(words[1], words[2], words[3], words[4]);
+          int fail = images.rgbSplit(words[1], words[2], words[3], words[4]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid rgb-split command!");
+          System.out.printf("Invalid rgb-split command on line %d!\n", lineNo);
         }
         break;
 
       case "rgb-combine":
         if (words.length == 5) {
-          images.rgbCombine(words[1], words[2], words[3], words[4]);
+          int fail = images.rgbCombine(words[1], words[2], words[3], words[4]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid rgb-combine command!");
+          System.out.printf("Invalid rgb-combine command on line %d!\n", lineNo);
         }
         break;
 
       case "blur":
         if (words.length == 3) {
-          images.blur(words[1], words[2]);
+          int fail = images.blur(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid blur command!");
+          System.out.printf("Invalid blur command on line %d!\n", lineNo);
         }
         break;
 
       case "sharpen":
         if (words.length == 3) {
-          images.sharpen(words[1], words[2]);
+          int fail = images.sharpen(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid sharpen command!");
+          System.out.printf("Invalid sharpen command on line %d!\n", lineNo);
         }
         break;
 
       case "sepia":
         if (words.length == 3) {
-          images.sepia(words[1], words[2]);
+          int fail = images.sepia(words[1], words[2]);
+          if (fail != 0) {
+            System.out.printf("red-component on line %d failed!\n", lineNo);
+          }
         } else {
-          System.out.println("Invalid sepia command!");
+          System.out.printf("Invalid sepia command on line %d!\n", lineNo);
         }
         break;
 
@@ -150,11 +192,11 @@ public class CommandInterpreter {
         if (words.length == 2) {
           ScriptRunner.go(words[1]);
         } else {
-          System.out.println("Invalid run command!");
+          System.out.printf("Invalid run command on line %d!\n", lineNo);
         }
 
       default:
-        System.out.println("Unknown command: " + command);
+        System.out.printf("Unknown command: " + command);
         break;
     }
   }

@@ -1,13 +1,12 @@
 package controller;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 
 import model.Image;
 import util.ImageUtil;
 
 public class ImageHandler {
-  private HashMap<String, Image> images;
+  static protected HashMap<String, Image> images;
 
   public ImageHandler() {
     images = new HashMap<>();
@@ -17,9 +16,9 @@ public class ImageHandler {
     String extension = filePath.substring(filePath.lastIndexOf('.'));
 
     if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".png")) {
-      this.images.put(imageName, ImageUtil.loadImageRaster(filePath));
+      images.put(imageName, ImageUtil.loadImageRaster(filePath));
     } else if (extension.equalsIgnoreCase(".ppm")) {
-      this.images.put(imageName, ImageUtil.loadImageRaw(filePath));
+      images.put(imageName, ImageUtil.loadImageRaw(filePath));
     }
   }
 
@@ -40,169 +39,111 @@ public class ImageHandler {
     }
   }
 
-  public void redComponent(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.redComponent();
-    this.images.put(destName, destImg);
+  public int redComponent(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.redComponent());
   }
 
-  public void blueComponent(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.blueComponent();
-    this.images.put(destName, destImg);
+  public int greenComponent(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.greenComponent());
   }
 
-  public void greenComponent(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.greenComponent();
-    this.images.put(destName, destImg);
+  public int blueComponent(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.blueComponent());
   }
 
-  public void valueComponent(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.valueComponent();
-    this.images.put(destName, destImg);
+  public int valueComponent(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.valueComponent());
   }
 
-  public void intensityComponent(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.intensityComponent();
-    this.images.put(destName, destImg);
+  public int intensityComponent(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.intensityComponent());
   }
 
-  public void lumaComponent(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.lumaComponent();
-    this.images.put(destName, destImg);
+  public int lumaComponent(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.lumaComponent());
   }
 
-  public void horizontalFlip(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.horizontalFlip();
-    this.images.put(destName, destImg);
+  public int horizontalFlip(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.horizontalFlip());
   }
 
-  public void verticalFlip(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.verticalFlip();
-    this.images.put(destName, destImg);
+  public int verticalFlip(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.verticalFlip());
   }
 
-  public void brighten(int val, String srcName, String destName) {
+  public int brighten(int val, String srcName, String destName) {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
-      return;
+      return 1;
     }
 
     Image destImg = images.get(srcName).deepCopy();
     destImg.brighten(val);
-    this.images.put(destName, destImg);
+    images.put(destName, destImg);
+
+    if (images.containsKey(destName)) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 
-  public void rgbSplit(String srcName, String redName, String blueName, String greenName) {
+  public int rgbSplit(String srcName, String redName, String greenName, String blueName) {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
-      return;
+      return 1;
     }
 
     Image destImg = images.get(srcName).deepCopy();
     Image[] split = destImg.split();
 
-    this.images.put(redName, split[0]);
-    this.images.put(blueName, split[1]);
-    this.images.put(greenName, split[2]);
+    images.put(redName, split[0]);
+    images.put(greenName, split[1]);
+    images.put(blueName, split[2]);
+
+    if(images.containsKey(redName)
+            && images.containsKey(greenName)
+            && images.containsKey(blueName)) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 
-  public void rgbCombine(String destName, String redName, String blueName, String greenName) {
+  public int rgbCombine(String destName, String redName, String blueName, String greenName) {
     if (images.get(redName) == null) {
       System.out.println("Image " + redName + " not found!");
-      return;
-    } else if (images.get(blueName) == null) {
-      System.out.println("Image " + blueName + " not found!");
-      return;
+      return 1;
     } else if (images.get(greenName) == null) {
       System.out.println("Image " + greenName + " not found!");
-      return;
+      return 1;
+    } else if (images.get(blueName) == null) {
+      System.out.println("Image " + blueName + " not found!");
+      return 1;
     }
 
     Image destImg = images.get(redName).deepCopy();
-    destImg.combine(images.get(blueName));
     destImg.combine(images.get(greenName));
+    destImg.combine(images.get(blueName));
 
-    this.images.put(destName, destImg);
+    images.put(destName, destImg);
+    if (images.get(destName) != null) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 
-  public void blur(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.blur();
-    this.images.put(destName, destImg);
+  public int blur(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.blur());
   }
 
-  public void sharpen(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.sharpen();
-    this.images.put(destName, destImg);
+  public int sharpen(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.sharpen());
   }
 
-  public void sepia(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-      return;
-    }
-
-    Image destImg = images.get(srcName).deepCopy();
-    destImg.sepia();
-    this.images.put(destName, destImg);
+  public int sepia(String srcName, String destName) {
+    return ImageTransformer.apply(srcName, destName, img -> img.sepia());
   }
 
 }
