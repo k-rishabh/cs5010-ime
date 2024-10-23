@@ -1,3 +1,4 @@
 # InteeliJ specific files
 *.iml
 .idea/
+.out/
