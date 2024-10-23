@@ -26,8 +26,8 @@ replay_pid*
 # IntelliJ files
 .idea/
 **/.idea/
-.iml
-**/.iml
+*.iml
+**/*.iml
 out/
 **/out/
 
