@@ -23,6 +23,21 @@ public class RGBPixel implements PixelADT {
     this.clampValues();
   }
 
+  @Override
+  public int getRed() {
+    return this.red;
+  }
+
+  @Override
+  public int getGreen() {
+    return this.green;
+  }
+
+  @Override
+  public int getBlue() {
+    return this.blue;
+  }
+
   private void clampValues() {
     this.red = Math.max(0, Math.min(255, this.red));
     this.green = Math.max(0, Math.min(255, this.green));
@@ -66,21 +81,6 @@ public class RGBPixel implements PixelADT {
   public void applyGreenTint() {
     this.red = 0;
     this.blue = 0;
-  }
-
-  @Override
-  public int getRed() {
-    return this.red;
-  }
-
-  @Override
-  public int getGreen() {
-    return this.green;
-  }
-
-  @Override
-  public int getBlue() {
-    return this.blue;
   }
 
   @Override
