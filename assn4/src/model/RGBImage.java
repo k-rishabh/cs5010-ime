@@ -15,10 +15,6 @@ public class RGBImage extends Image {
     this.pixels = new PixelADT[height][width];
   }
 
-  public RGBImage(PixelADT[][] pixels) {
-    this.pixels = pixels;
-  }
-
   public RGBImage(int[][] packedPixels) {
     int height = packedPixels.length;
     int width = packedPixels[0].length;
@@ -30,6 +26,35 @@ public class RGBImage extends Image {
         this.pixels[i][j] = new RGBPixel(packedPixels[i][j]);
       }
     }
+  }
+
+  @Override
+  public Image deepCopy() {
+    int height = this.pixels.length;
+    int width = this.pixels[0].length;
+
+    Image copyImage = new RGBImage(height, width);
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        copyImage.pixels[i][j] = pixels[i][j].deepCopy();
+      }
+    }
+
+    return copyImage;
+  }
+
+  @Override
+  public Image[] split() {
+    Image redTint = this.deepCopy();
+    Image greenTint = this.deepCopy();
+    Image blueTint = this.deepCopy();
+
+    PixelProcessor.apply(redTint.pixels, p -> p.applyRedTint());
+    PixelProcessor.apply(greenTint.pixels, p -> p.applyGreenTint());
+    PixelProcessor.apply(blueTint.pixels, p -> p.applyBlueTint());
+
+    return new Image[]{redTint, greenTint, blueTint};
   }
 
   protected void applyFilter(Filter filter) {
@@ -64,40 +89,6 @@ public class RGBImage extends Image {
     }
 
     this.pixels = temp;
-  }
-
-  @Override
-  public Image[] split() {
-    Image redTint = this.deepCopy();
-    Image greenTint = this.deepCopy();
-    Image blueTint = this.deepCopy();
-
-    PixelProcessor.apply(redTint.pixels, p -> p.applyRedTint());
-    PixelProcessor.apply(greenTint.pixels, p -> p.applyGreenTint());
-    PixelProcessor.apply(blueTint.pixels, p -> p.applyBlueTint());
-
-    return new Image[]{redTint, greenTint, blueTint};
-  }
-
-  @Override
-  public Image deepCopy() {
-    int height = this.pixels.length;
-    int width = this.pixels[0].length;
-
-    Image copyImage = new RGBImage(height, width);
-
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        copyImage.pixels[i][j] = pixels[i][j].deepCopy();
-      }
-    }
-
-    return copyImage;
-  }
-
-  @Override
-  public Image combine() {
-    return null;
   }
 
 }

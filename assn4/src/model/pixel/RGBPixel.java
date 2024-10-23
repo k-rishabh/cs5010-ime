@@ -27,7 +27,6 @@ public class RGBPixel implements PixelADT {
     this((packedRGB >> 16) & 0xFF,(packedRGB >> 8) & 0xFF,packedRGB & 0xFF);
   }
 
-
   private void clampValues() {
     this.red = Math.max(0, Math.min(255, this.red));
     this.green = Math.max(0, Math.min(255, this.green));
@@ -35,44 +34,31 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
-  public void brighten(int val) {
-    this.red += val;
-    this.green += val;
-    this.blue += val;
-
-    this.clampValues();
+  public int getPacked() {
+    return (this.red << 16) | (this.green << 8) | (this.blue);
   }
 
   @Override
-  public int[] applyFilter(double val) {
-    return new int[]{(int) (this.red * val), (int) (this.green * val), (int) (this.blue * val)};
+  public PixelADT deepCopy() {
+    return new RGBPixel(this.red, this.green, this.blue);
   }
 
   @Override
-  public void applySepia() {
-    this.red = (int) ((this.red * 0.393) + (this.green * 0.769) + (this.blue * 0.189));
-    this.green = (int) ((this.red * 0.349) + (this.green * 0.686) + (this.blue * 0.168));
-    this.blue = (int) ((this.red * 0.272) + (this.green * 0.534) + (this.blue * 0.131));
-
-    this.clampValues();
+  public void showRed() {
+    this.green = this.red;
+    this.blue = this.red;
   }
 
   @Override
-  public void applyRedTint() {
-    this.green = 0;
-    this.blue = 0;
+  public void showGreen() {
+    this.red = this.green;
+    this.blue = this.green;
   }
 
   @Override
-  public void applyGreenTint() {
-    this.red = 0;
-    this.blue = 0;
-  }
-
-  @Override
-  public void applyBlueTint() {
-    this.red = 0;
-    this.green = 0;
+  public void showBlue() {
+    this.red = this.blue;
+    this.green = this.blue;
   }
 
   @Override
@@ -100,12 +86,51 @@ public class RGBPixel implements PixelADT {
   }
 
   @Override
-  public PixelADT deepCopy() {
-    return new RGBPixel(this.red, this.green, this.blue);
+  public void brighten(int val) {
+    this.red += val;
+    this.green += val;
+    this.blue += val;
+
+    this.clampValues();
   }
 
   @Override
-  public int getPacked() {
-    return (this.red << 16) | (this.green << 8) | (this.blue);
+  public void applyRedTint() {
+    this.green = 0;
+    this.blue = 0;
   }
+
+  @Override
+  public void applyGreenTint() {
+    this.red = 0;
+    this.blue = 0;
+  }
+
+  @Override
+  public void applyBlueTint() {
+    this.red = 0;
+    this.green = 0;
+  }
+
+  @Override
+  public void addComponent(PixelADT pixel) {
+    this.red = Math.max(this.red, (pixel.getPacked() >> 16) & 0xFF);
+    this.green = Math.max(this.green, (pixel.getPacked() >> 8) & 0xFF);
+    this.blue = Math.max(this.blue, pixel.getPacked() & 0xFF);
+  }
+
+  @Override
+  public int[] applyFilter(double val) {
+    return new int[]{(int) (this.red * val), (int) (this.green * val), (int) (this.blue * val)};
+  }
+
+  @Override
+  public void applySepia() {
+    this.red = (int) ((this.red * 0.393) + (this.green * 0.769) + (this.blue * 0.189));
+    this.green = (int) ((this.red * 0.349) + (this.green * 0.686) + (this.blue * 0.168));
+    this.blue = (int) ((this.red * 0.272) + (this.green * 0.534) + (this.blue * 0.131));
+
+    this.clampValues();
+  }
+
 }

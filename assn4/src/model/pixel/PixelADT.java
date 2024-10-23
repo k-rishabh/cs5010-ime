@@ -1,17 +1,16 @@
 package model.pixel;
 
 public interface PixelADT {
-  void brighten(int val);
 
-  int[] applyFilter(double val);
+  int getPacked();
 
-  void applySepia();
+  PixelADT deepCopy();
 
-  void applyRedTint();
+  void showRed();
 
-  void applyGreenTint();
+  void showGreen();
 
-  void applyBlueTint();
+  void showBlue();
 
   void showValue();
 
@@ -19,7 +18,18 @@ public interface PixelADT {
 
   void showLuma();
 
-  PixelADT deepCopy();
+  void brighten(int val);
 
-  int getPacked();
+  void applyRedTint();
+
+  void applyGreenTint();
+
+  void applyBlueTint();
+
+  void addComponent(PixelADT pixel);
+
+  int[] applyFilter(double val);
+
+  void applySepia();
+
 }

@@ -1,14 +1,11 @@
 package model;
 
-import java.util.Arrays;
-
 import model.filter.Filter;
 import model.filter.BlurFilter;
 import model.filter.SharpenFilter;
 
 import model.pixel.PixelADT;
 import model.pixel.PixelProcessor;
-import model.pixel.RGBPixel;
 
 public abstract class Image implements ImageADT {
   protected PixelADT[][] pixels;
@@ -27,11 +24,21 @@ public abstract class Image implements ImageADT {
   public int getPackedPixel(int i, int j) {
     return pixels[i][j].getPacked();
   }
-//
-//  @Override
-//  protected void setPixel(int i, int j, PixelADT pixel) {
-//    pixels[i][j] = pixel;
-//  }
+
+  @Override
+  public void redComponent() {
+    PixelProcessor.apply(pixels, p -> p.showRed());
+  }
+
+  @Override
+  public void greenComponent() {
+    PixelProcessor.apply(pixels, p -> p.showGreen());
+  }
+
+  @Override
+  public void blueComponent() {
+    PixelProcessor.apply(pixels, p -> p.showBlue());
+  }
 
   @Override
   public void valueComponent() {
@@ -60,7 +67,6 @@ public abstract class Image implements ImageADT {
         pixels[i][width - 1 - j] = temp;
       }
     }
-
   }
 
   @Override
@@ -72,12 +78,20 @@ public abstract class Image implements ImageADT {
       pixels[i] = pixels[height - 1 - i];
       pixels[height - 1 - i] = temp;
     }
-
   }
 
   @Override
   public void brighten(int val) {
     PixelProcessor.apply(pixels, p -> p.brighten(val));
+  }
+
+  @Override
+  public void combine(Image img) {
+    for (int i = 0; i < this.pixels.length; i++) {
+      for (int j = 0; j < this.pixels[i].length; j++) {
+        this.pixels[i][j].addComponent(img.pixels[i][j]);
+      }
+    }
   }
 
   @Override
@@ -98,12 +112,10 @@ public abstract class Image implements ImageADT {
   }
 
   @Override
-  abstract public Image[] split();
+  abstract public Image deepCopy();
 
   @Override
-  abstract public Image combine();
-
-  abstract public Image deepCopy();
+  abstract public Image[] split();
 
   abstract protected void applyFilter(Filter filter);
 }

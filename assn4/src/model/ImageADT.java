@@ -3,6 +3,19 @@ package model;
 import model.pixel.PixelADT;
 
 public interface ImageADT {
+  int getHeight();
+
+  int getWidth();
+
+  int getPackedPixel(int i, int j);
+
+  Image deepCopy();
+
+  void redComponent();
+
+  void greenComponent();
+
+  void blueComponent();
 
   void valueComponent();
 
@@ -18,21 +31,11 @@ public interface ImageADT {
 
   Image[] split();
 
+  void combine(Image img);
+
   void blur();
 
   void sharpen();
 
   void sepia();
-
-  int getHeight();
-
-  int getWidth();
-
-  PixelADT getPixel(int i, int j);
-//
-//  void setPixel(int i, int j, PixelADT pixel);
-
-  Image deepCopy();
-
-  Image combine();
 }
