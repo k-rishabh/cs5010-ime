@@ -165,5 +165,10 @@ public class ImageUtil {
         }
       }
     }
+    try {
+      writer.close();
+    } catch (IOException e) {
+      System.out.println("Failed to save raw image!");
+    }
   }
 }
