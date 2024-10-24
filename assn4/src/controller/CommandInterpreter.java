@@ -196,7 +196,7 @@ public class CommandInterpreter {
         }
 
       default:
-        System.out.printf("Unknown command: " + command);
+        System.out.printf("Unknown command \"%s\" on line %d!", command, lineNo);
         break;
     }
   }
