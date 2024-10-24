@@ -88,7 +88,7 @@ public class ImageTest {
     images.blur("original-image", "test-blur-image");
 
     Image actualImage = images.getImage("test-blur-image");
-    assertImageEquals(expectedImage, expectedImage);
+    assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
