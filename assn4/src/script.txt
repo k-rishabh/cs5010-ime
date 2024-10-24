@@ -1,82 +1,136 @@
 #Loading a PNG image
-load images/manhattan-small.png l1
+load res/original-image.png original-image
 
-#getting just the Red-component
-red-component l1 l1-red-component
+#Getting the red component
+red-component original-image image-red-component
 
 #Saving the red component
-save res/landscape-red-component.png l1-red-component
+save res/script-image-red-component.png image-red-component
 
-#getting just the Green-component
-green-component l1 l1-green-component
+#Getting the green component
+green-component original-image image-green-component
 
 #Saving the green component
-save res/landscape-green-component.png l1-green-component
+save res/script-image-green-component.png image-green-component
 
 #getting just the Blue-component
-blue-component l1 l1-blue-component
+blue-component original-image image-blue-component
 
 #Saving the blue component
-save res/landscape-blue-component.png l1-blue-component
+save res/script-image-blue-component.png image-blue-component
 
 #Blurring the image
-blur l1 l1-blur
+blur original-image image-blur
 
-#Savnig the blurred image
-save res/landscape-blur.png l1-blur
+#Savingg the blurred image
+save res/script-image-blur.png image-blur
 
 #Sharpening the image
-sharpen l1 l1-sharper
+sharpen original-image image-sharper
 
 #save the sharper image
-save res/landscape-sharper.png l1-sharper
+save res/script-image-sharper.png image-sharper
 
 #Brighten the image
-brighten 50 l1 l1-brighter
+brighten 20 original-image image-brighter
 
 #Saving the brighter image
-save res/landscape-brighter.png l1-brighter
+save res/script-image-brighter.png image-brighter
 
 #Splitting the image into three i.e. red green and blue components
-rgb-split l1 l1-red-split l1-green-split l1-blue-split
+rgb-split original-image image-red-split image-green-split image-blue-split
 
 #Save the 3 split images
-save res/landscape-red-split.png l1-red-split
-save res/landscape-green-split.png l1-green-split
-save res/landscape-blue-split.png l1-blue-split
+save res/script-image-red-split.png image-red-split
+save res/script-image-green-split.png image-green-split
+save res/script-image-blue-split.png image-blue-split
 
 #Flip the image vertically
-vertical-flip l1 l1-vertical-flip
+vertical-flip original-image image-vertical-flip
 
 #Save the vertically flipped image
-save res/landscape-vertical-flip.png l1-vertical-flip
+save res/script-image-vertical-flip.png image-vertical-flip
 
 #Flip the image horizontally
-horizontal-flip l1 l1-horizontal-flip
+horizontal-flip original-image image-horizontal-flip
 
 #Save the vertically flipped image
-save res/landscape-horizontal-flip.png l1-horizontal-flip
+save res/script-image-horizontal-flip.png image-horizontal-flip
 
 #Convert the image into sepia
-sepia l1 l1-sepia
+sepia original-image image-sepia
 
 #Save the greyscale
-save res/landscape-sepia.png l1-sepia
+save res/script-image-sepia.png image-sepia
 
 #Convert the image into luma
-luma-component l1 l1-luma
+luma-component original-image image-luma
+
+#Apply blur filter on luma image
+blur image-luma image-luma-blur
 
 #Save the luma
-save res/landscape-luma.png l1-luma
+save res/script-image-luma.png image-luma
 
 #Convert the image into value
-value-component l1 l1-value
+value-component original-image image-value
 
 #Save the greyscale
-save res/landscape-value.png l1-value
+save res/script-image-value.png image-value
 
 #Convert the image into intensity
-intensity-component l1 l1-intensity
+intensity-component original-image image-intensity
 
 #Save the intensity
-save res/landscape-intensity.png l1-intensity
+save res/script-image-intensity.png image-intensity
+
+#Save as PPM file
+save res/script-ppm-intensity.ppm image-intensity
+
+#Save as JPG file
+save res/script-jpg-intensity.jpg image-intensity
+
+#Test extra whitespace
+luma-component original-image  image-luma
+
+#Test invalid filepath
+load images/j$unit-small.png l2
+
+#Test space in filepath
+load images/ image-small.png l3
+
+#Test misspelled command
+blurd original-image image-blur
+
+#Test brighten greater than 255
+brighten 260 original-image image-bright-gt255
+
+#Test wrong extension of image
+load res/original-image.pbb original-image
+
+#Test darken lesser than 0
+brighten -260 original-image image-darken-gt255
+
+#Test horizontal flip twice
+horizontal-flip image-horizontal-flip image-horizontal-horizontal-flip
+
+#Test vertical flip twice
+vertical-flip image-vertical-flip image-vertical-vertical-flip
+
+#Loading a PPM image
+load res/ppm-original.ppm original-image-ppm
+
+#Blurring the PPM image
+blur original-image-ppm image-blur-ppm
+
+#Saving the blur PPM component
+save res/script-ppm-blur-image.ppm image-blur-ppm
+
+#Loading a JPG image
+load res/jpg-original.jpg original-image-jpg
+
+#Getting the red component of JPG image
+red-component original-image-jpg image-red-component-jpg
+
+#Saving the red component
+save res/script-jpg-red-component.jpg image-red-component-jpg

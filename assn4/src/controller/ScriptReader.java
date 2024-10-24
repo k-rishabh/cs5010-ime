@@ -17,7 +17,7 @@ public class ScriptReader {
    *
    * @param scriptFilePath the absolute file path of the script file
    */
-  public static void go(String scriptFilePath) {
+  public static void build(String scriptFilePath) {
     Scanner sc;
 
     try {

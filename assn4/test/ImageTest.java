@@ -10,10 +10,8 @@ import static org.junit.Assert.assertEquals;
  * This class contains JUnit tests for the Model.
  * The tests verify the correctness of image transformations such as blurring,
  * color component extraction, flipping, and brightening.
- * <p>
  * The images are loaded  in the setup phase and used
  * for testing transformation methods to ensure expected results.
- * <p>
  * Each test case asserts that the transformed image matches the expected output
  * by comparing pixel values.
  */
@@ -61,10 +59,14 @@ public class ImageTest {
     images.loadImage("res/image-brighten-gt255.png", "brighten-image-gt255");
     images.loadImage("res/image-darken.png", "darken-image");
     images.loadImage("res/image-darken-gt255.png", "darken-image-gt255");
-    images.loadImage("res/image-horizontal-vertical-flip.png", "horizontal-vertical-flip-image");
-    images.loadImage("res/image-vertical-horizontal-flip.png", "vertical-horizontal-flip-image");
-    images.loadImage("res/image-vertical-vertical-flip.png", "vertical-vertical-flip-image");
-    images.loadImage("res/image-horizontal-horizontal-flip.png", "horizontal-horizontal-flip-image");
+    images.loadImage("res/image-horizontal-vertical-flip.png",
+            "horizontal-vertical-flip-image");
+    images.loadImage("res/image-vertical-horizontal-flip.png",
+            "vertical-horizontal-flip-image");
+    images.loadImage("res/image-vertical-vertical-flip.png",
+            "vertical-vertical-flip-image");
+    images.loadImage("res/image-horizontal-horizontal-flip.png",
+            "horizontal-horizontal-flip-image");
     images.loadImage("res/image-blur-twice.png", "blur-twice");
     images.loadImage("res/image-sharpen-twice.png", "sharpen-twice");
     images.loadImage("res/image-red-component-blur.png", "red-component-blur");
@@ -174,7 +176,8 @@ public class ImageTest {
     Image expectedImageRed = images.getImage("red-split-image");
     Image expectedImageGreen = images.getImage("green-split-image");
     Image expectedImageBlue = images.getImage("blue-split-image");
-    images.rgbSplit("original-image", "test-red-rgb-split", "test-green-rgb-split", "test-blue-rgb-split");
+    images.rgbSplit("original-image", "test-red-rgb-split",
+            "test-green-rgb-split", "test-blue-rgb-split");
     Image actualImageRed = images.getImage("test-red-rgb-split");
     Image actualImageGreen = images.getImage("test-green-rgb-split");
     Image actualImageBlue = images.getImage("test-blue-rgb-split");
@@ -211,7 +214,8 @@ public class ImageTest {
   public void testHorizontalVerticalFlipImage() {
     Image expectedImage = images.getImage("horizontal-vertical-flip-image");
     images.horizontalFlip("original-image", "test-horizontal-flip-image");
-    images.verticalFlip("test-horizontal-flip-image", "test-horizontal-vertical-flip-image");
+    images.verticalFlip("test-horizontal-flip-image",
+            "test-horizontal-vertical-flip-image");
     Image actualImage = images.getImage("test-horizontal-vertical-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
@@ -220,7 +224,8 @@ public class ImageTest {
   public void testVerticalHorizontalFlipImage() {
     Image expectedImage = images.getImage("vertical-horizontal-flip-image");
     images.verticalFlip("original-image", "test-vertical-flip-image");
-    images.horizontalFlip("test-vertical-flip-image", "test-vertical-horizontal-flip-image");
+    images.horizontalFlip("test-vertical-flip-image",
+            "test-vertical-horizontal-flip-image");
     Image actualImage = images.getImage("test-vertical-horizontal-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
@@ -229,7 +234,8 @@ public class ImageTest {
   public void testVerticalVerticalFlipImage() {
     Image expectedImage = images.getImage("vertical-vertical-flip-image");
     images.verticalFlip("original-image", "test-vertical-flip-image");
-    images.verticalFlip("test-vertical-flip-image", "test-vertical-vertical-flip-image");
+    images.verticalFlip("test-vertical-flip-image",
+            "test-vertical-vertical-flip-image");
     Image actualImage = images.getImage("test-vertical-vertical-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
@@ -238,7 +244,8 @@ public class ImageTest {
   public void testHorizontalHorizontalFlipImage() {
     Image expectedImage = images.getImage("horizontal-horizontal-flip-image");
     images.horizontalFlip("original-image", "test-horizontal-flip-image");
-    images.horizontalFlip("test-horizontal-flip-image", "test-horizontal-horizontal-flip-image");
+    images.horizontalFlip("test-horizontal-flip-image",
+            "test-horizontal-horizontal-flip-image");
     Image actualImage = images.getImage("test-horizontal-horizontal-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }

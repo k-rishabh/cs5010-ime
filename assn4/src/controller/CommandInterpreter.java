@@ -202,7 +202,7 @@ public class CommandInterpreter {
 
       case "run":
         if (words.length == 2) {
-          ScriptReader.go(words[1]);
+          ScriptReader.build(words[1]);
         } else {
           System.out.printf("Invalid run command on line %d!\n", lineNo);
         }
