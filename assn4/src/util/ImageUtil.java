@@ -33,7 +33,7 @@ public class ImageUtil {
     try {
       img = read(new File(filePath));
     } catch (IOException e) {
-      System.out.println("Provided file path is not a valid image!");
+      System.out.println("Exception: Provided file path is not a valid image!");
       return null;
     }
 
@@ -62,7 +62,7 @@ public class ImageUtil {
     try {
       sc = new Scanner(new FileInputStream(filename));
     } catch (FileNotFoundException e) {
-      System.out.println("File " + filename + " not found!");
+      System.out.println("Exception: File " + filename + " not found!");
       return null;
     }
 
@@ -80,7 +80,7 @@ public class ImageUtil {
     token = sc.next();
 
     if (!token.equals("P3")) {
-      System.out.println("Invalid PPM file: plain RAW file should begin with P3");
+      System.out.println("Error: Invalid PPM file: plain RAW file should begin with P3");
     }
 
     int width = sc.nextInt();
@@ -121,7 +121,7 @@ public class ImageUtil {
     try {
       write(buffImg, filePath.substring(filePath.lastIndexOf('.') + 1), new File(filePath));
     } catch (IOException e) {
-      System.out.println("Failed to save raster image!");
+      System.out.println("Exception: Failed to save raster image!");
     }
   }
 
@@ -136,7 +136,7 @@ public class ImageUtil {
     try {
       writer = new FileWriter(filePath);
     } catch (IOException e) {
-      System.out.println("File " + filePath + " not found!");
+      System.out.println("Exception: File " + filePath + " not found!");
       return;
     }
 
@@ -145,7 +145,7 @@ public class ImageUtil {
       writer.write(img.getWidth() + " " + img.getHeight() + "\n");
       writer.write("255\n"); // Max color value
     } catch (IOException e) {
-      System.out.println("Failed to save raw image!");
+      System.out.println("Exception: Failed to save raw image!");
     }
 
     int width = img.getWidth();
@@ -161,14 +161,14 @@ public class ImageUtil {
         try {
           writer.write(red + " " + green + " " + pixel + "\n");
         } catch (IOException e) {
-          System.out.println("Failed to save raw image!");
+          System.out.println("Exception: Failed to save raw image!");
         }
       }
     }
     try {
       writer.close();
     } catch (IOException e) {
-      System.out.println("Failed to save raw image!");
+      System.out.println("Exception: Failed to save close file writer!");
     }
   }
 }

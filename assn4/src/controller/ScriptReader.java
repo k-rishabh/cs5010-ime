@@ -23,7 +23,7 @@ public class ScriptReader {
     try {
       sc = new Scanner(new FileInputStream(scriptFilePath));
     } catch (FileNotFoundException e) {
-      System.out.println("Script file not found: " + scriptFilePath);
+      System.out.println("Exception: Script file not found: " + scriptFilePath);
       return;
     }
 

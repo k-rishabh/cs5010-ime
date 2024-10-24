@@ -34,6 +34,8 @@ public class ImageHandler {
       images.put(imageName, ImageUtil.loadImageRaster(filePath));
     } else if (extension.equalsIgnoreCase(".ppm")) {
       images.put(imageName, ImageUtil.loadImageRaw(filePath));
+    } else {
+      System.out.printf("Error: Did not recognize file extension: %s!\n", extension);
     }
   }
 
@@ -57,6 +59,8 @@ public class ImageHandler {
       ImageUtil.saveImageRaster(filePath, img);
     } else if (extension.equalsIgnoreCase(".ppm")) {
       ImageUtil.saveImageRaw(filePath, img);
+    } else {
+      System.out.printf("Error: Did not recognize file extension: %s!\n", extension);
     }
   }
 
