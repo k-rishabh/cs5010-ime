@@ -146,4 +146,10 @@ public class ImageHandler {
     return ImageTransformer.apply(srcName, destName, img -> img.sepia());
   }
 
+  public Image getImage(String s) {
+    if(!images.containsKey(s)) {
+        System.out.println("Image " + s + " not found!");
+    }
+    return images.get(s);
+  }
 }

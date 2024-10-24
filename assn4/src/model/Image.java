@@ -6,6 +6,14 @@ import model.filter.SharpenFilter;
 
 import model.pixel.PixelADT;
 
+/**
+ * This abstract class implements ImageADT and represents an image, which is
+ * composed of a 2D array of pixels.
+ * It provides methods for various image processing operations such as color transformations,
+ * flipping, and applying filters. This class serves as a base for more specific image types
+ * and requires the implementation of certain methods such as split, combine,
+ * and deepCopy.
+ */
 public abstract class Image implements ImageADT {
   protected PixelADT[][] pixels;
 
@@ -116,5 +124,10 @@ public abstract class Image implements ImageADT {
   @Override
   abstract public Image[] split();
 
+  /**
+   * Applies a given filter to the image.
+   *
+   * @param filter the filter to be applied to the image.
+   */
   abstract protected void applyFilter(Filter filter);
 }

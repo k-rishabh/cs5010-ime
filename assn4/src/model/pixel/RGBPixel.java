@@ -1,7 +1,10 @@
 package model.pixel;
 
 /**
- * Class that represents an RGB pixel in a 2-D image.
+ * Class that represents an RGB pixel.
+ * This class stores the red, green, and blue components of the pixel
+ * and provides methods for operations such as brightening, applying filters,
+ * and generating grayscale representations (value, intensity, luma).
  */
 public class RGBPixel implements PixelADT {
   private int red;
@@ -10,6 +13,7 @@ public class RGBPixel implements PixelADT {
 
   /**
    * Constructor function to initialize the red, green, and blue values of the pixel.
+   * The values are clamped between 0 and 255 to ensure valid RGB ranges.
    *
    * @param red   the red component
    * @param green the green component
@@ -23,10 +27,20 @@ public class RGBPixel implements PixelADT {
     this.clampValues();
   }
 
+  /**
+   * Constructor to initialize an RGBPixel using a packed RGB integer value.
+   * The integer contains red, green, and blue values packed into different bits.
+   *
+   * @param packedRGB an integer where the first 8 bits represent blue, the next 8 bits
+   *                  represent green, and the next 8 bits represent red.
+   */
   public RGBPixel(int packedRGB) {
     this((packedRGB >> 16) & 0xFF,(packedRGB >> 8) & 0xFF,packedRGB & 0xFF);
   }
 
+  /**
+   * Ensures that the RGB values remain within the valid range (0-255).
+   */
   private void clampValues() {
     this.red = Math.max(0, Math.min(255, this.red));
     this.green = Math.max(0, Math.min(255, this.green));

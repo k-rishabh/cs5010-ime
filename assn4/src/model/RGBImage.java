@@ -5,15 +5,28 @@ import model.pixel.PixelADT;
 import model.pixel.RGBPixel;
 
 /**
- * Abstract class that represents an image in red, blue, and green pixels.
- * Contains implementation for
+ * Class representing an RGB image, extending the abstract Image class.
+ * This class provides the implementation for applying filters, splitting the image
+ * into color components, and creating deep copy of the image.
  */
 public class RGBImage extends Image {
 
+  /**
+   * Constructs an empty RGBImage with the given height and width.
+   *
+   * @param height the height of the image
+   * @param width  the width of the image
+   */
   public RGBImage(int height, int width) {
     this.pixels = new PixelADT[height][width];
   }
 
+  /**
+   * Constructs an RGBImage from a 2D array of packed integer RGB values.
+   * The packed values are unpacked into individual red, green, and blue components.
+   *
+   * @param packedPixels a 2D array of packed RGB values
+   */
   public RGBImage(int[][] packedPixels) {
     int height = packedPixels.length;
     int width = packedPixels[0].length;
@@ -56,6 +69,13 @@ public class RGBImage extends Image {
     return new Image[]{redTint, greenTint, blueTint};
   }
 
+  /**
+   * Applies the given Filter to the image. The filter matrix is applied
+   * to each pixel and the surrounding pixels, and the result is stored in a temporary
+   * array before being assigned back to the image.
+   *
+   * @param filter the filter to be applied to the image.
+   */
   protected void applyFilter(Filter filter) {
     double[][] matrix = filter.getFilter();
 
