@@ -1,8 +1,20 @@
 package controller;
 
+/**
+ * Functional class that is responsible for interpreting and executing each line of code.
+ * Also provides functionality to run another script file, or exit the program.
+ * Consists of a static ImageHandler which contains and performs operations on all images.
+ */
 public class CommandInterpreter {
   static ImageHandler images = new ImageHandler();
 
+  /**
+   * Static function that interprets and executes a line of code.
+   * If the command is invalid, it will throw an error along with the line number.
+   *
+   * @param command the command to be executed
+   * @param lineNo  the line number of the command in the provided script file
+   */
   public static void execute(String command, int lineNo) {
     command = command.toLowerCase();
 
@@ -190,10 +202,11 @@ public class CommandInterpreter {
 
       case "run":
         if (words.length == 2) {
-          ScriptRunner.go(words[1]);
+          ScriptReader.go(words[1]);
         } else {
           System.out.printf("Invalid run command on line %d!\n", lineNo);
         }
+        break;
 
       default:
         System.out.printf("Unknown command \"%s\" on line %d!\n", command, lineNo);

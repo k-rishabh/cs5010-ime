@@ -32,7 +32,7 @@ sharpen l1 l1-sharper
 save res/landscape-sharper.png l1-sharper
 
 #Brighten the image
-brighten 20 l1 l1-brighter
+brighten 50 l1 l1-brighter
 
 #Saving the brighter image
 save res/landscape-brighter.png l1-brighter

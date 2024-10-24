@@ -5,6 +5,7 @@ import model.filter.BlurFilter;
 import model.filter.SharpenFilter;
 
 import model.pixel.PixelADT;
+import util.PixelProcessor;
 
 /**
  * This abstract class implements ImageADT and represents an image, which is

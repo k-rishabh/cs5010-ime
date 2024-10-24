@@ -5,7 +5,18 @@ import java.util.Scanner;
 
 import java.io.FileNotFoundException;
 
-public class ScriptRunner {
+/**
+ * Functional class that is responsible for reading a script line by line.
+ * Passes each line to the CommandInterpreter.
+ */
+public class ScriptReader {
+  /**
+   * The main controller function that is responsible for reading the script file.
+   * Ignores empty lines.
+   * Passes each line to the CommandInterpreter.
+   *
+   * @param scriptFilePath the absolute file path of the script file
+   */
   public static void go(String scriptFilePath) {
     Scanner sc;
 

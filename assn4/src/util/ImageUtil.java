@@ -16,7 +16,17 @@ import model.RGBImage;
 import static javax.imageio.ImageIO.read;
 import static javax.imageio.ImageIO.write;
 
+/**
+ * Class that is responsible for loading and saving based on what type of image it is.
+ * Provides functionality for raster and raw type of images.
+ */
 public class ImageUtil {
+  /**
+   * Loads a raster type image from the given file path.
+   *
+   * @param filePath the file path of the raster image
+   * @return the image in the form of our internal representation
+   */
   public static Image loadImageRaster(String filePath) {
     BufferedImage img;
 
@@ -40,6 +50,12 @@ public class ImageUtil {
     return new RGBImage(pixels);
   }
 
+  /**
+   * Loads a raw type image from the given file path.
+   *
+   * @param filename the file path of the raw image
+   * @return the image in the form of our internal representation
+   */
   public static Image loadImageRaw(String filename) {
     Scanner sc;
 
@@ -86,6 +102,12 @@ public class ImageUtil {
     return new RGBImage(packedPixels);
   }
 
+  /**
+   * Saves an image in the provided file path, in the form of a Raster image.
+   *
+   * @param filePath the file path where the image must be saved
+   * @param img      the image to be saved, in the form of our internal representation
+   */
   public static void saveImageRaster(String filePath, Image img) {
     BufferedImage buffImg =
             new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -103,6 +125,12 @@ public class ImageUtil {
     }
   }
 
+  /**
+   * Saves an image in the provided file path, in the form of a Raw image.
+   *
+   * @param filePath the file path where the image must be saved
+   * @param img      the image to be saved, in the form of our internal representation
+   */
   public static void saveImageRaw(String filePath, Image img) {
     FileWriter writer;
     try {

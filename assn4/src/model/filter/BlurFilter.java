@@ -2,7 +2,7 @@ package model.filter;
 
 /**
  * A class extending Filter represents a blur filter for image processing.
- * This filter uses a 3x3 kernel to blur an image.
+ * This filter defaults to a 3x3 kernel to blur an image.
  */
 public class BlurFilter extends Filter {
   /**

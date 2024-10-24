@@ -35,7 +35,7 @@ public class RGBPixel implements PixelADT {
    *                  represent green, and the next 8 bits represent red.
    */
   public RGBPixel(int packedRGB) {
-    this((packedRGB >> 16) & 0xFF,(packedRGB >> 8) & 0xFF,packedRGB & 0xFF);
+    this((packedRGB >> 16) & 0xFF, (packedRGB >> 8) & 0xFF, packedRGB & 0xFF);
   }
 
   /**

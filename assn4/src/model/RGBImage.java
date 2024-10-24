@@ -3,16 +3,17 @@ package model;
 import model.filter.Filter;
 import model.pixel.PixelADT;
 import model.pixel.RGBPixel;
+import util.PixelProcessor;
 
 /**
- * Class representing an RGB image, extending the abstract Image class.
+ * Class representing an RGB image, extending the abstract class Image.
  * This class provides the implementation for applying filters, splitting the image
  * into color components, and creating deep copy of the image.
  */
 public class RGBImage extends Image {
 
   /**
-   * Constructs an empty RGBImage with the given height and width.
+   * Constructs an empty (black) RGBImage with the given height and width.
    *
    * @param height the height of the image
    * @param width  the width of the image

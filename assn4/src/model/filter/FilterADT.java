@@ -1,8 +1,8 @@
 package model.filter;
 
 /**
- * This interface represents the get and set operations for a filter that can be applied
- * to an image.
+ * This interface represents a filter that can be applied to an image.
+ * Interface specifies methods for getting and setting the filter.
  * A filter is represented as a matrix of double values.
  */
 public interface FilterADT {

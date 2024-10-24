@@ -2,7 +2,7 @@ package model;
 
 /**
  * This interface represents the operations that can be performed on an Image.
- * An image is composed of pixels, and various manipulations such as :
+ * An image is composed of pixels, and various manipulations such as:
  * <ol>
  * <li>Red Component</li>
  * <li>Green Component</li>
@@ -54,26 +54,38 @@ public interface ImageADT {
    */
   Image deepCopy();
 
+  /**
+   * Visualizes the red component of the image in the form of greyscale.
+   * Sets all color components to the red value.
+   */
   void redComponent();
 
+  /**
+   * Visualizes the green component of the image in the form of greyscale.
+   * Sets all color components to the green value.
+   */
   void greenComponent();
 
+  /**
+   * Visualizes the blue component of the image in the form of greyscale.
+   * Sets all color components to the blue value.
+   */
   void blueComponent();
 
   /**
-   * Converts the image to its value component.
+   * Converts the image to its value component in the form of greyscale.
    * The value component is the maximum of the red, green, and blue values for each pixel.
    */
   void valueComponent();
 
   /**
-   * Converts the image to its intensity component.
+   * Converts the image to its intensity component in the form of greyscale.
    * The intensity component is the average of the red, green, and blue values for each pixel.
    */
   void intensityComponent();
 
   /**
-   * Converts the image to its luma component.
+   * Converts the image to its luma component in the form of greyscale.
    * The luma component is a weighted sum of the red, green, and blue values using
    * the formula (0.2126 * Red + 0.7152 * Green + 0.0722 * Blue) for each pixel.
    */
@@ -96,7 +108,7 @@ public interface ImageADT {
    * If the constant is positive, then the image is brightened. If the constant
    * is negative, image is darkened.
    *
-   * @param val
+   * @param val the value to be brightened/darkened by
    */
   void brighten(int val);
 
@@ -109,9 +121,8 @@ public interface ImageADT {
   Image[] split();
 
   /**
-   * Combines the red, green, and blue channels of the image into a single image.
-   *
-   * @return the combined image
+   * Combines the color components of the calling class and parameter into one image.
+   * This is done by taking the max of each component from both images.
    */
   void combine(Image img);
 
