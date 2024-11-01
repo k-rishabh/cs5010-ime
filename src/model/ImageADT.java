@@ -1,7 +1,6 @@
 package model;
 
 /**
- * Test
  * This interface represents the operations that can be performed on an Image.
  * An image is composed of pixels, and various manipulations such as:
  * <ol>
