@@ -1,17 +1,23 @@
 package controller.command;
 
 import controller.ImageCommand;
+import controller.ImageHandler;
 import model.Image;
 
 public class Brighten implements ImageCommand {
   int val;
+  private final String source;
+  private final String result;
 
-  public Brighten(int val) {
+  public Brighten(int val,String source, String result) {
     this.val = val;
+    this.source = source;
+    this.result = result;
   }
 
+
   @Override
-  public int apply(Image img) {
-    return 0;
+  public void apply(ImageHandler img) {
+    img.brighten(this.val,source,result);
   }
 }

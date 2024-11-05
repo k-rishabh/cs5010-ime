@@ -1,25 +1,21 @@
 package controller.command;
 
 import controller.ImageCommand;
+import controller.ImageHandler;
 import model.Image;
 
 public class FlipHorizontal implements ImageCommand {
 
+  private final String source;
+  private final String result;
+
+  public FlipHorizontal(String source, String result) {
+    this.source = source;
+    this.result = result;
+  }
+
   @Override
-  public int apply(Image img) {
-    int h = img.getHeight();
-    int w = img.getWidth();
-
-    for (int i = 0; i < h; i++) {
-      for (int j = 0; j < w / 2; j++) {
-        int p1 = img.getPackedPixel(i, j);
-        int p2 = img.getPackedPixel(i, w - j);
-
-        img.setPixel(i, j, p2);
-        img.setPixel(i, w - j, p1);
-      }
-    }
-
-    return 0;
+  public void apply(ImageHandler img) {
+    img.horizontalFlip(source, result);
   }
 }

@@ -1,8 +1,10 @@
 package controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import model.Image;
+import util.Histogram;
 import util.ImageTransformer;
 import util.ImageUtil;
 
@@ -12,7 +14,7 @@ import util.ImageUtil;
  * Also performs transformations/operations on those images.
  */
 public class ImageHandler {
-  static protected HashMap<String, Image> images;
+  static protected Map<String, Image> images;
 
   /**
    * Default constructor function that initializes an empty list of images.
@@ -239,6 +241,52 @@ public class ImageHandler {
     }
   }
 
+  public int colorCorrectness(String srcName, String destName) {
+    if (images.get(srcName) == null) {
+      System.out.println("Image " + srcName + " not found!");
+    }
+    Image destImg = images.get(srcName).deepCopy();
+    destImg.colorCorrect();
+    images.put(destName, destImg);
+    if (images.get(destName) != null) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
+  public int levelAdjust(String srcName, String destName, int black, int mid, int white) {
+    if (images.get(srcName) == null) {
+      System.out.println("Image " + srcName + " not found!");
+    }
+    Image destImg = images.get(srcName).deepCopy();
+    destImg.levelsAdjust(black, mid, white);
+    images.put(destName, destImg);
+    if (images.get(destName) != null) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
+  public int histogram(String srcName, String destName) {
+    if (images.get(srcName) == null) {
+      System.out.println("Image " + srcName + " not found!");
+    }
+    Image destImg = images.get(srcName).deepCopy();
+    Histogram hist = new Histogram();
+    Image histImg = hist.createHistogram(destImg);
+    images.put(destName, histImg);
+    if (images.get(destName) != null) {
+      return 0;
+    } else {
+      return 1;
+    }
+
+  }
+
+
+
   /**
    * Function that applies the blur transformation on a given image.
    * Stores the result as a new image.
@@ -289,3 +337,4 @@ public class ImageHandler {
     return images.get(imgName);
   }
 }
+

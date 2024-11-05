@@ -131,4 +131,8 @@ public abstract class Image implements ImageADT {
    * @param filter the filter to be applied to the image.
    */
   abstract protected void applyFilter(Filter filter);
+
+  public abstract void colorCorrect();
+
+  public abstract void levelsAdjust(int black, int mid, int white);
 }

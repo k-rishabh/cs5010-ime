@@ -1,9 +1,12 @@
 package model;
 
+import java.util.function.Function;
+
 import model.filter.Filter;
 import model.pixel.PixelADT;
 import model.pixel.RGBPixel;
 import util.PixelProcessor;
+
 
 /**
  * Class representing an RGB image, extending the abstract class Image.
@@ -22,6 +25,9 @@ public class RGBImage extends Image {
     this.pixels = new PixelADT[height][width];
   }
 
+  public RGBImage(PixelADT[][] pixels){
+    this.pixels = pixels;
+  }
   /**
    * Constructs an RGBImage from a 2D array of packed integer RGB values.
    * The packed values are unpacked into individual red, green, and blue components.
@@ -107,8 +113,107 @@ public class RGBImage extends Image {
         temp[i][j] = new RGBPixel((int) redVal, (int) greenVal, (int) blueVal);
       }
     }
-
     this.pixels = temp;
   }
 
+
+  public int[][] getFrequencies(Image rgbImage) {
+    int[] reds = new int[256];
+    int[] greens = new int[256];
+    int[] blues = new int[256];
+
+    for (int i = 0; i < rgbImage.getHeight(); i++) {
+      for (int j = 0; j < rgbImage.getWidth(); j++) {
+        reds[(rgbImage.getPackedPixel(i, j) >> 16) & 0xFF]++;
+        greens[(rgbImage.getPackedPixel(i, j) >> 8) & 0xFF]++;
+        blues[(rgbImage.getPackedPixel(i, j)) & 0xFF]++;
+      }
+    }
+
+    return new int[][]{reds, greens, blues};
+  }
+
+  @Override
+  public void colorCorrect() {
+    int[][] frequencies = getFrequencies(this);
+    int[] red = frequencies[0];
+    int[] green = frequencies[1];
+    int[] blue = frequencies[2];
+
+    int redPeak = findChannelPeak(red);
+    int greenPeak = findChannelPeak(green);
+    int bluePeak = findChannelPeak(blue);
+
+    int avgPeak = (redPeak + greenPeak + bluePeak) / 3;
+    Function<PixelADT, Integer> colorCorrect = p -> {
+
+      int updatedR = Math.max(0, Math.min(255,((p.getPacked() >> 16) & 0xFF) + avgPeak - redPeak));
+      int updatedG = Math.max(0, Math.min(255,((p.getPacked() >> 8) & 0xFF) + avgPeak - greenPeak));
+      int updatedB = Math.max(0, Math.min(255,(p.getPacked() & 0xFF) + avgPeak - bluePeak));
+
+      return (updatedR<< 16) | (updatedG << 8) | (updatedB);
+    };
+
+    this.applyTransform(colorCorrect);
+  }
+
+  private int findChannelPeak(int[] histogram) {
+    int peakValue = 0;
+    int peakPosition = 0;
+    for (int i = 10; i <= 245; i++) {
+      if (histogram[i] > peakValue) {
+        peakValue = histogram[i];
+        peakPosition = i;
+      }
+    }
+
+    return peakPosition;
+  }
+
+  private void applyTransform(Function<PixelADT, Integer> transformFunction) {
+    int height = this.pixels.length;
+    int width = this.pixels[0].length;
+    int[][] result = new int[height][width];
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        result[i][j] = transformFunction.apply(this.pixels[i][j]);
+        RGBPixel pixel = new RGBPixel(result[i][j]);
+        this.pixels[i][j] = pixel;
+      }
+    }
+  }
+  @Override
+  public void levelsAdjust(int black, int mid, int white) {
+    Function<PixelADT, Integer> levelAdjust = p -> {
+      int updatedR = this.fittingProcess(black, mid, white, ((p.getPacked() >> 16) & 0xFF));
+      int updatedG = this.fittingProcess(black, mid, white, ((p.getPacked() >> 8) & 0xFF));
+      int updatedB = this.fittingProcess(black, mid, white, ((p.getPacked()) & 0xFF));
+
+      return (updatedR<< 16) | (updatedG << 8) | (updatedB);
+    };
+
+    this.applyTransform(levelAdjust);
+  }
+
+  private int fittingProcess(int black, int mid, int white, int signal) {
+    double valueA = Math.pow(black, 2) * (mid - white) - black * (Math.pow(mid, 2)
+            - Math.pow(white, 2)) + white * Math.pow(mid, 2) - mid * Math.pow(white, 2);
+
+    double valueAa = -black * (128 - 255) + 128 * white - 255 * mid;
+
+    double valueAb = Math.pow(black, 2) * (128 - 255) + 255 * Math.pow(mid, 2)
+            - 128 * Math.pow(white, 2);
+
+
+    double valueAc = Math.pow(black, 2) * (255 * mid - 128 * white)
+            - black * (255 * Math.pow(mid, 2) - 128 * Math.pow(white, 2));
+
+    double a = valueAa / valueA;
+
+    double b = valueAb / valueA;
+
+    double c = valueAc / valueA;
+    return Math.max(0, Math.min(255,(int) (a * Math.pow(signal, 2) + b * signal + c)));
+  }
 }
