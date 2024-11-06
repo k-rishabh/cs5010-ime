@@ -1,4 +1,4 @@
-package model.filter;
+package controller.filter;
 
 public class LumaFilter extends AbstractFilter {
   public LumaFilter() {

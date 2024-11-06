@@ -1,5 +1,7 @@
 package model;
 
+import controller.filter.Filter;
+
 /**
  * This interface represents the operations that can be performed on an Image.
  * An image is composed of pixels, and various manipulations such as:
@@ -54,23 +56,9 @@ public interface ImageV1 {
    */
   ImageV1 deepCopy();
 
-  /**
-   * Visualizes the red component of the image in the form of greyscale.
-   * Sets all color components to the red value.
-   */
-  void redComponent();
+  void applyColorFilter(Filter filter);
 
-  /**
-   * Visualizes the green component of the image in the form of greyscale.
-   * Sets all color components to the green value.
-   */
-  void greenComponent();
-
-  /**
-   * Visualizes the blue component of the image in the form of greyscale.
-   * Sets all color components to the blue value.
-   */
-  void blueComponent();
+  void applyImageFilter(Filter filter);
 
   /**
    * Converts the image to its value component in the form of greyscale.
@@ -78,18 +66,6 @@ public interface ImageV1 {
    */
   void valueComponent();
 
-  /**
-   * Converts the image to its intensity component in the form of greyscale.
-   * The intensity component is the average of the red, green, and blue values for each pixel.
-   */
-  void intensityComponent();
-
-  /**
-   * Converts the image to its luma component in the form of greyscale.
-   * The luma component is a weighted sum of the red, green, and blue values using
-   * the formula (0.2126 * Red + 0.7152 * Green + 0.0722 * Blue) for each pixel.
-   */
-  void lumaComponent();
 
   /**
    * Flips the image horizontally (flipping left to right pixel order).
@@ -125,23 +101,4 @@ public interface ImageV1 {
    * This is done by taking the max of each component from both images.
    */
   void combineComponents(ImageV1 img);
-
-  /**
-   * Applies a blur filter to the image.
-   * The blur filter manipulates the image by averaging nearby pixel values.
-   */
-  void blur();
-
-  /**
-   * Applies a sharpen filter to the image.
-   * The sharpen filter increases the contrast between neighboring pixels, thereby
-   * increasing the clarity of edges.
-   */
-  void sharpen();
-
-  /**
-   * Applies a sepia tone to the image.
-   * The sepia filter gives the image a warm brown tint, simulating an aged photograph.
-   */
-  void sepia();
 }

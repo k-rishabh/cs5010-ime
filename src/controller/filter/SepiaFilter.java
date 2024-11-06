@@ -1,4 +1,4 @@
-package model.filter;
+package controller.filter;
 
 public class SepiaFilter extends AbstractFilter {
   public SepiaFilter() {

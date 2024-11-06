@@ -1,6 +1,6 @@
 package model.pixel;
 
-import model.filter.Filter;
+import controller.filter.Filter;
 
 /**
  * Class that represents an RGB pixel.

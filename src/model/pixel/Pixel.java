@@ -1,6 +1,6 @@
 package model.pixel;
 
-import model.filter.Filter;
+import controller.filter.Filter;
 
 /**
  * This interface defines the operations that can be performed on a pixel.

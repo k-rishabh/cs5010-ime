@@ -1,4 +1,4 @@
-package model.filter;
+package controller.filter;
 
 /**
  * This interface represents a filter that can be applied to an image.

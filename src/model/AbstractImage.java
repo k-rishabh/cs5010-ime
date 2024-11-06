@@ -1,14 +1,14 @@
 package model;
 
-import model.filter.BlurFilter;
-import model.filter.CompBlueFilter;
-import model.filter.CompGreenFilter;
-import model.filter.CompRedFilter;
-import model.filter.Filter;
-import model.filter.IntensityFilter;
-import model.filter.LumaFilter;
-import model.filter.SepiaFilter;
-import model.filter.SharpenFilter;
+import controller.filter.BlurFilter;
+import controller.filter.CompBlueFilter;
+import controller.filter.CompGreenFilter;
+import controller.filter.CompRedFilter;
+import controller.filter.Filter;
+import controller.filter.IntensityFilter;
+import controller.filter.LumaFilter;
+import controller.filter.SepiaFilter;
+import controller.filter.SharpenFilter;
 
 import model.pixel.Pixel;
 import util.PixelProcessor;
@@ -40,18 +40,8 @@ public abstract class AbstractImage implements ImageV1 {
   }
 
   @Override
-  public void redComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new CompRedFilter()));
-  }
-
-  @Override
-  public void greenComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new CompGreenFilter()));
-  }
-
-  @Override
-  public void blueComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new CompBlueFilter()));
+  public void applyColorFilter(Filter filter) {
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(filter));
   }
 
   @Override
@@ -60,13 +50,8 @@ public abstract class AbstractImage implements ImageV1 {
   }
 
   @Override
-  public void intensityComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new IntensityFilter()));
-  }
-
-  @Override
-  public void lumaComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new LumaFilter()));
+  public void brighten(int val) {
+    PixelProcessor.apply(pixels, p -> p.brighten(val));
   }
 
   @Override
@@ -95,26 +80,6 @@ public abstract class AbstractImage implements ImageV1 {
   }
 
   @Override
-  public void brighten(int val) {
-    PixelProcessor.apply(pixels, p -> p.brighten(val));
-  }
-
-  @Override
-  public void blur() {
-    this.applyFilter(new BlurFilter());
-  }
-
-  @Override
-  public void sharpen() {
-    this.applyFilter(new SharpenFilter());
-  }
-
-  @Override
-  public void sepia() {
-    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new SepiaFilter()));
-  }
-
-  @Override
   abstract public ImageV1 deepCopy();
 
   @Override
@@ -128,6 +93,6 @@ public abstract class AbstractImage implements ImageV1 {
    *
    * @param filter the filter to be applied to the image.
    */
-  abstract protected void applyFilter(Filter filter);
+  abstract public void applyImageFilter(Filter filter);
 
 }

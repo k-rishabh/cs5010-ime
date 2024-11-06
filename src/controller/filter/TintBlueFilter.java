@@ -1,4 +1,4 @@
-package model.filter;
+package controller.filter;
 
 public class TintBlueFilter extends AbstractFilter {
   public TintBlueFilter() {

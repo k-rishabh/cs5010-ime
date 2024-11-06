@@ -1,4 +1,4 @@
-package model.filter;
+package controller.filter;
 
 /**
  * An abstract class that implements the FilterADT interface.

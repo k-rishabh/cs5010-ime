@@ -1,9 +1,9 @@
 package model;
 
-import model.filter.Filter;
-import model.filter.TintBlueFilter;
-import model.filter.TintGreenFilter;
-import model.filter.TintRedFilter;
+import controller.filter.Filter;
+import controller.filter.TintBlueFilter;
+import controller.filter.TintGreenFilter;
+import controller.filter.TintRedFilter;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 import util.PixelProcessor;

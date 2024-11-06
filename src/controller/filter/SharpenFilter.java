@@ -1,4 +1,4 @@
-package model.filter;
+package controller.filter;
 
 /**
  * A class extending Filter represents a sharpen filter for image processing.
