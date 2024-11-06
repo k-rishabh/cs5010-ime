@@ -172,7 +172,6 @@ public class RGBImageV2 extends RGBImageV1 implements ImageV2 {
     double valueAb = Math.pow(black, 2) * (128 - 255) + 255 * Math.pow(mid, 2)
             - 128 * Math.pow(white, 2);
 
-
     double valueAc = Math.pow(black, 2) * (255 * mid - 128 * white)
             - black * (255 * Math.pow(mid, 2) - 128 * Math.pow(white, 2));
 

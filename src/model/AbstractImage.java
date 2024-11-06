@@ -1,11 +1,15 @@
 package model;
 
 import model.filter.BlurFilter;
+import model.filter.CompBlueFilter;
+import model.filter.CompGreenFilter;
+import model.filter.CompRedFilter;
 import model.filter.Filter;
+import model.filter.IntensityFilter;
+import model.filter.LumaFilter;
 import model.filter.SepiaFilter;
 import model.filter.SharpenFilter;
 
-import model.pixel.Greyscale;
 import model.pixel.Pixel;
 import util.PixelProcessor;
 
@@ -37,32 +41,32 @@ public abstract class AbstractImage implements ImageV1 {
 
   @Override
   public void redComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.RED));
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new CompRedFilter()));
   }
 
   @Override
   public void greenComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.GREEN));
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new CompGreenFilter()));
   }
 
   @Override
   public void blueComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.BLUE));
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new CompBlueFilter()));
   }
 
   @Override
   public void valueComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.VALUE));
+    PixelProcessor.apply(pixels, p -> p.applyValueFilter());
   }
 
   @Override
   public void intensityComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.INTENSITY));
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new IntensityFilter()));
   }
 
   @Override
   public void lumaComponent() {
-    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.LUMA));
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new LumaFilter()));
   }
 
   @Override

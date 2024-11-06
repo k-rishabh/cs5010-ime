@@ -1,9 +1,9 @@
 package model;
 
 import model.filter.Filter;
-import model.filter.TintBlue;
-import model.filter.TintGreen;
-import model.filter.TintRed;
+import model.filter.TintBlueFilter;
+import model.filter.TintGreenFilter;
+import model.filter.TintRedFilter;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 import util.PixelProcessor;
@@ -70,9 +70,9 @@ public class RGBImageV1 extends AbstractImage {
     RGBImageV1 greenTint = this.deepCopy();
     RGBImageV1 blueTint = this.deepCopy();
 
-    PixelProcessor.apply(redTint.pixels, p -> p.applyColorFilter(new TintRed()));
-    PixelProcessor.apply(greenTint.pixels, p -> p.applyColorFilter(new TintGreen()));
-    PixelProcessor.apply(blueTint.pixels, p -> p.applyColorFilter(new TintBlue()));
+    PixelProcessor.apply(redTint.pixels, p -> p.applyColorFilter(new TintRedFilter()));
+    PixelProcessor.apply(greenTint.pixels, p -> p.applyColorFilter(new TintGreenFilter()));
+    PixelProcessor.apply(blueTint.pixels, p -> p.applyColorFilter(new TintBlueFilter()));
 
     return new ImageV1[]{redTint, greenTint, blueTint};
   }

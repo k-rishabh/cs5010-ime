@@ -45,7 +45,7 @@ public interface Pixel {
    *
    * @param type an enum representing the type of greyscale
    */
-  void applyGreyscale(Greyscale type);
+  void applyValueFilter();
 
   /**
    * Applies a filter on the color using 2D matrix multiplication.

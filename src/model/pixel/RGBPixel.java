@@ -84,32 +84,8 @@ public class RGBPixel implements Pixel {
   }
 
   @Override
-  public void applyGreyscale(Greyscale type) {
-    int grey;
-
-    switch (type) {
-      case RED:
-        grey = this.red;
-        break;
-      case GREEN:
-        grey = this.green;
-        break;
-      case BLUE:
-        grey = this.blue;
-        break;
-      case VALUE:
-        grey = Math.max(this.red, Math.max(this.green, this.blue));
-        break;
-      case INTENSITY:
-        grey = (this.red + this.green + this.blue) / 3;
-        break;
-      case LUMA:
-        grey = (int) ((0.2126 * this.red) + (0.7152 * this.green) + (0.0722 * this.blue));
-        break;
-      default:
-        throw new IllegalArgumentException("Unsupported greyscale enum: " + type);
-    }
-
+  public void applyValueFilter() {
+    int grey = Math.max(this.red, Math.max(this.green, this.blue));
     this.setPixel(grey, grey, grey);
   }
 
@@ -117,21 +93,19 @@ public class RGBPixel implements Pixel {
   public void applyColorFilter(Filter filter) {
     double[][] matrix = filter.getFilter();
 
-    if (matrix[0].length != 3) {
-      throw new IllegalArgumentException("The filter must have 3 columns!");
+    if (matrix.length != 3 || matrix[0].length != 3) {
+      throw new IllegalArgumentException("The filter must be 3x3 dimensions!");
     }
 
-    double r = 0;
-    double g = 0;
-    double b = 0;
+    double[] vals = new double[3];
 
-    for (double[] doubles : matrix) {
-      r += this.red * doubles[0];
-      g += this.green * doubles[1];
-      b += this.blue * doubles[2];
+    for(int i = 0; i < 3; i++) {
+      vals[i] += this.red * matrix[i][0];
+      vals[i] += this.green * matrix[i][1];
+      vals[i] += this.blue * matrix[i][2];
     }
 
-    this.setPixel((int) Math.round(r), (int) Math.round(g), (int) Math.round(b));
+    this.setPixel((int) Math.round(vals[0]), (int) Math.round(vals[1]), (int) Math.round(vals[2]));
   }
 
   @Override
