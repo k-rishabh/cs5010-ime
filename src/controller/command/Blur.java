@@ -2,7 +2,7 @@ package controller.command;
 
 import controller.ImageCommand;
 import controller.ImageHandler;
-import model.Image;
+import model.AbstractImage;
 
 public class Blur implements ImageCommand {
   private final String source;

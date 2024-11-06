@@ -2,7 +2,6 @@ package controller.command;
 
 import controller.ImageCommand;
 import controller.ImageHandler;
-import model.Image;
 
 public class ColorCorrect implements ImageCommand {
 

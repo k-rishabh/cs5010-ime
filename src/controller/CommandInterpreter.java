@@ -15,7 +15,6 @@ import controller.command.FlipVertical;
 import controller.command.Histogram;
 import controller.command.Sepia;
 import controller.command.Sharpen;
-import model.Image;
 
 import static java.lang.Integer.parseInt;
 
@@ -24,29 +23,28 @@ import static java.lang.Integer.parseInt;
  * Also provides functionality to run another script file, or exit the program.
  * Consists of a static ImageHandler which contains and performs operations on all images.
  */
-public class CommandInterpreter{
-  static ImageHandler images = new ImageHandler();
-
+public class CommandInterpreter {
+  Map<String, Function<Scanner, ImageCommand>> commands;
   protected Readable in;
   protected Appendable out;
+
   public CommandInterpreter(Readable in, Appendable out) {
     this.in = in;
     this.out = out;
+
+    this.commands = new HashMap<>();
   }
-
-
 
   public void apply(ImageHandler img) throws IOException {
     Scanner scan = new Scanner(this.in);
-    Map<String, Function<Scanner, ImageCommand>> knownCommands = new HashMap<>();
-    knownCommands.put("blur",s->new Blur(s.next(),s.next()));
-    knownCommands.put("brighten", s->new Brighten(s.nextInt(),s.next(),s.next()));
-    knownCommands.put("color-correct",s->new ColorCorrect(s.next(),s.next()));
-    knownCommands.put("sepia",s->new Sepia(s.next(),s.next()));
-    knownCommands.put("histogram",s->new Histogram(s.next(),s.next()));
-    knownCommands.put("sharpen",s->new Sharpen(s.next(),s.next()));
-    knownCommands.put("vertical-flip",s->new FlipVertical(s.next(),s.next()));
-    knownCommands.put("horizontal-flip",s->new FlipHorizontal(s.next(),s.next()));
+    commands.put("blur", s -> new Blur(s.next(), s.next()));
+    commands.put("brighten", s -> new Brighten(s.nextInt(), s.next(), s.next()));
+    commands.put("color-correct", s -> new ColorCorrect(s.next(), s.next()));
+    commands.put("sepia", s -> new Sepia(s.next(), s.next()));
+    commands.put("histogram", s -> new Histogram(s.next(), s.next()));
+    commands.put("sharpen", s -> new Sharpen(s.next(), s.next()));
+    commands.put("vertical-flip", s -> new FlipVertical(s.next(), s.next()));
+    commands.put("horizontal-flip", s -> new FlipHorizontal(s.next(), s.next()));
 
     while (scan.hasNext()) {
       try {
@@ -55,7 +53,7 @@ public class CommandInterpreter{
         if (in.equalsIgnoreCase("q") || in.equalsIgnoreCase("quit")) {
           return;
         }
-        Function<Scanner, ImageCommand> cmd = knownCommands.getOrDefault(in, null);
+        Function<Scanner, ImageCommand> cmd = commands.getOrDefault(in, null);
         if (cmd == null) {
           throw new IllegalArgumentException("Please provide a valid command.");
         } else {

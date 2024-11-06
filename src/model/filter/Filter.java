@@ -1,20 +1,22 @@
 package model.filter;
 
 /**
- * An abstract class that implements the FilterADT interface.
- * This class represents an image filter and provides functionality for setting
- * and retrieving the filter matrix. A filter is represented by a 2D matrix of double values.
+ * This interface represents a filter that can be applied to an image.
+ * Interface specifies methods for getting and setting the filter.
+ * A filter is represented as a matrix of double values.
  */
-public abstract class Filter implements FilterADT {
-  protected double[][] filter;
+public interface Filter {
+  /**
+   * Sets the filter matrix to a new set of values.
+   *
+   * @param newFilter the newFilter matrix to be applied, represented as a 2D array of doubles.
+   */
+  void setFilter(double[][] newFilter);
 
-  @Override
-  public void setFilter(double[][] newFilter) {
-    this.filter = newFilter;
-  }
-
-  @Override
-  public double[][] getFilter() {
-    return this.filter;
-  }
+  /**
+   * Retrieves the current filter matrix.
+   *
+   * @return a 2D array of doubles representing the filter matrix.
+   */
+  double[][] getFilter();
 }

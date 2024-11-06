@@ -3,7 +3,7 @@ package util;
 import java.util.function.Consumer;
 
 import controller.ImageHandler;
-import model.Image;
+import model.ImageV1;
 
 /**
  * Functional utility class that is responsible for applying a simple transformation to an Image.
@@ -18,13 +18,13 @@ public class ImageTransformer extends ImageHandler {
    * @param func     the function/transformation to be applied on the image
    * @return 0 if success, 1 if failure
    */
-  public static int apply(String srcName, String destName, Consumer<Image> func) {
+  public static int apply(String srcName, String destName, Consumer<ImageV1> func) {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
       return 1;
     }
 
-    Image destImg = images.get(srcName).deepCopy();
+    ImageV1 destImg = images.get(srcName).deepCopy();
     func.accept(destImg);
     images.put(destName, destImg);
 

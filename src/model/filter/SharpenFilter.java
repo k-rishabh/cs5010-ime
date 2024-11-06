@@ -4,7 +4,7 @@ package model.filter;
  * A class extending Filter represents a sharpen filter for image processing.
  * This filter uses defaults to a 5x5 kernel to sharpen the pixels of the image.
  */
-public class SharpenFilter extends Filter {
+public class SharpenFilter extends AbstractFilter {
   /**
    * Initializes a predefined 5x5 matrix.
    * The matrix represents a sharpen filter.

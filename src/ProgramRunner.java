@@ -1,3 +1,5 @@
+import java.io.File;
+
 import controller.ScriptReader;
 
 /**
@@ -12,10 +14,17 @@ public class ProgramRunner {
    * @param args takes in a single String which is the file path of the script file to be run.
    */
   public static void main(String[] args) {
-    if (args.length > 0) {
-      ScriptReader.build(args[0]);
+    // Initialize Controller
+    ScriptReader reader = new ScriptReader();
+
+    if (args.length == 0) {
+      System.out.println("No script file provided! Entering CLI mode...");
+      reader.build();
+    } else if (new File(args[0]).exists() && new File(args[0]).isFile()) {
+      reader.build(args[0]);
     } else {
-      System.out.println("No script file provided!");
+      System.out.println("Invalid script file path! Entering CLI mode...");
+      reader.build();
     }
   }
 

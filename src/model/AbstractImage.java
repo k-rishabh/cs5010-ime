@@ -1,10 +1,12 @@
 package model;
 
-import model.filter.Filter;
 import model.filter.BlurFilter;
+import model.filter.Filter;
+import model.filter.SepiaFilter;
 import model.filter.SharpenFilter;
 
-import model.pixel.PixelADT;
+import model.pixel.Greyscale;
+import model.pixel.Pixel;
 import util.PixelProcessor;
 
 /**
@@ -15,8 +17,8 @@ import util.PixelProcessor;
  * and requires the implementation of certain methods such as split, combine,
  * and deepCopy.
  */
-public abstract class Image implements ImageADT {
-  protected PixelADT[][] pixels;
+public abstract class AbstractImage implements ImageV1 {
+  protected Pixel[][] pixels;
 
   @Override
   public int getHeight() {
@@ -35,32 +37,32 @@ public abstract class Image implements ImageADT {
 
   @Override
   public void redComponent() {
-    PixelProcessor.apply(pixels, p -> p.showRed());
+    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.RED));
   }
 
   @Override
   public void greenComponent() {
-    PixelProcessor.apply(pixels, p -> p.showGreen());
+    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.GREEN));
   }
 
   @Override
   public void blueComponent() {
-    PixelProcessor.apply(pixels, p -> p.showBlue());
+    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.BLUE));
   }
 
   @Override
   public void valueComponent() {
-    PixelProcessor.apply(pixels, p -> p.showValue());
+    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.VALUE));
   }
 
   @Override
   public void intensityComponent() {
-    PixelProcessor.apply(pixels, p -> p.showIntensity());
+    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.INTENSITY));
   }
 
   @Override
   public void lumaComponent() {
-    PixelProcessor.apply(pixels, p -> p.showLuma());
+    PixelProcessor.apply(pixels, p -> p.applyGreyscale(Greyscale.LUMA));
   }
 
   @Override
@@ -70,7 +72,7 @@ public abstract class Image implements ImageADT {
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width / 2; j++) {
-        PixelADT temp = pixels[i][j];
+        Pixel temp = pixels[i][j];
         pixels[i][j] = pixels[i][width - 1 - j];
         pixels[i][width - 1 - j] = temp;
       }
@@ -82,7 +84,7 @@ public abstract class Image implements ImageADT {
     int height = pixels.length;
 
     for (int i = 0; i < height / 2; i++) {
-      PixelADT[] temp = pixels[i];
+      Pixel[] temp = pixels[i];
       pixels[i] = pixels[height - 1 - i];
       pixels[height - 1 - i] = temp;
     }
@@ -94,36 +96,28 @@ public abstract class Image implements ImageADT {
   }
 
   @Override
-  public void combine(Image img) {
-    for (int i = 0; i < this.pixels.length; i++) {
-      for (int j = 0; j < this.pixels[i].length; j++) {
-        this.pixels[i][j].addComponent(img.pixels[i][j]);
-      }
-    }
-  }
-
-  @Override
   public void blur() {
-    Filter filter = new BlurFilter();
-    this.applyFilter(filter);
+    this.applyFilter(new BlurFilter());
   }
 
   @Override
   public void sharpen() {
-    Filter filter = new SharpenFilter();
-    this.applyFilter(filter);
+    this.applyFilter(new SharpenFilter());
   }
 
   @Override
   public void sepia() {
-    PixelProcessor.apply(pixels, p -> p.applySepia());
+    PixelProcessor.apply(pixels, p -> p.applyColorFilter(new SepiaFilter()));
   }
 
   @Override
-  abstract public Image deepCopy();
+  abstract public ImageV1 deepCopy();
 
   @Override
-  abstract public Image[] split();
+  abstract public ImageV1[] splitComponents();
+
+  @Override
+  abstract public void combineComponents(ImageV1 img);
 
   /**
    * Applies a given filter to the image.
@@ -132,7 +126,4 @@ public abstract class Image implements ImageADT {
    */
   abstract protected void applyFilter(Filter filter);
 
-  public abstract void colorCorrect();
-
-  public abstract void levelsAdjust(int black, int mid, int white);
 }

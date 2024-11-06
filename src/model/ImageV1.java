@@ -20,7 +20,7 @@ package model;
  * <li>Sepia</li>
  * </ol>
  */
-public interface ImageADT {
+public interface ImageV1 {
   /**
    * Gets the height of the image, which is the number of rows of pixels.
    *
@@ -52,7 +52,7 @@ public interface ImageADT {
    *
    * @return a deep copy of the original image
    */
-  Image deepCopy();
+  ImageV1 deepCopy();
 
   /**
    * Visualizes the red component of the image in the form of greyscale.
@@ -118,13 +118,13 @@ public interface ImageADT {
    *
    * @return an array of three images, representing the red, green, and blue channels.
    */
-  Image[] split();
+  ImageV1[] splitComponents();
 
   /**
    * Combines the color components of the calling class and parameter into one image.
    * This is done by taking the max of each component from both images.
    */
-  void combine(Image img);
+  void combineComponents(ImageV1 img);
 
   /**
    * Applies a blur filter to the image.

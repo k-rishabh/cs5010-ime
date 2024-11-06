@@ -1,6 +1,6 @@
 package controller;
 
-import model.Image;
+import model.AbstractImage;
 
 /**
  * Interface that represents a command that the user can execute.
@@ -15,5 +15,5 @@ public interface ImageCommand {
    * @param img the image to be operated on
    * @return 0 if successful, 1 if failure
    */
-  int apply(Image img);
+  int apply(AbstractImage img);
 }

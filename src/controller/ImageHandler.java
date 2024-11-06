@@ -3,7 +3,8 @@ package controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import model.Image;
+import model.ImageV1;
+import model.ImageV2;
 import util.Histogram;
 import util.ImageTransformer;
 import util.ImageUtil;
@@ -14,7 +15,7 @@ import util.ImageUtil;
  * Also performs transformations/operations on those images.
  */
 public class ImageHandler {
-  static protected Map<String, Image> images;
+  static protected Map<String, ImageV1> images;
 
   /**
    * Default constructor function that initializes an empty list of images.
@@ -48,7 +49,7 @@ public class ImageHandler {
    * @param imageName the variable name of the image in the hashmap
    */
   public void saveImage(String filePath, String imageName) {
-    Image img = images.get(imageName);
+    ImageV1 img = images.get(imageName);
 
     if (img == null) {
       System.out.println("Image " + imageName + " not found!");
@@ -191,8 +192,8 @@ public class ImageHandler {
       return 1;
     }
 
-    Image destImg = images.get(srcName).deepCopy();
-    Image[] split = destImg.split();
+    ImageV1 destImg = images.get(srcName).deepCopy();
+    ImageV1[] split = destImg.splitComponents();
 
     images.put(redName, split[0]);
     images.put(greenName, split[1]);
@@ -229,9 +230,9 @@ public class ImageHandler {
       return 1;
     }
 
-    Image destImg = images.get(redName).deepCopy();
-    destImg.combine(images.get(greenName));
-    destImg.combine(images.get(blueName));
+    ImageV1 destImg = images.get(redName).deepCopy();
+    destImg.combineComponents(images.get(greenName));
+    destImg.combineComponents(images.get(blueName));
 
     images.put(destName, destImg);
     if (images.get(destName) != null) {
@@ -245,7 +246,8 @@ public class ImageHandler {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
     }
-    Image destImg = images.get(srcName).deepCopy();
+
+    ImageV1 destImg = images.get(srcName).deepCopy();
     destImg.colorCorrect();
     images.put(destName, destImg);
     if (images.get(destName) != null) {
@@ -259,7 +261,8 @@ public class ImageHandler {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
     }
-    Image destImg = images.get(srcName).deepCopy();
+
+    ImageV1 destImg = images.get(srcName).deepCopy();
     destImg.levelsAdjust(black, mid, white);
     images.put(destName, destImg);
     if (images.get(destName) != null) {
@@ -273,9 +276,9 @@ public class ImageHandler {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
     }
-    Image destImg = images.get(srcName).deepCopy();
+    ImageV2 destImg = images.get(srcName).deepCopy();
     Histogram hist = new Histogram();
-    Image histImg = hist.createHistogram(destImg);
+    ImageV2 histImg = hist.createHistogram(destImg);
     images.put(destName, histImg);
     if (images.get(destName) != null) {
       return 0;
@@ -329,7 +332,7 @@ public class ImageHandler {
    * @param imgName the variable name of the image in the hashmap
    * @return the Image with the given variable name
    */
-  public Image getImage(String imgName) {
+  public ImageV1 getImage(String imgName) {
     if (!images.containsKey(imgName)) {
       System.out.println("Image " + imgName + " not found!");
       return null;

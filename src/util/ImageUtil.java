@@ -10,8 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import model.Image;
-import model.RGBImage;
+import model.ImageV1;
+import model.RGBImageV1;
 
 import static javax.imageio.ImageIO.read;
 import static javax.imageio.ImageIO.write;
@@ -27,7 +27,7 @@ public class ImageUtil {
    * @param filePath the file path of the raster image
    * @return the image in the form of our internal representation
    */
-  public static Image loadImageRaster(String filePath) {
+  public static ImageV1 loadImageRaster(String filePath) {
     BufferedImage img;
 
     try {
@@ -47,7 +47,7 @@ public class ImageUtil {
       }
     }
 
-    return new RGBImage(pixels);
+    return new RGBImageV1(pixels);
   }
 
   /**
@@ -56,7 +56,7 @@ public class ImageUtil {
    * @param filename the file path of the raw image
    * @return the image in the form of our internal representation
    */
-  public static Image loadImageRaw(String filename) {
+  public static ImageV1 loadImageRaw(String filename) {
     Scanner sc;
 
     try {
@@ -99,7 +99,7 @@ public class ImageUtil {
       }
     }
 
-    return new RGBImage(packedPixels);
+    return new RGBImageV1(packedPixels);
   }
 
   /**
@@ -108,7 +108,7 @@ public class ImageUtil {
    * @param filePath the file path where the image must be saved
    * @param img      the image to be saved, in the form of our internal representation
    */
-  public static void saveImageRaster(String filePath, Image img) {
+  public static void saveImageRaster(String filePath, ImageV1 img) {
     BufferedImage buffImg =
             new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
@@ -131,7 +131,7 @@ public class ImageUtil {
    * @param filePath the file path where the image must be saved
    * @param img      the image to be saved, in the form of our internal representation
    */
-  public static void saveImageRaw(String filePath, Image img) {
+  public static void saveImageRaw(String filePath, ImageV1 img) {
     FileWriter writer;
     try {
       writer = new FileWriter(filePath);

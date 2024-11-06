@@ -1,12 +1,14 @@
 package model.pixel;
 
+import model.filter.Filter;
+
 /**
  * Class that represents an RGB pixel.
  * This class stores the red, green, and blue components of the pixel
  * and provides methods for operations such as brightening, applying filters,
  * and generating grayscale representations (value, intensity, luma).
  */
-public class RGBPixel implements PixelADT {
+public class RGBPixel implements Pixel {
   private int red;
   private int green;
   private int blue;
@@ -47,108 +49,108 @@ public class RGBPixel implements PixelADT {
     this.blue = Math.max(0, Math.min(255, this.blue));
   }
 
+  /**
+   * Simply updates the current pixel values with the given arguments.
+   *
+   * @param red the new red value
+   * @param green the new green value
+   * @param blue the new blue value
+   */
+  private void setPixel(int red, int green, int blue) {
+    this.red = red;
+    this.green = green;
+    this.blue = blue;
+    this.clampValues();
+  }
+
+  @Override
+  public int getRed() {
+    return this.red;
+  }
+
+  @Override
+  public int getGreen() {
+    return this.green;
+  }
+
+  @Override
+  public int getBlue() {
+    return this.blue;
+  }
+
   @Override
   public int getPacked() {
     return (this.red << 16) | (this.green << 8) | (this.blue);
   }
 
   @Override
-  public PixelADT deepCopy() {
-    return new RGBPixel(this.red, this.green, this.blue);
+  public void applyGreyscale(Greyscale type) {
+    int grey;
+
+    switch (type) {
+      case RED:
+        grey = this.red;
+        break;
+      case GREEN:
+        grey = this.green;
+        break;
+      case BLUE:
+        grey = this.blue;
+        break;
+      case VALUE:
+        grey = Math.max(this.red, Math.max(this.green, this.blue));
+        break;
+      case INTENSITY:
+        grey = (this.red + this.green + this.blue) / 3;
+        break;
+      case LUMA:
+        grey = (int) ((0.2126 * this.red) + (0.7152 * this.green) + (0.0722 * this.blue));
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported greyscale enum: " + type);
+    }
+
+    this.setPixel(grey, grey, grey);
   }
 
   @Override
-  public void showRed() {
-    this.green = this.red;
-    this.blue = this.red;
-  }
+  public void applyColorFilter(Filter filter) {
+    double[][] matrix = filter.getFilter();
 
-  @Override
-  public void showGreen() {
-    this.red = this.green;
-    this.blue = this.green;
-  }
+    if (matrix[0].length != 3) {
+      throw new IllegalArgumentException("The filter must have 3 columns!");
+    }
 
-  @Override
-  public void showBlue() {
-    this.red = this.blue;
-    this.green = this.blue;
-  }
+    double r = 0;
+    double g = 0;
+    double b = 0;
 
-  @Override
-  public void showValue() {
-    int max = Math.max(this.red, Math.max(this.green, this.blue));
-    this.red = max;
-    this.green = max;
-    this.blue = max;
-  }
+    for (double[] doubles : matrix) {
+      r += this.red * doubles[0];
+      g += this.green * doubles[1];
+      b += this.blue * doubles[2];
+    }
 
-  @Override
-  public void showIntensity() {
-    int avg = (this.red + this.green + this.blue) / 3;
-    this.red = avg;
-    this.green = avg;
-    this.blue = avg;
-  }
-
-  @Override
-  public void showLuma() {
-    int luma = (int) ((0.2126 * this.red) + (0.7152 * this.green) + (0.0722 * this.blue));
-    this.red = luma;
-    this.green = luma;
-    this.blue = luma;
+    this.setPixel((int) Math.round(r), (int) Math.round(g), (int) Math.round(b));
   }
 
   @Override
   public void brighten(int val) {
-    this.red += val;
-    this.green += val;
-    this.blue += val;
-
-    this.clampValues();
+    this.setPixel(this.red + val, this.green + val, this.blue + val);
   }
 
   @Override
-  public void applyRedTint() {
-    this.green = 0;
-    this.blue = 0;
-  }
+  public void maximizeComponents(Pixel pixel) {
+    int r = Math.max(this.red, pixel.getRed());
+    int g = Math.max(this.green, pixel.getGreen());
+    int b = Math.max(this.blue, pixel.getBlue());
 
-  @Override
-  public void applyGreenTint() {
-    this.red = 0;
-    this.blue = 0;
-  }
-
-  @Override
-  public void applyBlueTint() {
-    this.red = 0;
-    this.green = 0;
-  }
-
-  @Override
-  public void addComponent(PixelADT pixel) {
-    this.red = Math.max(this.red, (pixel.getPacked() >> 16) & 0xFF);
-    this.green = Math.max(this.green, (pixel.getPacked() >> 8) & 0xFF);
-    this.blue = Math.max(this.blue, pixel.getPacked() & 0xFF);
+    this.setPixel(r, g, b);
   }
 
   @Override
   public double[] applyFilter(double val) {
     return new double[]{this.red * val, this.green * val, this.blue * val};
-  }
-
-  @Override
-  public void applySepia() {
-    int tempRed = (int) ((this.red * 0.393) + (this.green * 0.769) + (this.blue * 0.189));
-    int tempGreen = (int) ((this.red * 0.349) + (this.green * 0.686) + (this.blue * 0.168));
-    int tempBlue = (int) ((this.red * 0.272) + (this.green * 0.534) + (this.blue * 0.131));
-
-    this.red = tempRed;
-    this.green = tempGreen;
-    this.blue = tempBlue;
-
-    this.clampValues();
   }
 
 }
