@@ -1,14 +1,6 @@
 package model;
 
-import controller.filter.BlurFilter;
-import controller.filter.CompBlueFilter;
-import controller.filter.CompGreenFilter;
-import controller.filter.CompRedFilter;
 import controller.filter.Filter;
-import controller.filter.IntensityFilter;
-import controller.filter.LumaFilter;
-import controller.filter.SepiaFilter;
-import controller.filter.SharpenFilter;
 
 import model.pixel.Pixel;
 import util.PixelProcessor;

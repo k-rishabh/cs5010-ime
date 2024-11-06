@@ -23,6 +23,7 @@ import controller.filter.Filter;
  * </ol>
  */
 public interface ImageV1 {
+
   /**
    * Gets the height of the image, which is the number of rows of pixels.
    *
@@ -66,17 +67,6 @@ public interface ImageV1 {
    */
   void valueComponent();
 
-
-  /**
-   * Flips the image horizontally (flipping left to right pixel order).
-   */
-  void horizontalFlip();
-
-  /**
-   * Flips the image vertically (flipping top to bottom pixel order).
-   */
-  void verticalFlip();
-
   /**
    * Brightens/Darkens the image by a given constant value.
    * Increases or decreases the brightness of each pixel by adding the value to
@@ -87,6 +77,17 @@ public interface ImageV1 {
    * @param val the value to be brightened/darkened by
    */
   void brighten(int val);
+
+
+  /**
+   * Flips the image horizontally (flipping left to right pixel order).
+   */
+  void horizontalFlip();
+
+  /**
+   * Flips the image vertically (flipping top to bottom pixel order).
+   */
+  void verticalFlip();
 
   /**
    * Splits the image into its red, green, and blue components.
@@ -101,4 +102,5 @@ public interface ImageV1 {
    * This is done by taking the max of each component from both images.
    */
   void combineComponents(ImageV1 img);
+
 }

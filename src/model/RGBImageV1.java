@@ -64,33 +64,6 @@ public class RGBImageV1 extends AbstractImage {
     return copyImage;
   }
 
-  @Override
-  public ImageV1[] splitComponents() {
-    RGBImageV1 redTint = this.deepCopy();
-    RGBImageV1 greenTint = this.deepCopy();
-    RGBImageV1 blueTint = this.deepCopy();
-
-    PixelProcessor.apply(redTint.pixels, p -> p.applyColorFilter(new TintRedFilter()));
-    PixelProcessor.apply(greenTint.pixels, p -> p.applyColorFilter(new TintGreenFilter()));
-    PixelProcessor.apply(blueTint.pixels, p -> p.applyColorFilter(new TintBlueFilter()));
-
-    return new ImageV1[]{redTint, greenTint, blueTint};
-  }
-
-  @Override
-  public void combineComponents(ImageV1 img) {
-    if (!(img instanceof RGBImageV1)) {
-      throw new IllegalArgumentException("Cannot combine images of two different color channels!");
-    }
-
-    RGBImageV1 rgb = (RGBImageV1) img;
-    for (int i = 0; i < this.pixels.length; i++) {
-      for (int j = 0; j < this.pixels[i].length; j++) {
-        this.pixels[i][j].maximizeComponents(rgb.pixels[i][j]);
-      }
-    }
-  }
-
   /**
    * Applies the given Filter to the image. The filter matrix is applied
    * to each pixel and the surrounding pixels, and the result is stored in a temporary
@@ -98,7 +71,7 @@ public class RGBImageV1 extends AbstractImage {
    *
    * @param filter the filter to be applied to the image.
    */
-  protected void applyFilter(Filter filter) {
+  public void applyImageFilter(Filter filter) {
     double[][] matrix = filter.getFilter();
 
     int height = pixels.length;
@@ -129,6 +102,33 @@ public class RGBImageV1 extends AbstractImage {
       }
     }
     this.pixels = temp;
+  }
+
+  @Override
+  public ImageV1[] splitComponents() {
+    RGBImageV1 redTint = this.deepCopy();
+    RGBImageV1 greenTint = this.deepCopy();
+    RGBImageV1 blueTint = this.deepCopy();
+
+    PixelProcessor.apply(redTint.pixels, p -> p.applyColorFilter(new TintRedFilter()));
+    PixelProcessor.apply(greenTint.pixels, p -> p.applyColorFilter(new TintGreenFilter()));
+    PixelProcessor.apply(blueTint.pixels, p -> p.applyColorFilter(new TintBlueFilter()));
+
+    return new ImageV1[]{redTint, greenTint, blueTint};
+  }
+
+  @Override
+  public void combineComponents(ImageV1 img) {
+    if (!(img instanceof RGBImageV1)) {
+      throw new IllegalArgumentException("Cannot combine images of two different color channels!");
+    }
+
+    RGBImageV1 rgb = (RGBImageV1) img;
+    for (int i = 0; i < this.pixels.length; i++) {
+      for (int j = 0; j < this.pixels[i].length; j++) {
+        this.pixels[i][j].maximizeComponents(rgb.pixels[i][j]);
+      }
+    }
   }
 
 }
