@@ -2,7 +2,11 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A utility class that provides functionality for performing a Haar transform on a
@@ -192,7 +196,7 @@ public class HaarTransform {
    * values before and after thresholding.
    *
    * @param initialMatrix the matrix to be compressed
-   * @param ratio the compression ratio, between 0 and 100
+   * @param ratio         the compression ratio, between 0 and 100
    * @return the compressed matrix
    */
   public static int[][] compressMatrix(int[][] initialMatrix, int ratio) {
@@ -204,26 +208,22 @@ public class HaarTransform {
     // haar 2d transform
     matrix = haar2D(matrix);
 
-    // count size of non zero values
-    int initZeros = 0;
+    // get all values
+    Set<Double> allValues = new HashSet<>();
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        if (matrix[i][j] == 0) {
-          initZeros++;
-        }
+        allValues.add(Math.abs(matrix[i][j]));
       }
     }
 
-    // calculate threshold
-    int nonZeros = h * w - initZeros;
-    int termsToZero = (int) Math.round(nonZeros * (ratio / 100.0));
+    // sort all values
+    List<Double> sortedValues = new ArrayList<>(allValues.size());
+    sortedValues.addAll(allValues);
+    Collections.sort(sortedValues);
 
-    double[] allValues = new double[h * w];
-    for (int i = 0; i < h; i++) {
-      System.arraycopy(matrix[i], 0, allValues, i * w, w);
-    }
-    Arrays.sort(allValues);
-    int threshold = (int) Math.round(allValues[initZeros + termsToZero - 1]);
+    // calculate threshold
+    int termsToZero = (int) Math.round(allValues.size() * ratio / 100.0);
+    int threshold = (int) Math.round(sortedValues.get(termsToZero));
 
     // thresholding
     for (int i = 0; i < matrix.length; i++) {

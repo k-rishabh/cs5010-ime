@@ -34,7 +34,7 @@ vertical-flip ex-image ex-image-actual-flip-vertical
 save res/ex-image-actual-flip-vertical.png ex-image-actual-flip-vertical
 
 # brighten
-brighten 20 ex-image ex-image-actual-brighten
+brighten 50 ex-image ex-image-actual-brighten
 save res/ex-image-actual-brighten.png ex-image-actual-brighten
 
 # blur
@@ -64,7 +64,7 @@ rgb-combine ex-image-actual-combine-rgb ex-image-red ex-image-green ex-image-blu
 save res/ex-image-actual-combine-rgb.png ex-image-actual-combine-rgb
 
 # compression
-compress 80 ex-image ex-image-actual-compressed
+compress 90 ex-image ex-image-actual-compressed
 save res/ex-image-actual-compressed.jpg ex-image-actual-compressed
 
 # histogram

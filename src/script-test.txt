@@ -34,7 +34,7 @@ vertical-flip test-image test-image-actual-flip-vertical
 save res/test-image-actual-flip-vertical.png test-image-actual-flip-vertical
 
 # brighten
-brighten 20 test-image test-image-actual-brighten
+brighten 50 test-image test-image-actual-brighten
 save res/test-image-actual-brighten.png test-image-actual-brighten
 
 # blur
@@ -84,4 +84,4 @@ blur test-image test-image-actual-blur-split split 60
 save res/test-image-actual-blur-split.png test-image-actual-blur-split
 
 # run
-# run src/script-example.txt
+run src/script-example.txt
