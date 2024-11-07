@@ -1,0 +1,87 @@
+# loading a PNG image
+load res/test-image.png test-image
+
+# red component
+red-component test-image test-image-actual-component-red
+save res/test-image-actual-component-red.png test-image-actual-component-red
+
+# green component
+green-component test-image test-image-actual-component-green
+save res/test-image-actual-component-green.png test-image-actual-component-green
+
+# blue component
+blue-component test-image test-image-actual-component-blue
+save res/test-image-actual-component-blue.png test-image-actual-component-blue
+
+# value component
+value-component test-image test-image-actual-component-value
+save res/test-image-actual-component-value.png test-image-actual-component-value
+
+# luma component
+luma-component test-image test-image-actual-component-luma
+save res/test-image-actual-component-luma.png test-image-actual-component-luma
+
+# intensity component
+intensity-component test-image test-image-actual-component-intensity
+save res/test-image-actual-component-intensity.png test-image-actual-component-intensity
+
+# horizontal flip
+horizontal-flip test-image test-image-actual-flip-horizontal
+save res/test-image-actual-flip-horizontal.png test-image-actual-flip-horizontal
+
+# vertical flip
+vertical-flip test-image test-image-actual-flip-vertical
+save res/test-image-actual-flip-vertical.png test-image-actual-flip-vertical
+
+# brighten
+brighten 20 test-image test-image-actual-brighten
+save res/test-image-actual-brighten.png test-image-actual-brighten
+
+# blur
+blur test-image test-image-actual-blur
+save res/test-image-actual-blur.png test-image-actual-blur
+
+# sharpen
+sharpen test-image test-image-actual-sharpen
+save res/test-image-actual-sharpen.png test-image-actual-sharpen
+
+# sepia
+sepia test-image test-image-actual-sepia
+save res/test-image-actual-sepia.png test-image-actual-sepia
+
+# rgb split
+rgb-split test-image test-image-actual-red test-image-actual-green test-image-actual-blue
+save res/test-image-actual-red.png test-image-actual-red
+save res/test-image-actual-green.png test-image-actual-green
+save res/test-image-actual-blue.png test-image-actual-blue
+
+# rgb combine
+load res/test-image-actual-red.png test-image-red
+load res/test-image-actual-green.png test-image-green
+load res/test-image-actual-blue.png test-image-blue
+
+rgb-combine test-image-actual-combine-rgb test-image-red test-image-green test-image-blue
+save res/test-image-actual-combine-rgb.png test-image-actual-combine-rgb
+
+# compression
+compress 50 test-image test-image-actual-compressed
+save res/test-image-actual-compressed.png test-image-actual-compressed
+
+# histogram
+histogram test-image test-image-actual-histogram
+save res/test-image-actual-histogram.png test-image-actual-histogram
+
+# color correct
+color-correct test-image test-image-actual-color-correct
+save res/test-image-actual-color-correct.png test-image-actual-color-correct
+
+# levels adjust
+levels-adjust 100 150 200 test-image test-image-actual-levels-adjust
+save res/test-image-actual-levels-adjust.png test-image-actual-levels-adjust
+
+# split view
+blur test-image test-image-actual-blur-split split 60
+save res/test-image-actual-blur-split.png test-image-actual-blur-split
+
+# run
+run src/script-example.txt

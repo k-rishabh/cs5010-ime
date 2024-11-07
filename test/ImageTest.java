@@ -2,7 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import controller.ImageHandler;
-import model.AbstractImage;
+import model.ImageV1;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,7 +24,7 @@ public class ImageTest {
    * @param expected the expected Image object.
    * @param actual   the actual Image object to compare with.
    */
-  private void assertImageEquals(AbstractImage expected, AbstractImage actual) {
+  private void assertImageEquals(ImageV1 expected, ImageV1 actual) {
     for (int y = 0; y < expected.getHeight(); y++) {
       for (int x = 0; x < expected.getWidth(); x++) {
         int expectedPixel = expected.getPackedPixel(y, x);
@@ -77,110 +77,110 @@ public class ImageTest {
   @Test
   public void testLoadImage() {
     images.loadImage("res/original-image.png", "test-image");
-    AbstractImage actualImage = images.getImage("test-image");
-    AbstractImage expectedImage = images.getImage("original-image");
+    ImageV1 actualImage = images.getImage("test-image");
+    ImageV1 expectedImage = images.getImage("original-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testBlurImage() {
-    AbstractImage expectedImage = images.getImage("blur-image");
+    ImageV1 expectedImage = images.getImage("blur-image");
     images.blur("original-image", "test-blur-image");
 
-    AbstractImage actualImage = images.getImage("test-blur-image");
+    ImageV1 actualImage = images.getImage("test-blur-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testBlueComponentImage() {
-    AbstractImage expectedImage = images.getImage("blue-component-image");
+    ImageV1 expectedImage = images.getImage("blue-component-image");
     images.blueComponent("original-image", "test-blue-component-image");
-    AbstractImage actualImage = images.getImage("test-blue-component-image");
+    ImageV1 actualImage = images.getImage("test-blue-component-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testGreenComponentImage() {
-    AbstractImage expectedImage = images.getImage("green-component-image");
+    ImageV1 expectedImage = images.getImage("green-component-image");
     images.greenComponent("original-image", "test-green-component-image");
-    AbstractImage actualImage = images.getImage("test-green-component-image");
+    ImageV1 actualImage = images.getImage("test-green-component-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testHorizontalFlipImage() {
-    AbstractImage expectedImage = images.getImage("horizontal-flip-image");
+    ImageV1 expectedImage = images.getImage("horizontal-flip-image");
     images.horizontalFlip("original-image", "test-horizontal-flip-image");
-    AbstractImage actualImage = images.getImage("test-horizontal-flip-image");
+    ImageV1 actualImage = images.getImage("test-horizontal-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testIntensityImage() {
-    AbstractImage expectedImage = images.getImage("intensity-image");
+    ImageV1 expectedImage = images.getImage("intensity-image");
     images.intensityComponent("original-image", "test-intensity-image");
-    AbstractImage actualImage = images.getImage("test-intensity-image");
+    ImageV1 actualImage = images.getImage("test-intensity-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testLumaImage() {
-    AbstractImage expectedImage = images.getImage("luma-image");
+    ImageV1 expectedImage = images.getImage("luma-image");
     images.lumaComponent("original-image", "test-luma-image");
-    AbstractImage actualImage = images.getImage("test-luma-image");
+    ImageV1 actualImage = images.getImage("test-luma-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testRedComponentImage() {
-    AbstractImage expectedImage = images.getImage("red-component-image");
+    ImageV1 expectedImage = images.getImage("red-component-image");
     images.redComponent("original-image", "test-red-component-image");
-    AbstractImage actualImage = images.getImage("test-red-component-image");
+    ImageV1 actualImage = images.getImage("test-red-component-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testSepiaImage() {
-    AbstractImage expectedImage = images.getImage("sepia-image");
+    ImageV1 expectedImage = images.getImage("sepia-image");
     images.sepia("original-image", "test-sepia-image");
-    AbstractImage actualImage = images.getImage("test-sepia-image");
+    ImageV1 actualImage = images.getImage("test-sepia-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testSharpenImage() {
-    AbstractImage expectedImage = images.getImage("sharpen-image");
+    ImageV1 expectedImage = images.getImage("sharpen-image");
     images.sharpen("original-image", "test-sharpen-image");
-    AbstractImage actualImage = images.getImage("test-sharpen-image");
+    ImageV1 actualImage = images.getImage("test-sharpen-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testValueImage() {
-    AbstractImage expectedImage = images.getImage("value-image");
+    ImageV1 expectedImage = images.getImage("value-image");
     images.valueComponent("original-image", "test-value-image");
-    AbstractImage actualImage = images.getImage("test-value-image");
+    ImageV1 actualImage = images.getImage("test-value-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testVerticalFlipImage() {
-    AbstractImage expectedImage = images.getImage("vertical-flip-image");
+    ImageV1 expectedImage = images.getImage("vertical-flip-image");
     images.verticalFlip("original-image", "test-vertical-flip-image");
-    AbstractImage actualImage = images.getImage("test-vertical-flip-image");
+    ImageV1 actualImage = images.getImage("test-vertical-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testRGBSplit() {
-    AbstractImage expectedImageRed = images.getImage("red-split-image");
-    AbstractImage expectedImageGreen = images.getImage("green-split-image");
-    AbstractImage expectedImageBlue = images.getImage("blue-split-image");
+    ImageV1 expectedImageRed = images.getImage("red-split-image");
+    ImageV1 expectedImageGreen = images.getImage("green-split-image");
+    ImageV1 expectedImageBlue = images.getImage("blue-split-image");
     images.rgbSplit("original-image", "test-red-rgb-split",
             "test-green-rgb-split", "test-blue-rgb-split");
-    AbstractImage actualImageRed = images.getImage("test-red-rgb-split");
-    AbstractImage actualImageGreen = images.getImage("test-green-rgb-split");
-    AbstractImage actualImageBlue = images.getImage("test-blue-rgb-split");
+    ImageV1 actualImageRed = images.getImage("test-red-rgb-split");
+    ImageV1 actualImageGreen = images.getImage("test-green-rgb-split");
+    ImageV1 actualImageBlue = images.getImage("test-blue-rgb-split");
     assertImageEquals(expectedImageRed, actualImageRed);
     assertImageEquals(expectedImageGreen, actualImageGreen);
     assertImageEquals(expectedImageBlue, actualImageBlue);
@@ -188,100 +188,100 @@ public class ImageTest {
 
   @Test
   public void testBrightenValueGreaterThan255() {
-    AbstractImage expectedImage = images.getImage("brighten-image-gt255");
+    ImageV1 expectedImage = images.getImage("brighten-image-gt255");
     images.brighten(260, "original-image", "test-brighten-image-gt255");
-    AbstractImage actualImage = images.getImage("test-brighten-image-gt255");
+    ImageV1 actualImage = images.getImage("test-brighten-image-gt255");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testDarkenImage() {
-    AbstractImage expectedImage = images.getImage("darken-image");
+    ImageV1 expectedImage = images.getImage("darken-image");
     images.brighten(-50, "original-image", "test-darken-image");
-    AbstractImage actualImage = images.getImage("test-darken-image");
+    ImageV1 actualImage = images.getImage("test-darken-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testDarkenValueGreaterThan255() {
-    AbstractImage expectedImage = images.getImage("darken-image-gt255");
+    ImageV1 expectedImage = images.getImage("darken-image-gt255");
     images.brighten(-260, "original-image", "test-darken-image-gt255");
-    AbstractImage actualImage = images.getImage("test-darken-image-gt255");
+    ImageV1 actualImage = images.getImage("test-darken-image-gt255");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testHorizontalVerticalFlipImage() {
-    AbstractImage expectedImage = images.getImage("horizontal-vertical-flip-image");
+    ImageV1 expectedImage = images.getImage("horizontal-vertical-flip-image");
     images.horizontalFlip("original-image", "test-horizontal-flip-image");
     images.verticalFlip("test-horizontal-flip-image",
             "test-horizontal-vertical-flip-image");
-    AbstractImage actualImage = images.getImage("test-horizontal-vertical-flip-image");
+    ImageV1 actualImage = images.getImage("test-horizontal-vertical-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testVerticalHorizontalFlipImage() {
-    AbstractImage expectedImage = images.getImage("vertical-horizontal-flip-image");
+    ImageV1 expectedImage = images.getImage("vertical-horizontal-flip-image");
     images.verticalFlip("original-image", "test-vertical-flip-image");
     images.horizontalFlip("test-vertical-flip-image",
             "test-vertical-horizontal-flip-image");
-    AbstractImage actualImage = images.getImage("test-vertical-horizontal-flip-image");
+    ImageV1 actualImage = images.getImage("test-vertical-horizontal-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testVerticalVerticalFlipImage() {
-    AbstractImage expectedImage = images.getImage("vertical-vertical-flip-image");
+    ImageV1 expectedImage = images.getImage("vertical-vertical-flip-image");
     images.verticalFlip("original-image", "test-vertical-flip-image");
     images.verticalFlip("test-vertical-flip-image",
             "test-vertical-vertical-flip-image");
-    AbstractImage actualImage = images.getImage("test-vertical-vertical-flip-image");
+    ImageV1 actualImage = images.getImage("test-vertical-vertical-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testHorizontalHorizontalFlipImage() {
-    AbstractImage expectedImage = images.getImage("horizontal-horizontal-flip-image");
+    ImageV1 expectedImage = images.getImage("horizontal-horizontal-flip-image");
     images.horizontalFlip("original-image", "test-horizontal-flip-image");
     images.horizontalFlip("test-horizontal-flip-image",
             "test-horizontal-horizontal-flip-image");
-    AbstractImage actualImage = images.getImage("test-horizontal-horizontal-flip-image");
+    ImageV1 actualImage = images.getImage("test-horizontal-horizontal-flip-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testBlurTwice() {
-    AbstractImage actualImage = images.getImage("blur-twice");
+    ImageV1 actualImage = images.getImage("blur-twice");
     images.blur("original-image", "test-blur-image");
     images.blur("test-blur-image", "test-blur-twice-image");
-    AbstractImage expectedImage = images.getImage("test-blur-twice-image");
+    ImageV1 expectedImage = images.getImage("test-blur-twice-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testSharpenTwice() {
-    AbstractImage actualImage = images.getImage("sharpen-twice");
+    ImageV1 actualImage = images.getImage("sharpen-twice");
     images.sharpen("original-image", "test-sharpen-image");
     images.sharpen("test-sharpen-image", "test-sharpen-twice-image");
-    AbstractImage expectedImage = images.getImage("test-sharpen-twice-image");
+    ImageV1 expectedImage = images.getImage("test-sharpen-twice-image");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testOperationOnComponent() {
-    AbstractImage actualImage = images.getImage("red-component-blur");
+    ImageV1 actualImage = images.getImage("red-component-blur");
     images.redComponent("original-image", "test-red-component");
     images.blur("test-red-component", "test-red-component-blur");
-    AbstractImage expectedImage = images.getImage("test-red-component-blur");
+    ImageV1 expectedImage = images.getImage("test-red-component-blur");
     assertImageEquals(expectedImage, actualImage);
   }
 
   @Test
   public void testOperationOnSplitComponent() {
-    AbstractImage actualImage = images.getImage("red-split-sharpen");
+    ImageV1 actualImage = images.getImage("red-split-sharpen");
     images.sharpen("red-split-image", "test-red-split-sharpen");
-    AbstractImage expectedImage = images.getImage("test-red-split-sharpen");
+    ImageV1 expectedImage = images.getImage("test-red-split-sharpen");
     assertImageEquals(expectedImage, actualImage);
   }
 }

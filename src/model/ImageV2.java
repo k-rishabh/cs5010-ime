@@ -4,8 +4,6 @@ public interface ImageV2 extends ImageV1 {
 
   ImageV2 compress(int ratio);
 
-  ImageV2 decompress();
-
   void colorCorrect();
 
   void levelsAdjust(int black, int mid, int white);

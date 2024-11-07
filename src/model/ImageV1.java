@@ -78,7 +78,6 @@ public interface ImageV1 {
    */
   void brighten(int val);
 
-
   /**
    * Flips the image horizontally (flipping left to right pixel order).
    */

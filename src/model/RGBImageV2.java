@@ -20,10 +20,11 @@ public class RGBImageV2 extends RGBImageV1 implements ImageV2 {
     int h = this.getHeight();
     int w = this.getWidth();
 
-    int[][] red = new int[h][w];
-    int[][] green = new int[h][w];
-    int[][] blue = new int[h][w];
+    double[][] red = new double[h][w];
+    double[][] green = new double[h][w];
+    double[][] blue = new double[h][w];
 
+    // initialize reds, blues, greens, and non-zero count
     int nz_init = 0;
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
@@ -45,42 +46,14 @@ public class RGBImageV2 extends RGBImageV1 implements ImageV2 {
       }
     }
 
+    // haar 2d transform
     red = HaarTransform.haar2D(red);
     green = HaarTransform.haar2D(green);
     blue = HaarTransform.haar2D(blue);
 
+    // thresholding
+
     return null;
-  }
-
-  @Override
-  public ImageV2 decompress() {
-    int h = this.getHeight();
-    int w = this.getWidth();
-
-    int[][] red = new int[h][w];
-    int[][] green = new int[h][w];
-    int[][] blue = new int[h][w];
-
-    for (int i = 0; i < h; i++) {
-      for (int j = 0; j < w; j++) {
-        red[i][j] = this.pixels[i][j].getRed();
-        green[i][j] = this.pixels[i][j].getGreen();
-        blue[i][j] = this.pixels[i][j].getBlue();
-      }
-    }
-
-    red = HaarTransform.haar2DInverse(red);
-    green = HaarTransform.haar2DInverse(green);
-    blue = HaarTransform.haar2D(blue);
-
-    int[][] newPixels = new int[red.length][red[0].length];
-    for (int i = 0; i < h; i++) {
-      for (int j = 0; j < w; j++) {
-        newPixels[i][j] = (red[i][j] << 16) | (green[i][j] << 8) | (blue[i][j]);
-      }
-    }
-
-    return new RGBImageV2(newPixels);
   }
 
   public int[][] getFrequencies(AbstractImage rgbImage) {
@@ -195,11 +168,19 @@ public class RGBImageV2 extends RGBImageV1 implements ImageV2 {
     int w = this.getWidth();
     int cut = (int) (w * ratio / 100.0);
 
-    ImageV2[] res = new RGBImageV2[2];
+    RGBImageV2[] res = new RGBImageV2[2];
     res[0] = new RGBImageV2(h, cut);
     res[1] = new RGBImageV2(h, w - cut);
 
-    // code
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        if (j < cut) {
+          res[0].pixels[i][j] = this.pixels[i][j];
+        } else {
+          res[1].pixels[i][cut - j] = this.pixels[i][j];
+        }
+      }
+    }
 
     return res;
   }
