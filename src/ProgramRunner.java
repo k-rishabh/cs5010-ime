@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 import controller.ImageController;
 import model.ImageModel;
 import model.RGBImage;
@@ -16,7 +18,6 @@ public class ProgramRunner {
     // Initialize
     ImageModel model = new RGBImage(0, 0);
     ImageController controller;
-
     if (args.length == 0) {
       // CLI mode
       controller = new ImageController(model);

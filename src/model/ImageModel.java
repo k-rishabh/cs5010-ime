@@ -119,7 +119,7 @@ public interface ImageModel {
 
   void colorCorrect();
 
-  void histogram();
+  ImageModel histogram();
 
   void levelsAdjust(int black, int mid, int white);
 
