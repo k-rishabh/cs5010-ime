@@ -11,7 +11,7 @@ public class RGBImageV2 extends RGBImageV1 implements ImageV2 {
     super(height, width);
   }
 
-  private RGBImageV2(int[][] packedPixels) {
+  public RGBImageV2(int[][] packedPixels) {
     super(packedPixels);
   }
 
@@ -47,9 +47,9 @@ public class RGBImageV2 extends RGBImageV1 implements ImageV2 {
     }
 
     // haar 2d transform
-    red = HaarTransform.haar2D(red);
-    green = HaarTransform.haar2D(green);
-    blue = HaarTransform.haar2D(blue);
+//    red = HaarTransform.haar2D(red);
+//    green = HaarTransform.haar2D(green);
+//    blue = HaarTransform.haar2D(blue);
 
     // thresholding
 

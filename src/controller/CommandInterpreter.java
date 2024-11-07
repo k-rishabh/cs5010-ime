@@ -49,7 +49,7 @@ public class CommandInterpreter {
     commands.put("save", s -> new Save(s.next(), s.next()));
     commands.put("blur", s -> new Blur(s.next(), s.next()));
     commands.put("brighten", s -> new Brighten(s.nextInt(), s.next(), s.next()));
-    commands.put("color-correct", s -> new ColorCorrect(s.next(), s.next()));
+//    commands.put("color-correct", s -> new ColorCorrect(s.next(), s.next()));
     commands.put("sepia", s -> new Sepia(s.next(), s.next()));
 //    commands.put("histogram", s -> new Histogram(s.next(), s.next()));
     commands.put("sharpen", s -> new Sharpen(s.next(), s.next()));

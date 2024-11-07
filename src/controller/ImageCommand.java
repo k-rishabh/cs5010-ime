@@ -15,5 +15,5 @@ public interface ImageCommand {
    * @param img the image to be operated on
    * @return 0 if successful, 1 if failure
    */
-  int apply(AbstractImage img);
+  void apply(ImageHandler img);
 }

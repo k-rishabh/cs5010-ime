@@ -15,6 +15,6 @@ public class ColorCorrect implements ImageCommand {
 
   @Override
   public void apply(ImageHandler img) {
-    img.colorCorrectness(source, result);
+//    img.colorCorrectness(source, result);
   }
 }

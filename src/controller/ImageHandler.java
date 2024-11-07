@@ -24,7 +24,7 @@ import util.ImageUtil;
  * Also performs transformations/operations on those images.
  */
 public class ImageHandler {
-   protected Map<String, ImageV2> images;
+   protected Map<String, ImageV1> images;
 
   public int apply(String srcName, String destName, Consumer<ImageV1> func) {
     if (images.get(srcName) == null) {
@@ -32,7 +32,7 @@ public class ImageHandler {
       return 1;
     }
 
-    ImageV2 destImg = images.get(srcName).deepCopy();
+    ImageV1 destImg = images.get(srcName).deepCopy();
     func.accept(destImg);
     images.put(destName, destImg);
 
@@ -223,8 +223,8 @@ public class ImageHandler {
       return 1;
     }
 
-    ImageV2 destImg = images.get(srcName).deepCopy();
-    ImageV2[] split = destImg.splitComponents();
+    ImageV1 destImg = images.get(srcName).deepCopy();
+    ImageV1[] split = destImg.splitComponents();
 
     images.put(redName, split[0]);
     images.put(greenName, split[1]);
@@ -261,7 +261,7 @@ public class ImageHandler {
       return 1;
     }
 
-    ImageV2 destImg = images.get(redName).deepCopy();
+    ImageV1 destImg = images.get(redName).deepCopy();
     destImg.combineComponents(images.get(greenName));
     destImg.combineComponents(images.get(blueName));
 
@@ -366,7 +366,7 @@ public class ImageHandler {
    * @param imgName the variable name of the image in the hashmap
    * @return the Image with the given variable name
    */
-  public ImageV2 getImage(String imgName) {
+  public ImageV1 getImage(String imgName) {
     if (!images.containsKey(imgName)) {
       System.out.println("Image " + imgName + " not found!");
       return null;
