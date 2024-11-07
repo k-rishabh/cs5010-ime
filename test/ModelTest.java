@@ -1,7 +1,5 @@
 import org.junit.Before;
 
-import model.ImageV1;
-
 import static org.junit.Assert.assertEquals;
 
 public class ModelTest {

@@ -1,25 +1,30 @@
 package model;
 
 import controller.filter.Filter;
+import model.pixel.Pixel;
 
-public class MockImageV2 implements ImageV2 {
+public class MockImage implements ImageModel {
   private StringBuilder log;
   private int uniqueCode;
 
-  public MockImageV2(StringBuilder log, int uniqueCode) {
+  public MockImage(StringBuilder log, int uniqueCode) {
     this.log = log;
     this.uniqueCode = uniqueCode;
   }
 
   @Override
-  public ImageV2 compress(int ratio) {
+  public void compress(int ratio) {
     log.append(String.format("Inside compress with ratio of: %d.\n", ratio));
-    return null;
   }
 
   @Override
   public void colorCorrect() {
     log.append("Inside color correct.");
+  }
+
+  @Override
+  public void histogram() {
+
   }
 
   @Override
@@ -29,13 +34,13 @@ public class MockImageV2 implements ImageV2 {
   }
 
   @Override
-  public ImageV2[] splitImage(int ratio) {
+  public ImageModel[] splitImage(int ratio) {
     log.append(String.format("Inside splitImage with ratio of: %d.\n", ratio));
     return null;
   }
 
   @Override
-  public void mergeRight(ImageV2 img) {
+  public void mergeRight(ImageModel img) {
     log.append(String.format("Inside of mergeRight with img height = %d and width = %d.\n",
             img.getHeight(), img.getWidth()));
   }
@@ -53,13 +58,33 @@ public class MockImageV2 implements ImageV2 {
   }
 
   @Override
+  public int getRed(int i, int j) {
+    return 0;
+  }
+
+  @Override
+  public int getGreen(int i, int j) {
+    return 0;
+  }
+
+  @Override
+  public int getBlue(int i, int j) {
+    return 0;
+  }
+
+  @Override
   public int getPackedPixel(int i, int j) {
     log.append(String.format("Inside getPackedPixel with i = %d, j = %d. \n", i, j));
     return uniqueCode;
   }
 
   @Override
-  public ImageV1 deepCopy() {
+  public Pixel getPixel(int i, int j) {
+    return null;
+  }
+
+  @Override
+  public ImageModel deepCopy() {
     log.append("Inside deepCopy. \n");
     return null;
   }
@@ -95,13 +120,13 @@ public class MockImageV2 implements ImageV2 {
   }
 
   @Override
-  public ImageV1[] splitComponents() {
+  public ImageModel[] splitComponents() {
     log.append("Inside splitComponents. \n");
     return null;
   }
 
   @Override
-  public void combineComponents(ImageV1 img) {
+  public void combineComponents(ImageModel img) {
     log.append(String.format("Inside combineComponents with img height = %d and width = %d. \n",
             img.getHeight(), img.getWidth()));
   }

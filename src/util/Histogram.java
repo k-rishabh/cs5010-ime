@@ -4,11 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import model.AbstractImage;
-import model.ImageV1;
-import model.ImageV2;
-import model.RGBImageV1;
-import model.RGBImageV2;
+import model.ImageModel;
+import model.RGBImage;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 
@@ -30,7 +27,7 @@ public class Histogram {
     plot.dispose();
   }
 
-  public ImageV1 createHistogram(ImageV1 rgbImage) {
+  public ImageModel createHistogram(RGBImage rgbImage) {
     int[][] freq = getFrequencies(rgbImage);
     int redFreq = findMaxFrequency(freq[0]);
     int greenFreq = findMaxFrequency(freq[1]);
@@ -70,7 +67,7 @@ public class Histogram {
 
 
 
-  public int[][] getFrequencies(ImageV1 rgbImage) {
+  public int[][] getFrequencies(ImageModel rgbImage) {
     int[] reds = new int[256];
     int[] greens = new int[256];
     int[] blues = new int[256];
@@ -86,7 +83,7 @@ public class Histogram {
     return new int[][]{reds, greens, blues};
   }
 
-  private ImageV1 convertToImage(BufferedImage image) {
+  private ImageModel convertToImage(BufferedImage image) {
     int width = image.getWidth();
     int height = image.getHeight();
     Pixel[][] pixels = new RGBPixel[height][width];
@@ -101,6 +98,6 @@ public class Histogram {
       }
     }
 
-    return new RGBImageV1(pixels);
+    return new RGBImage(pixels);
   }
 }

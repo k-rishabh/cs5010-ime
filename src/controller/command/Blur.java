@@ -1,20 +1,27 @@
 package controller.command;
 
+import java.util.Map;
 import controller.ImageCommand;
-import controller.ImageHandler;
-import model.AbstractImage;
+import controller.filter.BlurFilter;
+import model.ImageModel;
+import util.ImageTransformer;
 
 public class Blur implements ImageCommand {
   private final String source;
   private final String result;
 
-  public Blur(String source, String result) {
-    this.source = source;
-    this.result = result;
+  public Blur(String[] args) {
+    if(args.length == 3) {
+      this.source = args[1];
+      this.result = args[2];
+    } else {
+      throw new IllegalArgumentException("Error: Illegal number of arguments in blur command!");
+    }
   }
 
   @Override
-  public void apply(ImageHandler img) {
-    img.blur(source, result);
+  public int apply(Map<String, ImageModel> images) {
+    return ImageTransformer.apply(images, source, result,
+            img -> img.applyImageFilter(new BlurFilter()));
   }
 }

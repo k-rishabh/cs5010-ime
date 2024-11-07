@@ -63,7 +63,7 @@ public class HaarTransform {
    * @param matrix the matrix on which Haar 2D transformation will happen
    * @return the transformed matrix
    */
-  public static double[][] haar2D(int[][] matrix) {
+  public static double[][] haar2D(double[][] matrix) {
     int rows = matrix.length;
     int cols = matrix[0].length;
 
@@ -96,10 +96,9 @@ public class HaarTransform {
       for (int i = 0; i < c; i++) {
         haar1D(result[i]);
       }
-
-      // transpose back to original orientation
       result = transpose(result);
 
+      // next iteration
       r /= 2;
       c /= 2;
     }
@@ -131,59 +130,34 @@ public class HaarTransform {
   /**
    * Performs an inverse Haar transform on a 2D matrix of integers. It internally changes the
    * representation to double and changes back to integers for greater accuracy.
+   * Assumes that the matrix has dimensions that are a power of 2.
    *
    * @param matrix the matrix on which inverse Haar 2D transformation will happen
    * @return the transformed matrix
    */
-  public static int[][] haar2DInverse(int[][] matrix) {
+  public static double[][] haar2DInverse(double[][] matrix) {
     int rows = matrix.length;
     int cols = matrix[0].length;
-
-    // set rows and cols to next power of 2
-    rows = 32 - Integer.numberOfLeadingZeros(rows - 1);
-    cols = cols == 0 ? 0 : 32 - Integer.numberOfLeadingZeros(cols - 1);
-
-    // create new padded matrix
-    double[][] result = new double[rows][cols];
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        if (i >= matrix.length || j >= matrix[0].length) {
-          result[i][j] = 0;
-        } else {
-          result[i][j] = matrix[i][j];
-        }
-      }
-    }
 
     int r = 2;
     int c = 2;
     while (r <= rows && c <= cols) {
       // apply 1D haar transform on columns (which are now rows)
-      result = transpose(result);
+      matrix = transpose(matrix);
       for (int i = 0; i < c; i++) {
-        haar1DInverse(result[i]);
+        haar1DInverse(matrix[i]);
       }
-
-      // transpose back to original orientation
-      result = transpose(result);
+      matrix = transpose(matrix);
 
       // apply 1D haar transform on rows
       for (int i = 0; i < r; i++) {
-        haar1DInverse(result[i]);
+        haar1DInverse(matrix[i]);
       }
 
       r *= 2;
       c *= 2;
     }
 
-    // convert result to integers
-    int[][] intRes = new int[rows][cols];
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        intRes[i][j] = (int) result[i][j];
-      }
-    }
-
-    return intRes;
+    return matrix;
   }
 }

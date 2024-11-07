@@ -1,20 +1,26 @@
 package controller.command;
 
+import java.util.Map;
+
 import controller.ImageCommand;
-import controller.ImageHandler;
+import model.ImageModel;
+import util.ImageTransformer;
 
 public class FlipHorizontal implements ImageCommand {
+  String src;
+  String dest;
 
-  private final String source;
-  private final String result;
-
-  public FlipHorizontal(String source, String result) {
-    this.source = source;
-    this.result = result;
+  public FlipHorizontal(String[] args) {
+    if (args.length == 3) {
+      src = args[1];
+      dest = args[2];
+    } else {
+      throw new IllegalArgumentException("Unknown number of arguments for horizontalflip!");
+    }
   }
-
   @Override
-  public void apply(ImageHandler img) {
-    img.horizontalFlip(source, result);
+  public int apply(Map<String, ImageModel> images) {
+    return ImageTransformer.apply(images,src, dest, img -> img.horizontalFlip());
+
   }
 }

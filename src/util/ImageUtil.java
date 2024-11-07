@@ -10,10 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import model.ImageV1;
-import model.ImageV2;
-import model.RGBImageV1;
-import model.RGBImageV2;
+import model.ImageModel;
+import model.RGBImage;
 
 import static javax.imageio.ImageIO.read;
 import static javax.imageio.ImageIO.write;
@@ -29,7 +27,7 @@ public class ImageUtil {
    * @param filePath the file path of the raster image
    * @return the image in the form of our internal representation
    */
-  public static ImageV2 loadImageRaster(String filePath) {
+  public static ImageModel loadImageRaster(String filePath) {
     BufferedImage img;
 
     try {
@@ -49,7 +47,7 @@ public class ImageUtil {
       }
     }
 
-    return new RGBImageV2(pixels);
+    return new RGBImage(pixels);
   }
 
   /**
@@ -58,7 +56,7 @@ public class ImageUtil {
    * @param filename the file path of the raw image
    * @return the image in the form of our internal representation
    */
-  public static ImageV2 loadImageRaw(String filename) {
+  public static ImageModel loadImageRaw(String filename) {
     Scanner sc;
 
     try {
@@ -101,7 +99,7 @@ public class ImageUtil {
       }
     }
 
-    return new RGBImageV2(packedPixels);
+    return new RGBImage(packedPixels);
   }
 
   /**
@@ -110,7 +108,7 @@ public class ImageUtil {
    * @param filePath the file path where the image must be saved
    * @param img      the image to be saved, in the form of our internal representation
    */
-  public static void saveImageRaster(String filePath, ImageV1 img) {
+  public static void saveImageRaster(String filePath, ImageModel img) {
     BufferedImage buffImg =
             new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
@@ -133,7 +131,7 @@ public class ImageUtil {
    * @param filePath the file path where the image must be saved
    * @param img      the image to be saved, in the form of our internal representation
    */
-  public static void saveImageRaw(String filePath, ImageV1 img) {
+  public static void saveImageRaw(String filePath, ImageModel img) {
     FileWriter writer;
     try {
       writer = new FileWriter(filePath);

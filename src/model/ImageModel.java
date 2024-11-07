@@ -1,6 +1,7 @@
 package model;
 
 import controller.filter.Filter;
+import model.pixel.Pixel;
 
 /**
  * This interface represents the operations that can be performed on an Image.
@@ -22,8 +23,7 @@ import controller.filter.Filter;
  * <li>Sepia</li>
  * </ol>
  */
-public interface ImageV1 {
-
+public interface ImageModel {
   /**
    * Gets the height of the image, which is the number of rows of pixels.
    *
@@ -38,6 +38,12 @@ public interface ImageV1 {
    */
   int getWidth();
 
+  int getRed(int i, int j);
+
+  int getGreen(int i, int j);
+
+  int getBlue(int i, int j);
+
   /**
    * Retrieves the packed pixel at the specified coordinates.
    * A packed pixel is typically an integer representing the red, green, and blue values.
@@ -48,6 +54,8 @@ public interface ImageV1 {
    */
   int getPackedPixel(int i, int j);
 
+  Pixel getPixel(int i, int j);
+
   /**
    * Creates a deep copy of the image.
    * The deep copy should be independent of the original image.
@@ -55,10 +63,15 @@ public interface ImageV1 {
    *
    * @return a deep copy of the original image
    */
-  ImageV1 deepCopy();
+  ImageModel deepCopy();
 
   void applyColorFilter(Filter filter);
 
+  /**
+   * Applies a given filter to the image.
+   *
+   * @param filter the filter to be applied to the image.
+   */
   void applyImageFilter(Filter filter);
 
   /**
@@ -94,12 +107,23 @@ public interface ImageV1 {
    *
    * @return an array of three images, representing the red, green, and blue channels.
    */
-  ImageV1[] splitComponents();
+  ImageModel[] splitComponents();
 
   /**
    * Combines the color components of the calling class and parameter into one image.
    * This is done by taking the max of each component from both images.
    */
-  void combineComponents(ImageV1 img);
+  void combineComponents(ImageModel img);
 
+  void compress(int ratio);
+
+  void colorCorrect();
+
+  void histogram();
+
+  void levelsAdjust(int black, int mid, int white);
+
+  ImageModel[] splitImage(int ratio);
+
+  void mergeRight(ImageModel img);
 }

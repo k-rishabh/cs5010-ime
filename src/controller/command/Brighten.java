@@ -1,22 +1,29 @@
 package controller.command;
 
+import java.util.Map;
+
 import controller.ImageCommand;
-import controller.ImageHandler;
+import model.ImageModel;
+import util.ImageTransformer;
 
 public class Brighten implements ImageCommand {
-  int val;
   private final String source;
   private final String result;
+  private final int val;
 
-  public Brighten(int val,String source, String result) {
-    this.val = val;
-    this.source = source;
-    this.result = result;
+  public Brighten(String[] args) {
+    if(args.length != 3) {
+      this.val = Integer.parseInt(args[1]);
+      this.source = args[2];
+      this.result = args[3];
+    } else {
+      throw new IllegalArgumentException("Error: Illegal number of arguments brighten!");
+    }
   }
 
-
   @Override
-  public void apply(ImageHandler img) {
-    img.brighten(this.val,source,result);
+  public int apply(Map<String, ImageModel> images) {
+    return ImageTransformer.apply(images, source, result,
+            img -> img.brighten(val));
   }
 }

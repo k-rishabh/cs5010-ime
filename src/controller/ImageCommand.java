@@ -1,6 +1,8 @@
 package controller;
 
-import model.AbstractImage;
+import java.util.Map;
+
+import model.ImageModel;
 
 /**
  * Interface that represents a command that the user can execute.
@@ -12,8 +14,7 @@ public interface ImageCommand {
    * Applies a transformation/operation on the image.
    * The type of transformation depends on the calling object.
    *
-   * @param img the image to be operated on
-   * @return 0 if successful, 1 if failure
+   * @param images the images to be operated on
    */
-  void apply(ImageHandler img);
+  int apply(Map<String, ImageModel> images);
 }

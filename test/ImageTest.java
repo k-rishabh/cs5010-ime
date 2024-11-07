@@ -1,9 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import controller.ImageHandler;
-import model.ImageV1;
-
 import static org.junit.Assert.assertEquals;
 
 /**

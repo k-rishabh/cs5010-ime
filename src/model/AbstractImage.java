@@ -13,7 +13,7 @@ import util.PixelProcessor;
  * and requires the implementation of certain methods such as split, combine,
  * and deepCopy.
  */
-public abstract class AbstractImage implements ImageV1 {
+public abstract class AbstractImage implements ImageModel {
   protected Pixel[][] pixels;
 
   @Override
@@ -27,8 +27,28 @@ public abstract class AbstractImage implements ImageV1 {
   }
 
   @Override
+  public int getRed(int i, int j) {
+    return pixels[i][j].getRed();
+  }
+
+  @Override
+  public int getGreen(int i, int j) {
+    return pixels[i][j].getGreen();
+  }
+
+  @Override
+  public int getBlue(int i, int j) {
+    return pixels[i][j].getBlue();
+  }
+
+  @Override
   public int getPackedPixel(int i, int j) {
     return pixels[i][j].getPacked();
+  }
+
+  @Override
+  public Pixel getPixel(int i, int j) {
+    return pixels[i][j];
   }
 
   @Override
@@ -72,19 +92,15 @@ public abstract class AbstractImage implements ImageV1 {
   }
 
   @Override
-  abstract public ImageV1 deepCopy();
+  abstract public ImageModel deepCopy();
 
   @Override
-  abstract public ImageV1[] splitComponents();
-
-  @Override
-  abstract public void combineComponents(ImageV1 img);
-
-  /**
-   * Applies a given filter to the image.
-   *
-   * @param filter the filter to be applied to the image.
-   */
   abstract public void applyImageFilter(Filter filter);
+
+  @Override
+  abstract public ImageModel[] splitComponents();
+
+  @Override
+  abstract public void combineComponents(ImageModel img);
 
 }

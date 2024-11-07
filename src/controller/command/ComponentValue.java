@@ -1,19 +1,28 @@
 package controller.command;
 
+import java.util.Map;
+
 import controller.ImageCommand;
-import controller.ImageHandler;
+import controller.filter.CompRedFilter;
+import model.ImageModel;
+import util.ImageTransformer;
 
 public class ComponentValue implements ImageCommand {
   private final String source;
   private final String result;
 
-  public ComponentValue(String source, String result) {
-    this.source = source;
-    this.result = result;
+  public ComponentValue(String[] args) {
+    if(args.length == 3) {
+      this.source = args[1];
+      this.result = args[2];
+    } else {
+      throw new IllegalArgumentException("Error: Illegal number of arguments in value-component!");
+    }
   }
 
   @Override
-  public void apply(ImageHandler img) {
-    img.valueComponent(source,result);
+  public int apply(Map<String, ImageModel> images) {
+    return ImageTransformer.apply(images, source, result,
+            img -> img.valueComponent());
   }
 }

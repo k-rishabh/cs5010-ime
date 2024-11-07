@@ -64,8 +64,8 @@ rgb-combine test-image-actual-combine-rgb test-image-red test-image-green test-i
 save res/test-image-actual-combine-rgb.png test-image-actual-combine-rgb
 
 # compression
-compress 50 test-image test-image-actual-compressed
-save res/test-image-actual-compressed.png test-image-actual-compressed
+# compress 50 test-image test-image-actual-compressed
+# save res/test-image-actual-compressed.png test-image-actual-compressed
 
 # histogram
 histogram test-image test-image-actual-histogram

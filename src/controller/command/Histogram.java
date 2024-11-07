@@ -1,19 +1,28 @@
-//package controller.command;
-//
-//import controller.ImageCommand;
-//import controller.ImageHandler;
-//
-//public class Histogram implements ImageCommand {
-//  private final String source;
-//  private final String result;
-//
-//  public Histogram(String source, String result) {
-//    this.source = source;
-//    this.result = result;
-//  }
-//
-//  @Override
-//  public void apply(ImageHandler img) {
-//    img.histogram(source, result);
-//  }
-//}
+package controller.command;
+
+import java.util.Map;
+
+import controller.ImageCommand;
+import model.ImageModel;
+import util.ImageTransformer;
+
+public class Histogram implements ImageCommand {
+
+  private final String source;
+  private final String result;
+
+  public Histogram(String[] args) {
+    if(args.length == 3) {
+      this.source = args[1];
+      this.result = args[2];
+    } else {
+      throw new IllegalArgumentException("Error: Illegal number of arguments in histogram command!");
+    }
+  }
+
+  @Override
+  public int apply(Map<String, ImageModel> images) {
+    return ImageTransformer.apply(images, source, result,
+            img -> img.histogram());
+  }
+}

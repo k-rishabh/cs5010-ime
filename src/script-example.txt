@@ -1,5 +1,5 @@
 # loading a PNG image
-load res/ex-image.png ex-image
+load res/ex-image.jpg ex-image
 
 # red component
 red-component ex-image ex-image-actual-component-red
@@ -64,8 +64,8 @@ rgb-combine ex-image-actual-combine-rgb ex-image-red ex-image-green ex-image-blu
 save res/ex-image-actual-combine-rgb.png ex-image-actual-combine-rgb
 
 # compression
-compress 50 ex-image ex-image-actual-compressed
-save res/ex-image-actual-compressed.png ex-image-actual-compressed
+#compress 50 ex-image ex-image-actual-compressed
+#save res/ex-image-actual-compressed.png ex-image-actual-compressed
 
 # histogram
 histogram ex-image ex-image-actual-histogram
@@ -81,7 +81,4 @@ save res/ex-image-actual-levels-adjust.png ex-image-actual-levels-adjust
 
 # split view
 blur ex-image ex-image-actual-blur-split split 60
-save res/ex-image-actual-blur-split.png ex-image-actual-blur-split
-
-# run
-run src/script-example.txt
+#save res/ex-image-actual-blur-split.png ex-image-actual-blur-split
