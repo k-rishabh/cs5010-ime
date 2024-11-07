@@ -103,4 +103,28 @@ public abstract class AbstractImage implements ImageModel {
   @Override
   abstract public void combineComponents(ImageModel img);
 
+  @Override
+  public void mergeSplits(ImageModel img) {
+    if(this.getHeight() != img.getHeight()) {
+      throw new IllegalArgumentException("Images must have same height to be merged!");
+    }
+
+    int h = this.getHeight();
+    int cut = this.getWidth();
+    int w = this.getWidth() + img.getWidth();
+
+    Pixel[][] merged = new Pixel[h][w];
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < cut; j++) {
+        merged[i][j] = this.pixels[i][j];
+      }
+
+      for (int j = 0; j < w - cut; j++) {
+        merged[i][j + cut] = img.getPixel(i, j);
+      }
+    }
+
+    this.pixels = merged;
+  }
+
 }

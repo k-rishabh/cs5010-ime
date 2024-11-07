@@ -10,19 +10,33 @@ import util.ImageTransformer;
 public class ComponentRed implements ImageCommand {
   private final String source;
   private final String result;
+  private final int split;
 
   public ComponentRed(String[] args) {
-    if(args.length == 3) {
-      this.source = args[1];
-      this.result = args[2];
+    if (args.length != 3 && args.length != 5) {
+      throw new IllegalArgumentException("Error: Illegal number of arguments in component-red!");
+    } else if (args.length == 5 && !args[3].equals("split")) {
+      throw new IllegalArgumentException("Error: Illegal argument in component-red!");
+    }
+
+    this.source = args[1];
+    this.result = args[2];
+
+    if (args.length == 5) {
+      this.split = Integer.parseInt(args[4]);
     } else {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in red-component!");
+      this.split = 0;
     }
   }
 
   @Override
   public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images, source, result,
-            img -> img.applyColorFilter(new CompRedFilter()));
+    if (split == 0 || split == 100) {
+      return ImageTransformer.apply(images, source, result,
+              img -> img.applyColorFilter(new CompRedFilter()));
+    } else {
+      return ImageTransformer.applySplit(images, source, result,
+              img -> img.applyColorFilter(new CompRedFilter()), split);
+    }
   }
 }

@@ -53,7 +53,7 @@ public class RGBImage extends AbstractImage {
   }
 
   @Override
-  public void histogram(){
+  public void histogram() {
     Histogram histogram = new Histogram();
     histogram.createHistogram(this);
   }
@@ -294,15 +294,13 @@ public class RGBImage extends AbstractImage {
 
   @Override
   public ImageModel[] splitImage(int ratio) {
-    if (ratio < 0 || ratio > 100) {
-      throw new IllegalArgumentException("Split ratio must be between 0 and 100!");
-    } else if (ratio == 0 || ratio == 100) {
+    if (ratio <= 0 || ratio >= 100) {
       return new ImageModel[]{this};
     }
 
     int h = this.getHeight();
     int w = this.getWidth();
-    int cut = (int) (w * ratio / 100.0);
+    int cut = (int) Math.round(w * ratio / 100.0);
 
     RGBImage[] res = new RGBImage[2];
     res[0] = new RGBImage(h, cut);
@@ -313,36 +311,12 @@ public class RGBImage extends AbstractImage {
         if (j < cut) {
           res[0].pixels[i][j] = this.pixels[i][j];
         } else {
-          res[1].pixels[i][cut - j] = this.pixels[i][j];
+          res[1].pixels[i][j - cut] = this.pixels[i][j];
         }
       }
     }
 
     return res;
-  }
-
-  @Override
-  public void mergeRight(ImageModel img) {
-    if (this.getHeight() != img.getHeight()) {
-      throw new IllegalArgumentException("Cannot merge images of different heights!");
-    }
-
-    int h = this.getHeight();
-    int cut = this.getWidth();
-    int w = this.getWidth() + img.getWidth();
-
-    Pixel[][] merged = new Pixel[h][w];
-    for (int i = 0; i < h; i++) {
-      for (int j = 0; j < cut; j++) {
-        merged[i][j] = this.pixels[i][j];
-      }
-
-      for (int j = 0; j < w - cut; j++) {
-        merged[i][j + w] = this.pixels[i][j];
-      }
-    }
-
-    this.pixels = merged;
   }
 
 }

@@ -13,21 +13,35 @@ public class LevelsAdjust implements ImageCommand {
   private final int b;
   private final int m;
   private final int w;
+  private final int split;
   
   public LevelsAdjust(String[] args) {
-    if (args.length == 6) {
-      this.b = Integer.parseInt(args[1]);
-      this.m = Integer.parseInt(args[2]);
-      this.w = Integer.parseInt(args[3]);
-      this.source = args[4];
-      this.result = args[5];
-    } else {
+    if (args.length != 6 && args.length != 8) {
       throw new IllegalArgumentException("Illegal number of arguments in levels-adjust command!");
+    } else if (args.length == 8 && !args[6].equals("split")) {
+      throw new IllegalArgumentException("Illegal argument in levels-adjust command!");
+    }
+
+    this.b = Integer.parseInt(args[1]);
+    this.m = Integer.parseInt(args[2]);
+    this.w = Integer.parseInt(args[3]);
+    this.source = args[4];
+    this.result = args[5];
+
+    if (args.length == 8) {
+      this.split = Integer.parseInt(args[7]);
+    } else {
+      this.split = 0;
     }
   }
 
   @Override
   public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images, source, result, img -> img.levelsAdjust(b, m, w));
+    if (split == 0 || split == 100) {
+      return ImageTransformer.apply(images, source, result, img -> img.levelsAdjust(b, m, w));
+    } else {
+      return ImageTransformer.applySplit(images, source, result,
+              img -> img.levelsAdjust(b, m, w), split);
+    }
   }
 }

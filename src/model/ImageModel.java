@@ -125,5 +125,5 @@ public interface ImageModel {
 
   ImageModel[] splitImage(int ratio);
 
-  void mergeRight(ImageModel img);
+  void mergeSplits(ImageModel img);
 }

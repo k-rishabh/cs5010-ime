@@ -35,4 +35,26 @@ public class ImageTransformer {
       return 1;
     }
   }
+
+  public static int applySplit(Map<String, ImageModel> images, String srcName, String destName,
+                          Consumer<ImageModel> func, int ratio) {
+    if (images.get(srcName) == null) {
+      System.out.println("Image " + srcName + " not found!");
+      return 1;
+    }
+
+    ImageModel temp = images.get(srcName).deepCopy();
+    ImageModel[] destImg = temp.splitImage(ratio);
+
+    func.accept(destImg[0]);
+    destImg[0].mergeSplits(destImg[1]);
+
+    images.put(destName, destImg[0]);
+
+    if (images.containsKey(destName)) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
 }

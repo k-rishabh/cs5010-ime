@@ -40,7 +40,7 @@ public class MockImage implements ImageModel {
   }
 
   @Override
-  public void mergeRight(ImageModel img) {
+  public void mergeSplits(ImageModel img) {
     log.append(String.format("Inside of mergeRight with img height = %d and width = %d.\n",
             img.getHeight(), img.getWidth()));
   }
