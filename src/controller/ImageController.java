@@ -133,5 +133,7 @@ public class ImageController {
       }
 
     }
+
+    System.out.println("Successfully reached end of script!");
   }
 }
