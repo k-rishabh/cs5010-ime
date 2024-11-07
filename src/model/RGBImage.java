@@ -53,9 +53,9 @@ public class RGBImage extends AbstractImage {
   }
 
   @Override
-  public void histogram(){
+  public ImageModel histogram(){
     Histogram histogram = new Histogram();
-    histogram.createHistogram(this);
+    return histogram.createHistogram(this);
   }
 
   @Override

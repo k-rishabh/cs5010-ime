@@ -22,7 +22,9 @@ public class Histogram implements ImageCommand {
 
   @Override
   public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images, source, result,
-            img -> img.histogram());
+    ImageModel srcImage = images.get(source).deepCopy();
+    ImageModel destImage = srcImage.histogram();
+    images.put(result, destImage);
+    return 0;
   }
 }
