@@ -53,7 +53,7 @@ public class RGBImage extends AbstractImage {
   }
 
   @Override
-  public ImageModel histogram(){
+  public ImageModel histogram() {
     Histogram histogram = new Histogram();
     return histogram.createHistogram(this);
   }
@@ -141,155 +141,133 @@ public class RGBImage extends AbstractImage {
     int h = this.getHeight();
     int w = this.getWidth();
 
-    double[][] red = new double[h][w];
-    double[][] green = new double[h][w];
-    double[][] blue = new double[h][w];
+    int[][] reds = new int[h][w];
+    int[][] greens = new int[h][w];
+    int[][] blues = new int[h][w];
 
-    // initialize reds, blues, greens, and non-zero count
-    int nz_init = 0;
+    // initialize reds, greens, and blues
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        red[i][j] = this.getRed(i, j);
-        green[i][j] = this.getGreen(i, j);
-        blue[i][j] = this.getBlue(i, j);
-
-        if (red[i][j] == 0) {
-          nz_init++;
-        }
-
-        if (green[i][j] == 0) {
-          nz_init++;
-        }
-
-        if (blue[i][j] == 0) {
-          nz_init++;
-        }
+        reds[i][j] = this.getRed(i, j);
+        greens[i][j] = this.getGreen(i, j);
+        blues[i][j] = this.getBlue(i, j);
       }
     }
 
-    // haar 2d transform
-    red = HaarTransform.haar2D(red);
-    green = HaarTransform.haar2D(green);
-    blue = HaarTransform.haar2D(blue);
+    // compress matrices
+    reds = HaarTransform.compressMatrix(reds, ratio);
+    greens = HaarTransform.compressMatrix(greens, ratio);
+    blues = HaarTransform.compressMatrix(blues, ratio);
 
-    // thresholding
-
-
-    // inverse haar 2d transform
-    red = HaarTransform.haar2DInverse(red);
-    green = HaarTransform.haar2DInverse(green);
-    blue = HaarTransform.haar2DInverse(blue);
-
-    // un-padding of matrices
+    // combine matrices
+    Pixel[][] compressed = new Pixel[h][w];
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        int r = (int) Math.round(red[i][j]);
-        int g = (int) Math.round(green[i][j]);
-        int b = (int) Math.round(blue[i][j]);
-
-        this.pixels[i][j] = new RGBPixel(r, g, b);
-      }
-    }
-  }
-
-  public int[][] getFrequencies(ImageModel rgbImage) {
-    int[] reds = new int[256];
-    int[] greens = new int[256];
-    int[] blues = new int[256];
-
-    for (int i = 0; i < rgbImage.getHeight(); i++) {
-      for (int j = 0; j < rgbImage.getWidth(); j++) {
-        reds[rgbImage.getRed(i, j)]++;
-        greens[rgbImage.getGreen(i, j)]++;
-        blues[rgbImage.getBlue(i, j)]++;
+        compressed[i][j] = new RGBPixel(reds[i][j], greens[i][j], blues[i][j]);
       }
     }
 
-    return new int[][]{reds, greens, blues};
+    this.pixels = compressed;
   }
 
-  @Override
-  public void colorCorrect() {
-    int[][] frequencies = getFrequencies(this);
-    int[] red = frequencies[0];
-    int[] green = frequencies[1];
-    int[] blue = frequencies[2];
+public int[][] getFrequencies(ImageModel rgbImage) {
+  int[] reds = new int[256];
+  int[] greens = new int[256];
+  int[] blues = new int[256];
 
-    int redPeak = findChannelPeak(red);
-    int greenPeak = findChannelPeak(green);
-    int bluePeak = findChannelPeak(blue);
-
-    int avgPeak = (redPeak + greenPeak + bluePeak) / 3;
-    Function<Pixel, Integer> colorCorrect = p -> {
-
-      int updatedR = Math.max(0, Math.min(255, p.getRed() + avgPeak - redPeak));
-      int updatedG = Math.max(0, Math.min(255, p.getGreen() + avgPeak - greenPeak));
-      int updatedB = Math.max(0, Math.min(255, p.getBlue() + avgPeak - bluePeak));
-
-      return (updatedR << 16) | (updatedG << 8) | (updatedB);
-    };
-
-    this.applyTransform(colorCorrect);
-  }
-
-  private int findChannelPeak(int[] histogram) {
-    int peakValue = 0;
-    int peakPosition = 0;
-    for (int i = 10; i <= 245; i++) {
-      if (histogram[i] > peakValue) {
-        peakValue = histogram[i];
-        peakPosition = i;
-      }
-    }
-
-    return peakPosition;
-  }
-
-  private void applyTransform(Function<Pixel, Integer> transformFunction) {
-    int height = this.pixels.length;
-    int width = this.pixels[0].length;
-    int[][] result = new int[height][width];
-
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        result[i][j] = transformFunction.apply(this.pixels[i][j]);
-        RGBPixel pixel = new RGBPixel(result[i][j]);
-        this.pixels[i][j] = pixel;
-      }
+  for (int i = 0; i < rgbImage.getHeight(); i++) {
+    for (int j = 0; j < rgbImage.getWidth(); j++) {
+      reds[rgbImage.getRed(i, j)]++;
+      greens[rgbImage.getGreen(i, j)]++;
+      blues[rgbImage.getBlue(i, j)]++;
     }
   }
 
-  @Override
-  public void levelsAdjust(int black, int mid, int white) {
-    Function<Pixel, Integer> levelAdjust = p -> {
-      int updatedR = this.fittingProcess(black, mid, white, p.getRed());
-      int updatedG = this.fittingProcess(black, mid, white, p.getGreen());
-      int updatedB = this.fittingProcess(black, mid, white, p.getBlue());
+  return new int[][]{reds, greens, blues};
+}
 
-      return (updatedR << 16) | (updatedG << 8) | (updatedB);
-    };
+@Override
+public void colorCorrect() {
+  int[][] frequencies = getFrequencies(this);
+  int[] red = frequencies[0];
+  int[] green = frequencies[1];
+  int[] blue = frequencies[2];
 
-    this.applyTransform(levelAdjust);
+  int redPeak = findChannelPeak(red);
+  int greenPeak = findChannelPeak(green);
+  int bluePeak = findChannelPeak(blue);
+
+  int avgPeak = (redPeak + greenPeak + bluePeak) / 3;
+  Function<Pixel, Integer> colorCorrect = p -> {
+
+    int updatedR = Math.max(0, Math.min(255, p.getRed() + avgPeak - redPeak));
+    int updatedG = Math.max(0, Math.min(255, p.getGreen() + avgPeak - greenPeak));
+    int updatedB = Math.max(0, Math.min(255, p.getBlue() + avgPeak - bluePeak));
+
+    return (updatedR << 16) | (updatedG << 8) | (updatedB);
+  };
+
+  this.applyTransform(colorCorrect);
+}
+
+private int findChannelPeak(int[] histogram) {
+  int peakValue = 0;
+  int peakPosition = 0;
+  for (int i = 10; i <= 245; i++) {
+    if (histogram[i] > peakValue) {
+      peakValue = histogram[i];
+      peakPosition = i;
+    }
   }
 
-  private int fittingProcess(int black, int mid, int white, int signal) {
-    double valueA = Math.pow(black, 2) * (mid - white) - black * (Math.pow(mid, 2)
-            - Math.pow(white, 2)) + white * Math.pow(mid, 2) - mid * Math.pow(white, 2);
+  return peakPosition;
+}
 
-    double valueAa = -black * (128 - 255) + 128 * white - 255 * mid;
+private void applyTransform(Function<Pixel, Integer> transformFunction) {
+  int height = this.pixels.length;
+  int width = this.pixels[0].length;
+  int[][] result = new int[height][width];
 
-    double valueAb = Math.pow(black, 2) * (128 - 255) + 255 * Math.pow(mid, 2)
-            - 128 * Math.pow(white, 2);
-
-    double valueAc = Math.pow(black, 2) * (255 * mid - 128 * white)
-            - black * (255 * Math.pow(mid, 2) - 128 * Math.pow(white, 2));
-
-    double a = valueAa / valueA;
-
-    double b = valueAb / valueA;
-
-    double c = valueAc / valueA;
-    return Math.max(0, Math.min(255, (int) (a * Math.pow(signal, 2) + b * signal + c)));
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      result[i][j] = transformFunction.apply(this.pixels[i][j]);
+      RGBPixel pixel = new RGBPixel(result[i][j]);
+      this.pixels[i][j] = pixel;
+    }
   }
+}
+
+@Override
+public void levelsAdjust(int black, int mid, int white) {
+  Function<Pixel, Integer> levelAdjust = p -> {
+    int updatedR = this.fittingProcess(black, mid, white, p.getRed());
+    int updatedG = this.fittingProcess(black, mid, white, p.getGreen());
+    int updatedB = this.fittingProcess(black, mid, white, p.getBlue());
+
+    return (updatedR << 16) | (updatedG << 8) | (updatedB);
+  };
+
+  this.applyTransform(levelAdjust);
+}
+
+private int fittingProcess(int black, int mid, int white, int signal) {
+  double valueA = Math.pow(black, 2) * (mid - white) - black * (Math.pow(mid, 2)
+          - Math.pow(white, 2)) + white * Math.pow(mid, 2) - mid * Math.pow(white, 2);
+
+  double valueAa = -black * (128 - 255) + 128 * white - 255 * mid;
+
+  double valueAb = Math.pow(black, 2) * (128 - 255) + 255 * Math.pow(mid, 2)
+          - 128 * Math.pow(white, 2);
+
+  double valueAc = Math.pow(black, 2) * (255 * mid - 128 * white)
+          - black * (255 * Math.pow(mid, 2) - 128 * Math.pow(white, 2));
+
+  double a = valueAa / valueA;
+
+  double b = valueAb / valueA;
+
+  double c = valueAc / valueA;
+  return Math.max(0, Math.min(255, (int) (a * Math.pow(signal, 2) + b * signal + c)));
+}
 
 }

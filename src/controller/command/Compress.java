@@ -13,9 +13,9 @@ public class Compress implements ImageCommand {
 
   public Compress(String[] args) {
     if (args.length == 4) {
-      this.source = args[1];
-      this.result = args[2];
-      this.ratio = Integer.parseInt(args[3]);
+      this.ratio = Integer.parseInt(args[1]);
+      this.source = args[2];
+      this.result = args[3];
     } else {
       throw new IllegalArgumentException(
               "Error: Illegal number of arguments in compress!");

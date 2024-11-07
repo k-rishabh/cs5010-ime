@@ -1,7 +1,10 @@
 package util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import model.pixel.RGBPixel;
 
 /**
  * A utility class that provides functionality for performing a Haar transform on a
@@ -52,7 +55,7 @@ public class HaarTransform {
     }
 
     for (int i = n / 2; i < n; i++) {
-      arr[i] = diff.get(i);
+      arr[i] = diff.get(i - n / 2);
     }
   }
 
@@ -63,13 +66,23 @@ public class HaarTransform {
    * @param matrix the matrix on which Haar 2D transformation will happen
    * @return the transformed matrix
    */
-  public static double[][] haar2D(double[][] matrix) {
+  private static double[][] haar2D(double[][] matrix) {
     int rows = matrix.length;
     int cols = matrix[0].length;
 
     // set rows and cols to next power of 2
-    rows = 32 - Integer.numberOfLeadingZeros(rows - 1);
-    cols = cols == 0 ? 0 : 32 - Integer.numberOfLeadingZeros(cols - 1);
+    int r = 1;
+    int c = 1;
+
+    while (r < rows) {
+      r = r << 1;
+    }
+    while (c < cols) {
+      c = c << 1;
+    }
+
+    rows = r;
+    cols = c;
 
     // create new padded matrix
     double[][] result = new double[rows][cols];
@@ -83,8 +96,6 @@ public class HaarTransform {
       }
     }
 
-    int r = rows;
-    int c = cols;
     while (r > 1 && c > 1) {
       // apply 1D haar transform on rows
       for (int i = 0; i < r; i++) {
@@ -135,7 +146,7 @@ public class HaarTransform {
    * @param matrix the matrix on which inverse Haar 2D transformation will happen
    * @return the transformed matrix
    */
-  public static double[][] haar2DInverse(double[][] matrix) {
+  private static double[][] haar2DInverse(double[][] matrix) {
     int rows = matrix.length;
     int cols = matrix[0].length;
 
@@ -159,5 +170,69 @@ public class HaarTransform {
     }
 
     return matrix;
+  }
+
+  private static double[][] convertIntToDouble(int[][] matrix) {
+    double[][] result = new double[matrix.length][matrix[0].length];
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[0].length; j++) {
+        result[i][j] = matrix[i][j];
+      }
+    }
+
+    return result;
+  }
+
+  public static int[][] compressMatrix(int[][] initialMatrix, int ratio) {
+    int h = initialMatrix.length;
+    int w = initialMatrix[0].length;
+
+    double[][] matrix = convertIntToDouble(initialMatrix);
+
+    // haar 2d transform
+    matrix = haar2D(matrix);
+
+    // count size of non zero values
+    int initZeros = 0;
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        if (matrix[i][j] == 0) {
+          initZeros++;
+        }
+      }
+    }
+
+    // calculate threshold
+    int nonZeros = h * w - initZeros;
+    int termsToZero = (int) Math.round(nonZeros * (ratio / 100.0));
+
+    double[] allValues = new double[h * w];
+    for (int i = 0; i < h; i++) {
+      System.arraycopy(matrix[i], 0, allValues, i * w, w);
+    }
+    Arrays.sort(allValues);
+    int threshold = (int) Math.round(allValues[initZeros + termsToZero - 1]);
+
+    // thresholding
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[0].length; j++) {
+        if (Math.abs(matrix[i][j]) <= threshold) {
+          matrix[i][j] = 0;
+        }
+      }
+    }
+
+    // inverse haar 2d transform
+    matrix = haar2DInverse(matrix);
+
+    // un-padding matrix
+    int[][] res = new int[h][w];
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        res[i][j] = (int) Math.round(matrix[i][j]);
+      }
+    }
+
+    return res;
   }
 }
