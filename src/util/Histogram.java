@@ -6,7 +6,9 @@ import java.awt.image.BufferedImage;
 
 import model.AbstractImage;
 import model.ImageV1;
+import model.ImageV2;
 import model.RGBImageV1;
+import model.RGBImageV2;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 
@@ -68,7 +70,7 @@ public class Histogram {
 
 
 
-  public int[][] getFrequencies(AbstractImage rgbImage) {
+  public int[][] getFrequencies(ImageV1 rgbImage) {
     int[] reds = new int[256];
     int[] greens = new int[256];
     int[] blues = new int[256];

@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import model.ImageV1;
+import model.ImageV2;
 import model.RGBImageV1;
+import model.RGBImageV2;
 
 import static javax.imageio.ImageIO.read;
 import static javax.imageio.ImageIO.write;
@@ -27,7 +29,7 @@ public class ImageUtil {
    * @param filePath the file path of the raster image
    * @return the image in the form of our internal representation
    */
-  public static ImageV1 loadImageRaster(String filePath) {
+  public static ImageV2 loadImageRaster(String filePath) {
     BufferedImage img;
 
     try {
@@ -47,7 +49,7 @@ public class ImageUtil {
       }
     }
 
-    return new RGBImageV1(pixels);
+    return new RGBImageV2(pixels);
   }
 
   /**
@@ -56,7 +58,7 @@ public class ImageUtil {
    * @param filename the file path of the raw image
    * @return the image in the form of our internal representation
    */
-  public static ImageV1 loadImageRaw(String filename) {
+  public static ImageV2 loadImageRaw(String filename) {
     Scanner sc;
 
     try {
@@ -99,7 +101,7 @@ public class ImageUtil {
       }
     }
 
-    return new RGBImageV1(packedPixels);
+    return new RGBImageV2(packedPixels);
   }
 
   /**

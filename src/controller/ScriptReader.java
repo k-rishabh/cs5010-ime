@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Scanner;
 
 import java.io.FileNotFoundException;
@@ -12,8 +14,11 @@ import java.io.FileNotFoundException;
 public class ScriptReader {
   private Scanner sc;
 
+  ImageHandler imgHandler;
+
   public ScriptReader() {
     sc = new Scanner(System.in);
+    imgHandler = new ImageHandler();
   }
 
   public void build() {
@@ -22,7 +27,13 @@ public class ScriptReader {
       if (cmd.equals("q") || cmd.equals("quit")) {
         return;
       } else if (!cmd.isEmpty()) {
-        CommandInterpreter.execute(cmd, 0);
+        Readable in = new StringReader(cmd);
+        CommandInterpreter ci = new CommandInterpreter(in, System.out);
+        try {
+          ci.apply(imgHandler);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
     }
   }
@@ -35,21 +46,31 @@ public class ScriptReader {
    * @param scriptFilePath the absolute file path of the script file
    */
   public void build(String scriptFilePath) {
+    StringBuilder fileContent = new StringBuilder();
     try {
       sc = new Scanner(new FileInputStream(scriptFilePath));
+      while (sc.hasNextLine()) {
+        String s = sc.nextLine();
+        if (s.isEmpty()) {
+          continue;
+        }
+        if (s.charAt(0) != '#') {
+          fileContent.append(s).append(System.lineSeparator());
+        }
+      }
     } catch (FileNotFoundException e) {
       System.out.println("Exception: Script file not found: " + scriptFilePath);
       return;
     }
 
-    int lineNo = 0;
-    while (sc.hasNextLine()) {
-      String line = sc.nextLine().trim();
-      lineNo++;
+    Readable in = new StringReader(fileContent.toString());
 
-      if (!line.isEmpty()) {
-        CommandInterpreter.execute(line, lineNo);
-      }
+    CommandInterpreter ci = new CommandInterpreter(in, System.out);
+    try {
+      ci.apply(imgHandler);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+
   }
 }

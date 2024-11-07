@@ -9,10 +9,18 @@ import java.util.function.Function;
 
 import controller.command.Blur;
 import controller.command.Brighten;
-import controller.command.ColorCorrect;
+//import controller.command.ColorCorrect;
+import controller.command.ComponentBlue;
+import controller.command.ComponentGreen;
+import controller.command.ComponentIntensity;
+import controller.command.ComponentLuma;
+import controller.command.ComponentRed;
+import controller.command.ComponentValue;
 import controller.command.FlipHorizontal;
 import controller.command.FlipVertical;
-import controller.command.Histogram;
+//import controller.command.Histogram;
+import controller.command.Load;
+import controller.command.Save;
 import controller.command.Sepia;
 import controller.command.Sharpen;
 
@@ -37,14 +45,22 @@ public class CommandInterpreter {
 
   public void apply(ImageHandler img) throws IOException {
     Scanner scan = new Scanner(this.in);
+    commands.put("load", s -> new Load(s.next(), s.next()));
+    commands.put("save", s -> new Save(s.next(), s.next()));
     commands.put("blur", s -> new Blur(s.next(), s.next()));
     commands.put("brighten", s -> new Brighten(s.nextInt(), s.next(), s.next()));
     commands.put("color-correct", s -> new ColorCorrect(s.next(), s.next()));
     commands.put("sepia", s -> new Sepia(s.next(), s.next()));
-    commands.put("histogram", s -> new Histogram(s.next(), s.next()));
+//    commands.put("histogram", s -> new Histogram(s.next(), s.next()));
     commands.put("sharpen", s -> new Sharpen(s.next(), s.next()));
     commands.put("vertical-flip", s -> new FlipVertical(s.next(), s.next()));
     commands.put("horizontal-flip", s -> new FlipHorizontal(s.next(), s.next()));
+    commands.put("green-component", s -> new ComponentGreen(s.next(), s.next()));
+    commands.put("blue-component", s -> new ComponentBlue(s.next(), s.next()));
+    commands.put("red-component", s -> new ComponentRed(s.next(), s.next()));
+    commands.put("luma-component", s -> new ComponentLuma(s.next(), s.next()));
+    commands.put("intensity-component", s -> new ComponentIntensity(s.next(), s.next()));
+    commands.put("value-component", s -> new ComponentValue(s.next(), s.next()));
 
     while (scan.hasNext()) {
       try {
@@ -59,9 +75,8 @@ public class CommandInterpreter {
         } else {
           c = cmd.apply(scan);
           c.apply(img);
-          out.append("Operation performed: ").append(in).append("\n");
         }
-      } catch (IOException | IllegalArgumentException | InputMismatchException e) {
+      } catch (IllegalArgumentException | InputMismatchException e) {
         out.append(e.getMessage());
       }
     }

@@ -2,11 +2,20 @@ package controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import controller.filter.BlurFilter;
+import controller.filter.CompBlueFilter;
+import controller.filter.CompGreenFilter;
+import controller.filter.CompRedFilter;
+import controller.filter.Filter;
+import controller.filter.IntensityFilter;
+import controller.filter.LumaFilter;
+import controller.filter.SepiaFilter;
+import controller.filter.SharpenFilter;
 import model.ImageV1;
 import model.ImageV2;
 import util.Histogram;
-import util.ImageTransformer;
 import util.ImageUtil;
 
 /**
@@ -15,7 +24,24 @@ import util.ImageUtil;
  * Also performs transformations/operations on those images.
  */
 public class ImageHandler {
-  static protected Map<String, ImageV1> images;
+   protected Map<String, ImageV2> images;
+
+  public int apply(String srcName, String destName, Consumer<ImageV1> func) {
+    if (images.get(srcName) == null) {
+      System.out.println("Image " + srcName + " not found!");
+      return 1;
+    }
+
+    ImageV2 destImg = images.get(srcName).deepCopy();
+    func.accept(destImg);
+    images.put(destName, destImg);
+
+    if (images.containsKey(destName)) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
 
   /**
    * Default constructor function that initializes an empty list of images.
@@ -76,7 +102,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int redComponent(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.redComponent());
+    Filter CompRedFilter = new CompRedFilter();
+    return apply(srcName, destName, img -> img.applyColorFilter(CompRedFilter));
   }
 
   /**
@@ -88,7 +115,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int greenComponent(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.greenComponent());
+    Filter CompGreenFilter = new CompGreenFilter();
+    return apply(srcName, destName, img -> img.applyColorFilter(CompGreenFilter));
   }
 
   /**
@@ -100,7 +128,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int blueComponent(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.blueComponent());
+    Filter CompBlueFilter = new CompBlueFilter();
+    return apply(srcName, destName, img -> img.applyColorFilter(CompBlueFilter));
   }
 
   /**
@@ -112,7 +141,7 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int valueComponent(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.valueComponent());
+    return apply(srcName, destName, img -> img.valueComponent());
   }
 
   /**
@@ -124,7 +153,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int intensityComponent(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.intensityComponent());
+    Filter IntensityFilter = new IntensityFilter();
+    return apply(srcName, destName, img -> img.applyColorFilter(IntensityFilter));
   }
 
   /**
@@ -136,7 +166,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int lumaComponent(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.lumaComponent());
+    Filter LumaFilter = new LumaFilter();
+    return apply(srcName, destName, img -> img.applyColorFilter(LumaFilter));
   }
 
   /**
@@ -148,7 +179,7 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int horizontalFlip(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.horizontalFlip());
+    return apply(srcName, destName, img -> img.horizontalFlip());
   }
 
   /**
@@ -160,7 +191,7 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int verticalFlip(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.verticalFlip());
+    return apply(srcName, destName, img -> img.verticalFlip());
   }
 
   /**
@@ -173,7 +204,7 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int brighten(int val, String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.brighten(val));
+    return apply(srcName, destName, img -> img.brighten(val));
   }
 
   /**
@@ -192,8 +223,8 @@ public class ImageHandler {
       return 1;
     }
 
-    ImageV1 destImg = images.get(srcName).deepCopy();
-    ImageV1[] split = destImg.splitComponents();
+    ImageV2 destImg = images.get(srcName).deepCopy();
+    ImageV2[] split = destImg.splitComponents();
 
     images.put(redName, split[0]);
     images.put(greenName, split[1]);
@@ -230,7 +261,7 @@ public class ImageHandler {
       return 1;
     }
 
-    ImageV1 destImg = images.get(redName).deepCopy();
+    ImageV2 destImg = images.get(redName).deepCopy();
     destImg.combineComponents(images.get(greenName));
     destImg.combineComponents(images.get(blueName));
 
@@ -241,52 +272,52 @@ public class ImageHandler {
       return 1;
     }
   }
+//
+//  public int colorCorrectness(String srcName, String destName) {
+//    if (images.get(srcName) == null) {
+//      System.out.println("Image " + srcName + " not found!");
+//    }
+//
+//    ImageV1 destImg = images.get(srcName).deepCopy();
+//    destImg.colorCorrect();
+//    images.put(destName, destImg);
+//    if (images.get(destName) != null) {
+//      return 0;
+//    } else {
+//      return 1;
+//    }
+//  }
+//
+//  public int levelAdjust(String srcName, String destName, int black, int mid, int white) {
+//    if (images.get(srcName) == null) {
+//      System.out.println("Image " + srcName + " not found!");
+//    }
+//
+//    ImageV1 destImg = images.get(srcName).deepCopy();
+//    destImg.levelsAdjust(black, mid, white);
+//    images.put(destName, destImg);
+//    if (images.get(destName) != null) {
+//      return 0;
+//    } else {
+//      return 1;
+//    }
+//  }
 
-  public int colorCorrectness(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-    }
-
-    ImageV1 destImg = images.get(srcName).deepCopy();
-    destImg.colorCorrect();
-    images.put(destName, destImg);
-    if (images.get(destName) != null) {
-      return 0;
-    } else {
-      return 1;
-    }
-  }
-
-  public int levelAdjust(String srcName, String destName, int black, int mid, int white) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-    }
-
-    ImageV1 destImg = images.get(srcName).deepCopy();
-    destImg.levelsAdjust(black, mid, white);
-    images.put(destName, destImg);
-    if (images.get(destName) != null) {
-      return 0;
-    } else {
-      return 1;
-    }
-  }
-
-  public int histogram(String srcName, String destName) {
-    if (images.get(srcName) == null) {
-      System.out.println("Image " + srcName + " not found!");
-    }
-    ImageV2 destImg = images.get(srcName).deepCopy();
-    Histogram hist = new Histogram();
-    ImageV2 histImg = hist.createHistogram(destImg);
-    images.put(destName, histImg);
-    if (images.get(destName) != null) {
-      return 0;
-    } else {
-      return 1;
-    }
-
-  }
+//  public int histogram(String srcName, String destName) {
+//    if (images.get(srcName) == null) {
+//      System.out.println("Image " + srcName + " not found!");
+//    }
+//    ImageV1 destImg = images.get(srcName).deepCopy();
+//    Histogram hist = new Histogram();
+//    ImageV1 histImg = hist.createHistogram(destImg);
+//    images.put(destName, histImg);
+//    if (images.get(destName) != null) {
+//      return 0;
+//    } else {
+//      return 1;
+//    }
+//
+//  }
 
 
 
@@ -299,7 +330,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int blur(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.blur());
+    Filter BlurFilter = new BlurFilter();
+    return apply(srcName, destName, img -> img.applyImageFilter(BlurFilter));
   }
 
   /**
@@ -311,7 +343,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int sharpen(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.sharpen());
+    Filter SharpenFilter = new SharpenFilter();
+    return apply(srcName, destName, img -> img.applyImageFilter(SharpenFilter));
   }
 
   /**
@@ -323,7 +356,8 @@ public class ImageHandler {
    * @return 0 if success, 1 if failure
    */
   public int sepia(String srcName, String destName) {
-    return ImageTransformer.apply(srcName, destName, img -> img.sepia());
+    Filter SepiaFilter = new SepiaFilter();
+    return apply(srcName, destName, img -> img.applyColorFilter(SepiaFilter));
   }
 
   /**
@@ -332,7 +366,7 @@ public class ImageHandler {
    * @param imgName the variable name of the image in the hashmap
    * @return the Image with the given variable name
    */
-  public ImageV1 getImage(String imgName) {
+  public ImageV2 getImage(String imgName) {
     if (!images.containsKey(imgName)) {
       System.out.println("Image " + imgName + " not found!");
       return null;
