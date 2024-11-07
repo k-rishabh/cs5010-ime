@@ -63,7 +63,7 @@ public class HaarTransform {
    * @param matrix the matrix on which Haar 2D transformation will happen
    * @return the transformed matrix
    */
-  public static int[][] haar2D(int[][] matrix) {
+  public static double[][] haar2D(int[][] matrix) {
     int rows = matrix.length;
     int cols = matrix[0].length;
 
@@ -104,15 +104,7 @@ public class HaarTransform {
       c /= 2;
     }
 
-    // convert result to integers
-    int[][] intRes = new int[rows][cols];
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        intRes[i][j] = (int) result[i][j];
-      }
-    }
-
-    return intRes;
+    return result;
   }
 
   /**
