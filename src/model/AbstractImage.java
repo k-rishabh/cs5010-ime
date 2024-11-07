@@ -104,6 +104,35 @@ public abstract class AbstractImage implements ImageModel {
   abstract public void combineComponents(ImageModel img);
 
   @Override
+  public ImageModel[] splitImage(int ratio) {
+    if (ratio < 0 || ratio > 100) {
+      throw new IllegalArgumentException("Split ratio must be between 0 and 100!");
+    } else if (ratio == 0 || ratio == 100) {
+      return new ImageModel[]{this};
+    }
+
+    int h = this.getHeight();
+    int w = this.getWidth();
+    int cut = (int) (w * ratio / 100.0);
+
+    RGBImage[] res = new RGBImage[2];
+    res[0] = new RGBImage(h, cut);
+    res[1] = new RGBImage(h, w - cut);
+
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        if (j < cut) {
+          res[0].pixels[i][j] = this.pixels[i][j];
+        } else {
+          res[1].pixels[i][cut - j] = this.pixels[i][j];
+        }
+      }
+    }
+
+    return res;
+  }
+
+  @Override
   public void mergeSplits(ImageModel img) {
     if(this.getHeight() != img.getHeight()) {
       throw new IllegalArgumentException("Images must have same height to be merged!");
