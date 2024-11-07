@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 import controller.ImageController;
 import model.ImageModel;
 import model.RGBImage;
@@ -10,7 +8,9 @@ import model.RGBImage;
  */
 public class ProgramRunner {
   /**
-   * Runs the entire program, based on the provided script file.
+   * Runs the entire program, based on the provided script file. If no script file is provided, or
+   * incorrect script file is provided, it will default to CLI input. It requires the file in the
+   * format "java ProgramRunner -file fileName".
    *
    * @param args takes in a single String which is the file path of the script file to be run.
    */
@@ -18,6 +18,7 @@ public class ProgramRunner {
     // Initialize
     ImageModel model = new RGBImage(0, 0);
     ImageController controller;
+
     if (args.length == 0) {
       // CLI mode
       controller = new ImageController(model);

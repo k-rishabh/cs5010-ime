@@ -92,18 +92,6 @@ public abstract class AbstractImage implements ImageModel {
   }
 
   @Override
-  abstract public ImageModel deepCopy();
-
-  @Override
-  abstract public void applyImageFilter(Filter filter);
-
-  @Override
-  abstract public ImageModel[] splitComponents();
-
-  @Override
-  abstract public void combineComponents(ImageModel img);
-
-  @Override
   public ImageModel[] splitImage(int ratio) {
     if (ratio <= 0 || ratio >= 100) {
       return new ImageModel[]{this};
@@ -153,5 +141,17 @@ public abstract class AbstractImage implements ImageModel {
 
     this.pixels = merged;
   }
+
+  @Override
+  abstract public ImageModel deepCopy();
+
+  @Override
+  abstract public void applyImageFilter(Filter filter);
+
+  @Override
+  abstract public ImageModel[] splitComponents();
+
+  @Override
+  abstract public void combineComponents(ImageModel img);
 
 }

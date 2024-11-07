@@ -7,11 +7,21 @@ import controller.filter.SepiaFilter;
 import model.ImageModel;
 import util.ImageTransformer;
 
+/**
+ * A class that represents the Sepia transformation on an image.
+ * It is represented by the source image, destination image, and split (if required).
+ */
 public class Sepia implements ImageCommand {
   private final String source;
   private final String result;
   private final int split;
 
+  /**
+   * Constructor function for the Sepia transformation. Requires an array of Strings,
+   * each in order, representing one word of the command in correct syntax.
+   *
+   * @param args the parameters for the transformation
+   */
   public Sepia(String[] args) {
     if (args.length != 3 && args.length != 5) {
       throw new IllegalArgumentException("Error: Illegal number of arguments in sepia command!");

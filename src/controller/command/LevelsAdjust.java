@@ -6,6 +6,11 @@ import controller.ImageCommand;
 import model.ImageModel;
 import util.ImageTransformer;
 
+/**
+ * A class that represents the Levels Adjust transformation on an image.
+ * It is represented by the source image, destination image, and split (if required).
+ * It also stores the black, mid, and white values to be adjusted with.
+ */
 public class LevelsAdjust implements ImageCommand {
 
   private final String source;
@@ -14,7 +19,13 @@ public class LevelsAdjust implements ImageCommand {
   private final int m;
   private final int w;
   private final int split;
-  
+
+  /**
+   * Constructor function for the Levels Adjust transformation. Requires an array of Strings,
+   * each in order, representing one word of the command in correct syntax.
+   *
+   * @param args the parameters for the transformation
+   */
   public LevelsAdjust(String[] args) {
     if (args.length != 6 && args.length != 8) {
       throw new IllegalArgumentException("Illegal number of arguments in levels-adjust command!");

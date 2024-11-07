@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import model.pixel.RGBPixel;
-
 /**
  * A utility class that provides functionality for performing a Haar transform on a
  * 2D matrix of integers. Additionally, it provides functionality for inverse Haar transform
  * on similar 2D matrices of integers.
- *
- * <p>Internally, the functions convert the matrices to doubles to perform calculations with
+ * <p> Internally, the functions convert the matrices to doubles to perform calculations with
  * a higher accuracy. They are converted back at the end.
  */
 public class HaarTransform {
@@ -172,6 +169,12 @@ public class HaarTransform {
     return matrix;
   }
 
+  /**
+   * Converts a 2D matrix of integers to a doubles matrix.
+   *
+   * @param matrix the integer matrix to be converted
+   * @return the resulting double matrix
+   */
   private static double[][] convertIntToDouble(int[][] matrix) {
     double[][] result = new double[matrix.length][matrix[0].length];
     for (int i = 0; i < matrix.length; i++) {
@@ -183,6 +186,15 @@ public class HaarTransform {
     return result;
   }
 
+  /**
+   * Applies all necessary Haar transformations in order, to compress a 2D matrix of
+   * integers. It uses the ratio for lossy compression. Ratio represents the fraction of non-zero
+   * values before and after thresholding.
+   *
+   * @param initialMatrix the matrix to be compressed
+   * @param ratio the compression ratio, between 0 and 100
+   * @return the compressed matrix
+   */
   public static int[][] compressMatrix(int[][] initialMatrix, int ratio) {
     int h = initialMatrix.length;
     int w = initialMatrix[0].length;

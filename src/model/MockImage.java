@@ -3,6 +3,11 @@ package model;
 import controller.filter.Filter;
 import model.pixel.Pixel;
 
+/**
+ * A mock implementation of the model used for testing the controller.
+ * It documents which functions are called in StringBuilder log.
+ * It may also return a uniqueCode that it is initialized with, if return type is int.
+ */
 public class MockImage implements ImageModel {
   private StringBuilder log;
   private int uniqueCode;

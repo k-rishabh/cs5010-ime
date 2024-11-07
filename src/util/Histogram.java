@@ -65,8 +65,6 @@ public class Histogram {
     }
   }
 
-
-
   public int[][] getFrequencies(ImageModel rgbImage) {
     int[] reds = new int[256];
     int[] greens = new int[256];

@@ -36,8 +36,20 @@ public class ImageTransformer {
     }
   }
 
+  /**
+   * Higher order function that takes a source and destination images.
+   * Applies a transformation on the source image and saves it as the destination image.
+   * It also requires the ratio to implement split view. The transformation will only be applied
+   * on the first ratio percentage of pixels from the left.
+   *
+   * @param srcName  variable name of source image
+   * @param destName variable name of destination image
+   * @param func     the function/transformation to be applied on the image
+   * @param ratio    the fraction of pixels from the left, to be operated on
+   * @return 0 if success, 1 if failure
+   */
   public static int applySplit(Map<String, ImageModel> images, String srcName, String destName,
-                          Consumer<ImageModel> func, int ratio) {
+                               Consumer<ImageModel> func, int ratio) {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
       return 1;

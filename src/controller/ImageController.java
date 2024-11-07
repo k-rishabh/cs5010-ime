@@ -31,8 +31,10 @@ import model.ImageModel;
 import controller.command.Histogram;
 
 /**
- * Functional class that is responsible for reading a script line by line.
- * Passes each line to the CommandInterpreter.
+ * The main controller of the program. It is responsible for delegating operations to the model.
+ * It uses a command design pattern to call transformations on an object using the command map.
+ * It also stores the images in the form of a hashmap.
+ * Supports both CLI and script based input.
  */
 public class ImageController {
   private Scanner sc;
@@ -40,9 +42,9 @@ public class ImageController {
   private Map<String, Function<String[], ImageCommand>> commands;
 
   /**
-   * Command line mode.
+   * Initializes the controller in CLI mode. Takes the model as input.
    *
-   * @param img
+   * @param img the model on which the controller will operate
    */
   public ImageController(ImageModel img) {
     sc = new Scanner(System.in);
@@ -51,10 +53,11 @@ public class ImageController {
   }
 
   /**
-   * Script file mode. If fails, defaults to command line mode.
+   * Initializes the controller in script file mode. If fails, defaults to command line mode.
+   * It takes the model and script file path as input.
    *
-   * @param img
-   * @param scriptFilePath
+   * @param img the model on which the controller will operate
+   * @param scriptFilePath the file path of the script file
    */
   public ImageController(ImageModel img, String scriptFilePath) {
     commands = new HashMap<>();
@@ -69,6 +72,9 @@ public class ImageController {
     }
   }
 
+  /**
+   * Initializes all the known commands that can be used to operate on images.
+   */
   private void initializeCommands() {
     commands.put("load", args -> new Load(args));
     commands.put("save", args -> new Save(args));
@@ -98,7 +104,12 @@ public class ImageController {
   }
 
   /**
-   * The main controller function that is responsible for reading the script file.
+   * The main (go) function of the controller that is responsible for parsing the input command.
+   * Based on the command entered, it gets the function from the command map and delegates the
+   * work to the command package. The command package will in turn use model functions to operate
+   * on the model.
+   * <p> The command package automatically adds the resulting image(s) to the map, since it is
+   * provided as input, along with the parameters of the command.
    */
   public void execute() {
     this.initializeCommands();
@@ -131,7 +142,6 @@ public class ImageController {
           System.out.printf("Unknown command on line number: %d\n", lineNo);
         }
       }
-
     }
 
     System.out.println("Successfully reached end of script!");

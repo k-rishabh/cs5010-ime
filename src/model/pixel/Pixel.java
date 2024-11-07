@@ -5,8 +5,8 @@ import controller.filter.Filter;
 /**
  * This interface defines the operations that can be performed on a pixel.
  * The operations allow for various transformations to be applied to the pixel,
- * such as brightening, darkening, applying filters (blur and sharpen),
- * and adjusting color components (Value, Luma, Intensity, Sepia, Red/Green/Blue Component).
+ * such as brightening, darkening, applying image filters (blur, sharpen),
+ * and applying color filters (Value, Luma, Intensity, Sepia, Red/Green/Blue Component).
  */
 public interface Pixel {
 
@@ -40,10 +40,8 @@ public interface Pixel {
   int getPacked();
 
   /**
-   * Sets all the components of the pixel to the same value.
-   * The value depends on the type of greyscale required.
-   *
-   * @param type an enum representing the type of greyscale
+   * Applies a color filter on the pixel so that it is a greyscale representation of the
+   * max component value.
    */
   void applyValueFilter();
 

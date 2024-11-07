@@ -4,13 +4,22 @@ import java.util.Map;
 
 import controller.ImageCommand;
 import model.ImageModel;
-import model.RGBImage;
 import util.ImageUtil;
 
+/**
+ * A class that represents the load command for an image.
+ * It is represented by the file path and the name of the image.
+ */
 public class Load implements ImageCommand {
   String filePath;
   String imageName;
 
+  /**
+   * Constructor function for the load command. Requires an array of Strings,
+   * each in order, representing one word of the command in correct syntax.
+   *
+   * @param args the parameters for the transformation
+   */
   public Load(String[] args) {
     if (args.length == 3) {
       filePath = args[1];

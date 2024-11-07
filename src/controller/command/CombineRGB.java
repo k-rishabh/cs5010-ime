@@ -5,12 +5,22 @@ import java.util.Map;
 import controller.ImageCommand;
 import model.ImageModel;
 
+/**
+ * A class that represents the CombineRGB transformation.
+ * It is represented by the red, green, and blue source images, and the destination image.
+ */
 public class CombineRGB implements ImageCommand {
   private final String dest;
   private final String red;
   private final String green;
   private final String blue;
 
+  /**
+   * Constructor function for the CombineRGB transformation. Requires an array of Strings, each
+   * in order, representing one word of the command in correct syntax.
+   *
+   * @param args the parameters for the transformation
+   */
   public CombineRGB(String[] args) {
     if (args.length == 5) {
       dest = args[1];
