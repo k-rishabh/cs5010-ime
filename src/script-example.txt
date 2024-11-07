@@ -80,5 +80,5 @@ levels-adjust 100 150 200 ex-image ex-image-actual-levels-adjust
 save res/ex-image-actual-levels-adjust.png ex-image-actual-levels-adjust
 
 # split view
-#sepia ex-image ex-image-actual-sepia-split split 60
-#save res/ex-image-actual-sepia-split.png ex-image-actual-sepia-split
+sepia ex-image ex-image-actual-sepia-split split 60
+save res/ex-image-actual-sepia-split.png ex-image-actual-sepia-split
