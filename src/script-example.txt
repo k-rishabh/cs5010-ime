@@ -1,4 +1,4 @@
-# loading a PNG image
+# loading a JPG image
 load res/ex-image.jpg ex-image
 
 # red component
@@ -82,3 +82,33 @@ save res/ex-image-actual-levels-adjust.png ex-image-actual-levels-adjust
 # split view
 sepia ex-image ex-image-actual-sepia-split split 60
 save res/ex-image-actual-sepia-split.png ex-image-actual-sepia-split
+
+#Loading a PPM image
+load res/ppm-original.ppm original-image-ppm
+
+#Blurring the PPM image
+blur original-image-ppm image-blur-ppm
+
+#Saving the blur PPM component
+save res/script-ppm-blur-image.ppm image-blur-ppm
+
+#Getting the red component of JPG image
+red-component ex-image image-red-component-jpg
+
+#Saving the red component
+save res/ex-jpg-red-component.jpg image-red-component-jpg
+
+#Test extra whitespace
+luma-component ex-image  image-luma
+
+#Test invalid filepath
+load images/j$unit-small.png l2
+
+#Test space in filepath
+load images/ image-small.png l3
+
+#Test misspelled command
+blurd ex-image image-blur
+
+#Test wrong extension of image
+load res/original-image.pbb ex-image

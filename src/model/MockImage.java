@@ -29,7 +29,7 @@ public class MockImage implements ImageModel {
 
   @Override
   public ImageModel histogram() {
-return null;
+    return null;
   }
 
   @Override

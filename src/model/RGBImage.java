@@ -160,25 +160,9 @@ public class RGBImage extends AbstractImage {
     this.pixels = compressed;
   }
 
-  private int[][] getFrequencies(ImageModel rgbImage) {
-    int[] reds = new int[256];
-    int[] greens = new int[256];
-    int[] blues = new int[256];
-
-    for (int i = 0; i < rgbImage.getHeight(); i++) {
-      for (int j = 0; j < rgbImage.getWidth(); j++) {
-        reds[rgbImage.getRed(i, j)]++;
-        greens[rgbImage.getGreen(i, j)]++;
-        blues[rgbImage.getBlue(i, j)]++;
-      }
-    }
-
-    return new int[][]{reds, greens, blues};
-  }
-
   @Override
   public void colorCorrect() {
-    int[][] frequencies = getFrequencies(this);
+    int[][] frequencies = Histogram.getFrequencies(this);
     int[] red = frequencies[0];
     int[] green = frequencies[1];
     int[] blue = frequencies[2];
