@@ -23,7 +23,7 @@ public class ColorCorrect implements ImageCommand {
    */
   public ColorCorrect(String[] args) {
     if (args.length != 3 && args.length != 5) {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in color-cprrect!");
+      throw new IllegalArgumentException("Error: Illegal number of arguments in color-correct!");
     } else if (args.length == 5 && !args[3].equals("split")) {
       throw new IllegalArgumentException("Error: Illegal argument in color-correct!");
     }
