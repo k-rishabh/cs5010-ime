@@ -28,9 +28,9 @@ public class FlipHorizontal implements ImageCommand {
       throw new IllegalArgumentException("Unknown number of arguments for horizontalflip!");
     }
   }
+
   @Override
   public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images,src, dest, img -> img.horizontalFlip());
-
+    return ImageTransformer.apply(images, src, dest, img -> img.horizontalFlip());
   }
 }

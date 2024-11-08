@@ -20,11 +20,12 @@ public class Histogram implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Histogram(String[] args) {
-    if(args.length == 3) {
+    if (args.length == 3) {
       this.source = args[1];
       this.result = args[2];
     } else {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in histogram command!");
+      throw new IllegalArgumentException(
+              "Error: Illegal number of arguments in histogram command!");
     }
   }
 

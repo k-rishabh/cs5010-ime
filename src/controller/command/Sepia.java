@@ -42,11 +42,11 @@ public class Sepia implements ImageCommand {
   @Override
   public int apply(Map<String, ImageModel> images) {
     if (split == 0 || split == 100) {
-      return ImageTransformer.apply(images, source, result,
-              img -> img.applyColorFilter(new SepiaFilter()));
+      return ImageTransformer.apply(images, source,
+              result, img -> img.applyColorFilter(new SepiaFilter()));
     } else {
-      return ImageTransformer.applySplit(images, source, result,
-              img -> img.applyColorFilter(new SepiaFilter()), split);
+      return ImageTransformer.applySplit(images, source,
+              result, img -> img.applyColorFilter(new SepiaFilter()), split);
     }
   }
 }

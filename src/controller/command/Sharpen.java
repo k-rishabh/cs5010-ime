@@ -42,11 +42,11 @@ public class Sharpen implements ImageCommand {
   @Override
   public int apply(Map<String, ImageModel> images) {
     if (split == 0 || split == 100) {
-      return ImageTransformer.apply(images, source, result,
-              img -> img.applyImageFilter(new SharpenFilter()));
+      return ImageTransformer.apply(images, source,
+              result, img -> img.applyImageFilter(new SharpenFilter()));
     } else {
-      return ImageTransformer.applySplit(images, source, result,
-              img -> img.applyImageFilter(new SharpenFilter()), split);
+      return ImageTransformer.applySplit(images, source,
+              result, img -> img.applyImageFilter(new SharpenFilter()), split);
     }
   }
 }

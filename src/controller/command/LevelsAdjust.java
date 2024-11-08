@@ -51,8 +51,8 @@ public class LevelsAdjust implements ImageCommand {
     if (split == 0 || split == 100) {
       return ImageTransformer.apply(images, source, result, img -> img.levelsAdjust(b, m, w));
     } else {
-      return ImageTransformer.applySplit(images, source, result,
-              img -> img.levelsAdjust(b, m, w), split);
+      return ImageTransformer.applySplit(images, source,
+              result, img -> img.levelsAdjust(b, m, w), split);
     }
   }
 }
