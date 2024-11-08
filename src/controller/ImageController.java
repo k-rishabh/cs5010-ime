@@ -37,8 +37,7 @@ import controller.command.Histogram;
  * Supports both CLI and script based input.
  */
 public class ImageController {
-  private ImageModel mock;
-  private Scanner sc;
+  public Scanner sc;
   private Map<String, ImageModel> images;
   private Map<String, Function<String[], ImageCommand>> commands;
 
@@ -51,9 +50,7 @@ public class ImageController {
     sc = new Scanner(System.in);
     commands = new HashMap<>();
     images = new HashMap<>();
-    this.mock = img;
   }
-
   /**
    * Initializes the controller in script file mode. If fails, defaults to command line mode.
    * It takes the model and script file path as input.
