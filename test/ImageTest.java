@@ -15,6 +15,8 @@ import model.RGBImage;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * This class contains JUnit tests for the Model.
  * The tests verify the correctness of image transformations such as blurring,
@@ -42,9 +44,9 @@ public class ImageTest {
         int actualPixelG = actual.getGreen(y, x);
         int actualPixelB = actual.getBlue(y, x);
         System.out.println(actualPixelR + " " + actualPixelG + " " + actualPixelB);
-//        assertEquals(expectedPixelR, actualPixelR);
-//        assertEquals(expectedPixelG, actualPixelG);
-//        assertEquals(expectedPixelB, actualPixelB);
+        assertEquals(expectedPixelR, actualPixelR);
+        assertEquals(expectedPixelG, actualPixelG);
+        assertEquals(expectedPixelB, actualPixelB);
 
       }
     }
