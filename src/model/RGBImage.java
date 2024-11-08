@@ -127,15 +127,6 @@ public class RGBImage extends AbstractImage {
   }
 
   @Override
-  public void combineComponents(ImageModel img) {
-    for (int i = 0; i < this.pixels.length; i++) {
-      for (int j = 0; j < this.pixels[i].length; j++) {
-        this.getPixel(i, j).maximizeComponents(img.getPixel(i, j));
-      }
-    }
-  }
-
-  @Override
   public void compress(int ratio) {
     int h = this.getHeight();
     int w = this.getWidth();

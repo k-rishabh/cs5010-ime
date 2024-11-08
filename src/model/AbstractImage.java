@@ -92,6 +92,15 @@ public abstract class AbstractImage implements ImageModel {
   }
 
   @Override
+  public void combineComponents(ImageModel img) {
+    for (int i = 0; i < this.pixels.length; i++) {
+      for (int j = 0; j < this.pixels[i].length; j++) {
+        this.getPixel(i, j).maximizeComponents(img.getPixel(i, j));
+      }
+    }
+  }
+
+  @Override
   public ImageModel[] splitImage(int ratio) {
     if (ratio <= 0 || ratio >= 100) {
       return new ImageModel[]{this};
@@ -150,8 +159,5 @@ public abstract class AbstractImage implements ImageModel {
 
   @Override
   abstract public ImageModel[] splitComponents();
-
-  @Override
-  abstract public void combineComponents(ImageModel img);
 
 }
