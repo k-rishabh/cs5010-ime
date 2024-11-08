@@ -8,7 +8,7 @@ import model.pixel.Pixel;
  * that can take place on an Image. Some of the functionalities are: applying color filters,
  * applying image filters, flipping, histogram, brighten, levels adjustment, color correction,
  * compression, etc.
- * <p>It also has some basic getter functions for height, width, and the pixels at a particular
+ * It also has some basic getter functions for height, width, and the pixels at a particular
  * coordinate in the image.
  */
 public interface ImageModel {

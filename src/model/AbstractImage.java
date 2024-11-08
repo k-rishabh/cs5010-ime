@@ -152,12 +152,12 @@ public abstract class AbstractImage implements ImageModel {
   }
 
   @Override
-  abstract public ImageModel deepCopy();
+  public abstract ImageModel deepCopy();
 
   @Override
-  abstract public void applyImageFilter(Filter filter);
+  public abstract void applyImageFilter(Filter filter);
 
   @Override
-  abstract public ImageModel[] splitComponents();
+  public abstract ImageModel[] splitComponents();
 
 }

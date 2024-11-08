@@ -96,12 +96,12 @@ public class MockImage implements ImageModel {
 
   @Override
   public void applyColorFilter(Filter filter) {
-
+    log.append("In applyColorFilter. \n");
   }
 
   @Override
   public void applyImageFilter(Filter filter) {
-
+    log.append("In applyImageFilter. \n");
   }
 
   @Override

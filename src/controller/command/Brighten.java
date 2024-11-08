@@ -23,7 +23,7 @@ public class Brighten implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Brighten(String[] args) {
-    if(args.length != 3) {
+    if (args.length != 3) {
       this.val = Integer.parseInt(args[1]);
       this.source = args[2];
       this.result = args[3];
@@ -34,7 +34,7 @@ public class Brighten implements ImageCommand {
 
   @Override
   public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images, source, result,
-            img -> img.brighten(val));
+    return ImageTransformer.apply(images, source,
+            result, img -> img.brighten(val));
   }
 }

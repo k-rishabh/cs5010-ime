@@ -52,9 +52,9 @@ public class RGBPixel implements Pixel {
   /**
    * Simply updates the current pixel values with the given arguments.
    *
-   * @param red the new red value
+   * @param red   the new red value
    * @param green the new green value
-   * @param blue the new blue value
+   * @param blue  the new blue value
    */
   private void setPixel(int red, int green, int blue) {
     this.red = red;
@@ -99,7 +99,7 @@ public class RGBPixel implements Pixel {
 
     double[] vals = new double[3];
 
-    for(int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       vals[i] += this.red * matrix[i][0];
       vals[i] += this.green * matrix[i][1];
       vals[i] += this.blue * matrix[i][2];

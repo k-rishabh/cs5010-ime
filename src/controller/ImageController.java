@@ -51,11 +51,12 @@ public class ImageController {
     commands = new HashMap<>();
     images = new HashMap<>();
   }
+
   /**
    * Initializes the controller in script file mode. If fails, defaults to command line mode.
    * It takes the model and script file path as input.
    *
-   * @param img the model on which the controller will operate
+   * @param img            the model on which the controller will operate
    * @param scriptFilePath the file path of the script file
    */
   public ImageController(ImageModel img, String scriptFilePath) {
@@ -107,7 +108,7 @@ public class ImageController {
    * Based on the command entered, it gets the function from the command map and delegates the
    * work to the command package. The command package will in turn use model functions to operate
    * on the model.
-   * <p> The command package automatically adds the resulting image(s) to the map, since it is
+   * The command package automatically adds the resulting image(s) to the map, since it is
    * provided as input, along with the parameters of the command.
    */
   public void execute() {

@@ -25,7 +25,7 @@ public class ProgramRunner {
 
     } else if (args.length == 2) {
       // script mode
-      if (args[0].equals("-file")){
+      if (args[0].equals("-file")) {
         controller = new ImageController(model, args[1]);
       } else {
         throw new IllegalArgumentException("Invalid command line argument!");

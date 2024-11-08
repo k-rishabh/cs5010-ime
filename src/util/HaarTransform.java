@@ -1,8 +1,6 @@
 package util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.Set;
  * A utility class that provides functionality for performing a Haar transform on a
  * 2D matrix of integers. Additionally, it provides functionality for inverse Haar transform
  * on similar 2D matrices of integers.
- * <p> Internally, the functions convert the matrices to doubles to perform calculations with
+ * Internally, the functions convert the matrices to doubles to perform calculations with
  * a higher accuracy. They are converted back at the end.
  */
 public class HaarTransform {

@@ -23,7 +23,7 @@ This assignment implements an image processing system with support for image man
 - Following the feedback from the previous assignment, we removed many static methods. Hence, our ProgramRunner now initializes a controller.
 
 ## Completeness
-All parts of our code are working and complete. However, our controller tests do not use the MockImage class to perform its opertaions.
+All parts of our code are working and complete, except our Controller Test, which has a complete MockImage but incomplete JUnit tests.
 
 ## How to Run the Program
 
