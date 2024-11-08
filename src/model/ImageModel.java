@@ -150,10 +150,27 @@ public interface ImageModel {
    */
   void compress(int ratio);
 
+  /**
+   * Applies color correction to the image by adjusting each color channel to align with average
+   * peak based on channel histograms.
+   */
   void colorCorrect();
 
+  /**
+   * Method which creates the histogram from the RGB Image.
+   *
+   * @return  returns an image which represents the histogram.
+   */
   ImageModel histogram();
 
+  /**
+   * Adjusts levels by mapping pixel values from the specified black, mid, and white values
+   * to fit within the desired range. This operation improves the contrast.
+   *
+   * @param black the black value.
+   * @param mid   the mid value.
+   * @param white the white value.
+   */
   void levelsAdjust(int black, int mid, int white);
 
   /**
