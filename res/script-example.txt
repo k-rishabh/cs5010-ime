@@ -83,32 +83,35 @@ save res/ex-image-actual-levels-adjust.png ex-image-actual-levels-adjust
 sepia ex-image ex-image-actual-sepia-split split 60
 save res/ex-image-actual-sepia-split.png ex-image-actual-sepia-split
 
-#Loading a PPM image
+# run another script
+run res/script-submission.txt
+
+# loading a PPM image
 load res/ppm-original.ppm original-image-ppm
 
-#Blurring the PPM image
+# blurring the PPM image
 blur original-image-ppm image-blur-ppm
 
-#Saving the blur PPM component
+# saving the blur PPM component
 save res/script-ppm-blur-image.ppm image-blur-ppm
 
-#Getting the red component of JPG image
+# getting the red component of JPG image
 red-component ex-image image-red-component-jpg
 
-#Saving the red component
+# saving the red component
 save res/ex-jpg-red-component.jpg image-red-component-jpg
 
-#Test extra whitespace
+# test extra whitespace
 luma-component ex-image  image-luma
 
-#Test invalid filepath
+# test invalid filepath
 load images/j$unit-small.png l2
 
-#Test space in filepath
+# test space in filepath
 load images/ image-small.png l3
 
-#Test misspelled command
+# test misspelled command
 blurd ex-image image-blur
 
-#Test wrong extension of image
+# test wrong extension of image
 load res/original-image.pbb ex-image
