@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import model.Image;
+import model.ImageModel;
 import model.RGBImage;
 
 import static javax.imageio.ImageIO.read;
@@ -27,7 +27,7 @@ public class ImageUtil {
    * @param filePath the file path of the raster image
    * @return the image in the form of our internal representation
    */
-  public static Image loadImageRaster(String filePath) {
+  public static ImageModel loadImageRaster(String filePath) {
     BufferedImage img;
 
     try {
@@ -56,7 +56,7 @@ public class ImageUtil {
    * @param filename the file path of the raw image
    * @return the image in the form of our internal representation
    */
-  public static Image loadImageRaw(String filename) {
+  public static ImageModel loadImageRaw(String filename) {
     Scanner sc;
 
     try {
@@ -108,7 +108,7 @@ public class ImageUtil {
    * @param filePath the file path where the image must be saved
    * @param img      the image to be saved, in the form of our internal representation
    */
-  public static void saveImageRaster(String filePath, Image img) {
+  public static void saveImageRaster(String filePath, ImageModel img) {
     BufferedImage buffImg =
             new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
@@ -131,7 +131,7 @@ public class ImageUtil {
    * @param filePath the file path where the image must be saved
    * @param img      the image to be saved, in the form of our internal representation
    */
-  public static void saveImageRaw(String filePath, Image img) {
+  public static void saveImageRaw(String filePath, ImageModel img) {
     FileWriter writer;
     try {
       writer = new FileWriter(filePath);

@@ -1,17 +1,24 @@
 package model;
 
-import model.filter.Filter;
-import model.pixel.PixelADT;
+import java.util.function.Function;
+
+import controller.filter.Filter;
+import controller.filter.TintBlueFilter;
+import controller.filter.TintGreenFilter;
+import controller.filter.TintRedFilter;
+import model.pixel.Pixel;
 import model.pixel.RGBPixel;
+import util.HaarTransform;
+import util.Histogram;
 import util.PixelProcessor;
+
 
 /**
  * Class representing an RGB image, extending the abstract class Image.
  * This class provides the implementation for applying filters, splitting the image
  * into color components, and creating deep copy of the image.
  */
-public class RGBImage extends Image {
-
+public class RGBImage extends AbstractImage {
   /**
    * Constructs an empty (black) RGBImage with the given height and width.
    *
@@ -19,7 +26,16 @@ public class RGBImage extends Image {
    * @param width  the width of the image
    */
   public RGBImage(int height, int width) {
-    this.pixels = new PixelADT[height][width];
+    this.pixels = new Pixel[height][width];
+  }
+
+  /**
+   * Constructs an RGBImage from a 2D array of pixels of type Pixel.
+   *
+   * @param pixels a 2D array of pixels
+   */
+  public RGBImage(Pixel[][] pixels) {
+    this.pixels = pixels;
   }
 
   /**
@@ -32,7 +48,7 @@ public class RGBImage extends Image {
     int height = packedPixels.length;
     int width = packedPixels[0].length;
 
-    this.pixels = new PixelADT[height][width];
+    this.pixels = new Pixel[height][width];
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -42,15 +58,21 @@ public class RGBImage extends Image {
   }
 
   @Override
-  public Image deepCopy() {
+  public ImageModel histogram() {
+    Histogram histogram = new Histogram();
+    return histogram.createHistogram(this);
+  }
+
+  @Override
+  public RGBImage deepCopy() {
     int height = this.pixels.length;
     int width = this.pixels[0].length;
 
-    Image copyImage = new RGBImage(height, width);
+    RGBImage copyImage = new RGBImage(height, width);
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        copyImage.pixels[i][j] = pixels[i][j].deepCopy();
+        copyImage.pixels[i][j] = new RGBPixel(pixels[i][j].getPacked());
       }
     }
 
@@ -58,33 +80,14 @@ public class RGBImage extends Image {
   }
 
   @Override
-  public Image[] split() {
-    Image redTint = this.deepCopy();
-    Image greenTint = this.deepCopy();
-    Image blueTint = this.deepCopy();
-
-    PixelProcessor.apply(redTint.pixels, p -> p.applyRedTint());
-    PixelProcessor.apply(greenTint.pixels, p -> p.applyGreenTint());
-    PixelProcessor.apply(blueTint.pixels, p -> p.applyBlueTint());
-
-    return new Image[]{redTint, greenTint, blueTint};
-  }
-
-  /**
-   * Applies the given Filter to the image. The filter matrix is applied
-   * to each pixel and the surrounding pixels, and the result is stored in a temporary
-   * array before being assigned back to the image.
-   *
-   * @param filter the filter to be applied to the image.
-   */
-  protected void applyFilter(Filter filter) {
+  public void applyImageFilter(Filter filter) {
     double[][] matrix = filter.getFilter();
 
     int height = pixels.length;
     int width = pixels[0].length;
     int c = matrix.length;
 
-    PixelADT[][] temp = new RGBPixel[height][width];
+    Pixel[][] temp = new RGBPixel[height][width];
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -96,7 +99,7 @@ public class RGBImage extends Image {
         for (int x = Math.max(0, c / 2 - i); x < Math.min(c, height + c / 2 - i); x++) {
           for (int y = Math.max(0, c / 2 - j); y < Math.min(c, width + c / 2 - j); y++) {
             double[] filterValues =
-                    this.pixels[x + i - c / 2][y + j - c / 2].applyFilter(matrix[x][y]);
+                    this.getPixel(x + i - c / 2, y + j - c / 2).applyFilter(matrix[x][y]);
 
             redVal += filterValues[0];
             greenVal += filterValues[1];
@@ -107,8 +110,138 @@ public class RGBImage extends Image {
         temp[i][j] = new RGBPixel((int) redVal, (int) greenVal, (int) blueVal);
       }
     }
-
     this.pixels = temp;
+  }
+
+  @Override
+  public ImageModel[] splitComponents() {
+    RGBImage redTint = this.deepCopy();
+    RGBImage greenTint = this.deepCopy();
+    RGBImage blueTint = this.deepCopy();
+
+    PixelProcessor.apply(redTint.pixels, p -> p.applyColorFilter(new TintRedFilter()));
+    PixelProcessor.apply(greenTint.pixels, p -> p.applyColorFilter(new TintGreenFilter()));
+    PixelProcessor.apply(blueTint.pixels, p -> p.applyColorFilter(new TintBlueFilter()));
+
+    return new ImageModel[]{redTint, greenTint, blueTint};
+  }
+
+  @Override
+  public void compress(int ratio) {
+    int h = this.getHeight();
+    int w = this.getWidth();
+
+    int[][] reds = new int[h][w];
+    int[][] greens = new int[h][w];
+    int[][] blues = new int[h][w];
+
+    // initialize reds, greens, and blues
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        reds[i][j] = this.getRed(i, j);
+        greens[i][j] = this.getGreen(i, j);
+        blues[i][j] = this.getBlue(i, j);
+      }
+    }
+
+    // compress matrices
+    reds = HaarTransform.compressMatrix(reds, ratio);
+    greens = HaarTransform.compressMatrix(greens, ratio);
+    blues = HaarTransform.compressMatrix(blues, ratio);
+
+    // combine matrices
+    Pixel[][] compressed = new Pixel[h][w];
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+        compressed[i][j] = new RGBPixel(reds[i][j], greens[i][j], blues[i][j]);
+      }
+    }
+
+    this.pixels = compressed;
+  }
+
+  @Override
+  public void colorCorrect() {
+    int[][] frequencies = Histogram.getFrequencies(this);
+    int[] red = frequencies[0];
+    int[] green = frequencies[1];
+    int[] blue = frequencies[2];
+
+    int redPeak = findChannelPeak(red);
+    int greenPeak = findChannelPeak(green);
+    int bluePeak = findChannelPeak(blue);
+
+    int avgPeak = (redPeak + greenPeak + bluePeak) / 3;
+    Function<Pixel, Integer> colorCorrect = p -> {
+
+      int updatedR = Math.max(0, Math.min(255, p.getRed() + avgPeak - redPeak));
+      int updatedG = Math.max(0, Math.min(255, p.getGreen() + avgPeak - greenPeak));
+      int updatedB = Math.max(0, Math.min(255, p.getBlue() + avgPeak - bluePeak));
+
+      return (updatedR << 16) | (updatedG << 8) | (updatedB);
+    };
+
+    this.applyTransform(colorCorrect);
+  }
+
+  private int findChannelPeak(int[] histogram) {
+    int peakValue = 0;
+    int peakPosition = 0;
+    for (int i = 10; i <= 245; i++) {
+      if (histogram[i] > peakValue) {
+        peakValue = histogram[i];
+        peakPosition = i;
+      }
+    }
+
+    return peakPosition;
+  }
+
+  private void applyTransform(Function<Pixel, Integer> transformFunction) {
+    int height = this.pixels.length;
+    int width = this.pixels[0].length;
+    int[][] result = new int[height][width];
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        result[i][j] = transformFunction.apply(this.pixels[i][j]);
+        RGBPixel pixel = new RGBPixel(result[i][j]);
+        this.pixels[i][j] = pixel;
+      }
+    }
+  }
+
+  private int fittingProcess(int black, int mid, int white, int signal) {
+    double valueA = Math.pow(black, 2) * (mid - white) - black * (Math.pow(mid, 2)
+            - Math.pow(white, 2)) + white * Math.pow(mid, 2) - mid * Math.pow(white, 2);
+
+    double valueAa = -black * (128 - 255) + 128 * white - 255 * mid;
+
+    double valueAb = Math.pow(black, 2) * (128 - 255) + 255 * Math.pow(mid, 2)
+            - 128 * Math.pow(white, 2);
+
+    double valueAc = Math.pow(black, 2) * (255 * mid - 128 * white)
+            - black * (255 * Math.pow(mid, 2) - 128 * Math.pow(white, 2));
+
+    double a = valueAa / valueA;
+
+    double b = valueAb / valueA;
+
+    double c = valueAc / valueA;
+    return Math.max(0, Math.min(255, (int) (a * Math.pow(signal, 2) + b * signal + c)));
+  }
+
+  @Override
+  public void levelsAdjust(int black, int mid, int white) {
+    Function<Pixel, Integer> levelAdjust = p -> {
+      int updatedR = this.fittingProcess(black, mid, white, p.getRed());
+      int updatedG = this.fittingProcess(black, mid, white, p.getGreen());
+      int updatedB = this.fittingProcess(black, mid, white, p.getBlue());
+
+      return (updatedR << 16) | (updatedG << 8) | (updatedB);
+    };
+
+    this.applyTransform(levelAdjust);
   }
 
 }
