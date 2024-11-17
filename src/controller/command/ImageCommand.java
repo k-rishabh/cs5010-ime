@@ -10,7 +10,7 @@ import model.ImageModel;
  * Used for abstraction of different operations on images.
  */
 public interface ImageCommand {
-  /**
+  /** 
    * Applies a transformation/operation on the image.
    * The type of transformation depends on the calling object.
    *
