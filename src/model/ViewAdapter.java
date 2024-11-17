@@ -1,4 +1,5 @@
 package model;
 
-public class ViewAdapter {
+public class ViewAdapter implements ViewAdapterInterface {
+
 }

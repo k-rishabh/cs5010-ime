@@ -2,7 +2,7 @@ package controller.command;
 
 import java.util.Map;
 
-import controller.ImageCommand;
+import model.ImageMapInterface;
 import model.ImageModel;
 
 /**
@@ -20,20 +20,18 @@ public class Histogram implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Histogram(String[] args) {
-    if (args.length == 3) {
-      this.source = args[1];
-      this.result = args[2];
+    if (args.length == 2) {
+      this.source = args[0];
+      this.result = args[1];
     } else {
       throw new IllegalArgumentException(
               "Error: Illegal number of arguments in histogram command!");
     }
   }
 
+
   @Override
-  public int apply(Map<String, ImageModel> images) {
-    ImageModel srcImage = images.get(source).deepCopy();
-    ImageModel destImage = srcImage.histogram();
-    images.put(result, destImage);
-    return 0;
+  public void apply(ImageMapInterface images) {
+    images.histogram(source, result);
   }
 }

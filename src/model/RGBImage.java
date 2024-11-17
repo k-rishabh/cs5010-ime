@@ -244,4 +244,8 @@ public class RGBImage extends AbstractImage {
     this.applyTransform(levelAdjust);
   }
 
+
+  @Override
+  public void downscale(int newHeight, int newWidth) {
+  }
 }

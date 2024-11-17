@@ -190,4 +190,6 @@ public interface ImageModel {
    * @param img the image to be merged to the right of the calling image
    */
   void mergeSplits(ImageModel img);
+
+  void downscale(int newHeight, int newWidth);
 }

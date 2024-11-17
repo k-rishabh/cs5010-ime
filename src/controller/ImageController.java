@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -21,12 +22,15 @@ import controller.command.ComponentValue;
 import controller.command.Compress;
 import controller.command.FlipHorizontal;
 import controller.command.FlipVertical;
+import controller.command.ImageCommand;
 import controller.command.LevelsAdjust;
 import controller.command.Load;
 import controller.command.Save;
 import controller.command.Sepia;
 import controller.command.Sharpen;
 import controller.command.SplitRGB;
+import model.ImageMap;
+import model.ImageMapInterface;
 import model.ImageModel;
 import controller.command.Histogram;
 
@@ -36,41 +40,25 @@ import controller.command.Histogram;
  * It also stores the images in the form of a hashmap.
  * Supports both CLI and script based input.
  */
-public class ImageController {
-  public Scanner sc;
-  private Map<String, ImageModel> images;
+public class ImageController implements ImageControllerInterface {
   private Map<String, Function<String[], ImageCommand>> commands;
+  private final Readable in;
+  private final Appendable out;
+
 
   /**
-   * Initializes the controller in CLI mode. Takes the model as input.
+   * Constructs the controller with a Readable and
+   * Appendable object. It has been designed to accept a sequence of multiple
+   * inputs from the Readable object.
    *
-   * @param img the model on which the controller will operate
+   * @param in  - Readable Object
+   * @param out - Appendable Object
    */
-  public ImageController(ImageModel img) {
-    sc = new Scanner(System.in);
-    commands = new HashMap<>();
-    images = new HashMap<>();
+  public ImageController(Readable in, Appendable out) {
+    this.in = in;
+    this.out = out;
   }
 
-  /**
-   * Initializes the controller in script file mode. If fails, defaults to command line mode.
-   * It takes the model and script file path as input.
-   *
-   * @param img            the model on which the controller will operate
-   * @param scriptFilePath the file path of the script file
-   */
-  public ImageController(ImageModel img, String scriptFilePath) {
-    commands = new HashMap<>();
-    images = new HashMap<>();
-
-    try {
-      sc = new Scanner(new FileInputStream(scriptFilePath));
-    } catch (FileNotFoundException e) {
-      System.out.println("Exception: Script file not found: " + scriptFilePath);
-      System.out.println("Using CLI input...");
-      sc = new Scanner(System.in);
-    }
-  }
 
   /**
    * Initializes all the known commands that can be used to operate on images.
@@ -111,39 +99,51 @@ public class ImageController {
    * The command package automatically adds the resulting image(s) to the map, since it is
    * provided as input, along with the parameters of the command.
    */
-  public void execute() {
+  public void execute(ImageMapInterface image) throws IOException {
+    commands = new HashMap<>();
     this.initializeCommands();
-
+    Scanner sc = new Scanner(in);
     int lineNo = 0;
     while (sc.hasNextLine()) {
-      lineNo++;
-      String cmd = sc.nextLine().trim();
+      try {
+        lineNo++;
+        String cmd = sc.nextLine().trim();
 
-      if (cmd.equals("q") || cmd.equals("quit")) {
-        System.out.println("Exiting program...");
-        System.exit(0);
-      } else if (!cmd.isEmpty() && cmd.charAt(0) != '#') {
-        String[] tokens = cmd.split(" ");
+        if (cmd.equals("q") || cmd.equals("quit")) {
+          System.out.println("Exiting program...");
+          System.exit(0);
+        } else if (!cmd.isEmpty() && cmd.charAt(0) != '#') {
+          String[] tokens = cmd.split(" ");
 
-        if (tokens[0].equals("run")) {
-          ImageController run = new ImageController(null, tokens[1]);
-          run.execute();
-          continue;
+//        if (tokens[0].equals("run")) {
+//          ImageController run = new ImageController(null, tokens[1]);
+//          run.execute();
+//          continue;
+//        }
+
+          if (tokens.length < 3) {
+//            this.out.append("Unknown command on line number:").append(String.valueOf(lineNo)).append("\n");
+//            System.out.printf("Unknown command on line number: %d\n", lineNo);
+            throw new IllegalArgumentException("Unknown command on line number: " + String.valueOf(lineNo));
+          }
+
+
+          String[] args = new String[tokens.length - 1];
+          System.arraycopy(tokens, 1, args, 0, tokens.length - 1);
+          ImageCommand fn = commands.get(tokens[0]).apply(args);
+          if (fn != null) {
+            fn.apply(image);
+            this.out.append(tokens[0]).append(" operation performed!").append("\n");
+          } else {
+//            this.out.append("Unknown command on line number:").append(String.valueOf(lineNo)).append("\n");
+            throw new IllegalArgumentException("Unknown command on line number: " + String.valueOf(lineNo));
+          }
         }
-
-        if (tokens.length < 3) {
-          System.out.printf("Unknown command on line number: %d\n", lineNo);
-        }
-
-        ImageCommand fn = commands.get(tokens[0]).apply(tokens);
-        if (fn != null) {
-          fn.apply(this.images);
-        } else {
-          System.out.printf("Unknown command on line number: %d\n", lineNo);
-        }
+      }
+      catch (Exception e) {
+        this.out.append("Error").append("\n");
       }
     }
 
-    System.out.println("Successfully reached end of script!");
   }
 }

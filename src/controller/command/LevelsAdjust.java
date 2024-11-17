@@ -2,7 +2,7 @@ package controller.command;
 
 import java.util.Map;
 
-import controller.ImageCommand;
+import model.ImageMapInterface;
 import model.ImageModel;
 import util.ImageTransformer;
 
@@ -13,12 +13,7 @@ import util.ImageTransformer;
  */
 public class LevelsAdjust implements ImageCommand {
 
-  private final String source;
-  private final String result;
-  private final int b;
-  private final int m;
-  private final int w;
-  private final int split;
+  private final String[] args;
 
   /**
    * Constructor function for the Levels Adjust transformation. Requires an array of Strings,
@@ -27,32 +22,18 @@ public class LevelsAdjust implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public LevelsAdjust(String[] args) {
-    if (args.length != 6 && args.length != 8) {
-      throw new IllegalArgumentException("Illegal number of arguments in levels-adjust command!");
-    } else if (args.length == 8 && !args[6].equals("split")) {
-      throw new IllegalArgumentException("Illegal argument in levels-adjust command!");
-    }
-
-    this.b = Integer.parseInt(args[1]);
-    this.m = Integer.parseInt(args[2]);
-    this.w = Integer.parseInt(args[3]);
-    this.source = args[4];
-    this.result = args[5];
-
-    if (args.length == 8) {
-      this.split = Integer.parseInt(args[7]);
+    if (args.length == 7 && !args[5].equals("split")) {
+      throw new IllegalArgumentException("Error: Illegal argument in levels adjust.!");
+    } else if (args.length == 5 || args.length == 7) {
+      this.args = args;
     } else {
-      this.split = 0;
+      throw new IllegalArgumentException("Error: Illegal number of arguments in levels adjust.!");
     }
   }
 
+
   @Override
-  public int apply(Map<String, ImageModel> images) {
-    if (split == 0 || split == 100) {
-      return ImageTransformer.apply(images, source, result, img -> img.levelsAdjust(b, m, w));
-    } else {
-      return ImageTransformer.applySplit(images, source,
-              result, img -> img.levelsAdjust(b, m, w), split);
-    }
+  public void apply(ImageMapInterface images) {
+    images.levelsAdjust(args);
   }
 }

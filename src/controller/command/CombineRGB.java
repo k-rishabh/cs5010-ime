@@ -2,7 +2,7 @@ package controller.command;
 
 import java.util.Map;
 
-import controller.ImageCommand;
+import model.ImageMapInterface;
 import model.ImageModel;
 
 /**
@@ -22,38 +22,18 @@ public class CombineRGB implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public CombineRGB(String[] args) {
-    if (args.length == 5) {
-      dest = args[1];
-      red = args[2];
-      green = args[3];
-      blue = args[4];
+    if (args.length == 4) {
+      dest = args[0];
+      red = args[1];
+      green = args[2];
+      blue = args[3];
     } else {
       throw new IllegalArgumentException("Illegal number of arguments in rgb-combine!");
     }
   }
 
   @Override
-  public int apply(Map<String, ImageModel> images) {
-    if (images.get(red) == null) {
-      System.out.println("Image " + red + " not found!");
-      return 1;
-    } else if (images.get(green) == null) {
-      System.out.println("Image " + green + " not found!");
-      return 1;
-    } else if (images.get(blue) == null) {
-      System.out.println("Image " + blue + " not found!");
-      return 1;
-    }
-
-    ImageModel destImg = images.get(red).deepCopy();
-    destImg.combineComponents(images.get(green));
-    destImg.combineComponents(images.get(blue));
-
-    images.put(dest, destImg);
-    if (images.get(dest) != null) {
-      return 0;
-    } else {
-      return 1;
-    }
+  public void apply(ImageMapInterface images) {
+    images.rgbCombine(dest, red, green, blue);
   }
 }

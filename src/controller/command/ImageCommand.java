@@ -1,7 +1,9 @@
-package controller;
+package controller.command;
 
 import java.util.Map;
 
+import controller.ImageControllerInterface;
+import model.ImageMapInterface;
 import model.ImageModel;
 
 /**
@@ -16,5 +18,5 @@ public interface ImageCommand {
    *
    * @param images the images to be operated on
    */
-  int apply(Map<String, ImageModel> images);
+  void apply(ImageMapInterface images);
 }

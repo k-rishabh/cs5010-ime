@@ -1,6 +1,18 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.Scanner;
+
 import controller.ImageController;
+import model.ImageMap;
+import model.ImageMapInterface;
 import model.ImageModel;
 import model.RGBImage;
+
+import static java.lang.System.in;
 
 /**
  * Contains the main method.
@@ -14,26 +26,36 @@ public class ProgramRunner {
    *
    * @param args takes in a single String which is the file path of the script file to be run.
    */
-  public static void main(String[] args) {
-    // Initialize
-    ImageModel model = new RGBImage(0, 0);
+  public static void main(String[] args) throws IOException {
+    ImageMapInterface imageMap = new ImageMap();
     ImageController controller;
 
     if (args.length == 0) {
       // CLI mode
-      controller = new ImageController(model);
-
+      controller = new ImageController(new InputStreamReader(System.in), System.out);
     } else if (args.length == 2) {
-      // script mode
       if (args[0].equals("-file")) {
-        controller = new ImageController(model, args[1]);
+        File file = new File(args[1]);
+        FileInputStream fis = new FileInputStream(file);
+        Scanner sc = new Scanner(fis);
+        StringBuilder builder = new StringBuilder();
+        while (sc.hasNextLine()) {
+          String s = sc.nextLine();
+          if (s.isEmpty()) {
+            continue;
+          }
+          if (s.charAt(0) != '#') {
+            builder.append(s).append(System.lineSeparator());
+          }
+        }
+        Readable in = new StringReader(builder.toString());
+        controller = new ImageController(in, System.out);
       } else {
         throw new IllegalArgumentException("Invalid command line argument!");
       }
     } else {
       throw new IllegalArgumentException("Unknown command line arguments!");
     }
-
-    controller.execute();
+    controller.execute(imageMap);
   }
 }

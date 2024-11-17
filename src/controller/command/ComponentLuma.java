@@ -2,8 +2,8 @@ package controller.command;
 
 import java.util.Map;
 
-import controller.ImageCommand;
 import controller.filter.LumaFilter;
+import model.ImageMapInterface;
 import model.ImageModel;
 import util.ImageTransformer;
 
@@ -12,9 +12,7 @@ import util.ImageTransformer;
  * It is represented by the source image, destination image, and split (if required).
  */
 public class ComponentLuma implements ImageCommand {
-  private final String source;
-  private final String result;
-  private final int split;
+  private final String[] args;
 
   /**
    * Constructor function for the Component Luma transformation. Requires an array of Strings,
@@ -23,30 +21,18 @@ public class ComponentLuma implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public ComponentLuma(String[] args) {
-    if (args.length != 3 && args.length != 5) {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in component-luma!");
-    } else if (args.length == 5 && !args[3].equals("split")) {
+    if (args.length == 4 && !args[2].equals("split")) {
       throw new IllegalArgumentException("Error: Illegal argument in component-luma!");
-    }
-
-    this.source = args[1];
-    this.result = args[2];
-
-    if (args.length == 5) {
-      this.split = Integer.parseInt(args[4]);
+    } else if (args.length == 2 || args.length == 4) {
+      this.args = args;
     } else {
-      this.split = 0;
+      throw new IllegalArgumentException("Error: Illegal argument in component-luma!");
     }
   }
 
   @Override
-  public int apply(Map<String, ImageModel> images) {
-    if (split == 0 || split == 100) {
-      return ImageTransformer.apply(images, source,
-              result, img -> img.applyColorFilter(new LumaFilter()));
-    } else {
-      return ImageTransformer.applySplit(images, source,
-              result, img -> img.applyColorFilter(new LumaFilter()), split);
-    }
+  public void apply(ImageMapInterface images) {
+    images.lumaGreyscale(args);
   }
+
 }

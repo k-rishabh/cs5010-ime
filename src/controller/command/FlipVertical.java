@@ -2,7 +2,7 @@ package controller.command;
 
 import java.util.Map;
 
-import controller.ImageCommand;
+import model.ImageMapInterface;
 import model.ImageModel;
 import util.ImageTransformer;
 
@@ -21,16 +21,17 @@ public class FlipVertical implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public FlipVertical(String[] args) {
-    if (args.length == 3) {
-      src = args[1];
-      dest = args[2];
+    if (args.length == 2) {
+      src = args[0];
+      dest = args[1];
     } else {
       throw new IllegalArgumentException("Unknown number of arguments for vertical-flip!");
     }
   }
 
+
   @Override
-  public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images, src, dest, img -> img.verticalFlip());
+  public void apply(ImageMapInterface images) {
+    images.verticalFlip(src, dest);
   }
 }

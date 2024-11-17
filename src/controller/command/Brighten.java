@@ -2,7 +2,7 @@ package controller.command;
 
 import java.util.Map;
 
-import controller.ImageCommand;
+import model.ImageMapInterface;
 import model.ImageModel;
 import util.ImageTransformer;
 
@@ -23,18 +23,18 @@ public class Brighten implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Brighten(String[] args) {
-    if (args.length != 3) {
-      this.val = Integer.parseInt(args[1]);
-      this.source = args[2];
-      this.result = args[3];
+    if (args.length == 3) {
+      this.val = Integer.parseInt(args[0]);
+      this.source = args[1];
+      this.result = args[2];
     } else {
       throw new IllegalArgumentException("Error: Illegal number of arguments brighten!");
     }
   }
 
+
   @Override
-  public int apply(Map<String, ImageModel> images) {
-    return ImageTransformer.apply(images, source,
-            result, img -> img.brighten(val));
+  public void apply(ImageMapInterface images) {
+    images.brighten(source,result,val);
   }
 }

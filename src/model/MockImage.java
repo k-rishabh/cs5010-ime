@@ -1,5 +1,7 @@
 package model;
 
+import java.io.IOException;
+
 import controller.filter.Filter;
 import model.pixel.Pixel;
 
@@ -8,131 +10,111 @@ import model.pixel.Pixel;
  * It documents which functions are called in StringBuilder log.
  * It may also return a uniqueCode that it is initialized with, if return type is int.
  */
-public class MockImage implements ImageModel {
+public class MockImage implements ImageMapInterface {
   private StringBuilder log;
-  private int uniqueCode;
 
-  public MockImage(StringBuilder log, int uniqueCode) {
+  public MockImage(StringBuilder log) {
     this.log = log;
-    this.uniqueCode = uniqueCode;
+  }
+
+
+  @Override
+  public void load(String imageName, String filePath) {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(filePath).append("\n");
   }
 
   @Override
-  public void compress(int ratio) {
-    log.append(String.format("Inside compress with ratio of: %d.\n", ratio));
+  public void save(String imageName, String filePath) throws IOException {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(filePath).append("\n");
   }
 
   @Override
-  public void colorCorrect() {
-    log.append("Inside color correct.");
+  public void sepia(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public ImageModel histogram() {
-    return null;
+  public void redComponent(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public void levelsAdjust(int black, int mid, int white) {
-    log.append(String.format("Inside levelsAdjust with black = %d, mid = %d, white = %d.\n",
-            black, mid, white));
+  public void blueComponent(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public ImageModel[] splitImage(int ratio) {
-    log.append(String.format("Inside splitImage with ratio of: %d.\n", ratio));
-    return null;
+  public void greenComponent(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public void mergeSplits(ImageModel img) {
-    log.append(String.format("Inside of mergeRight with img height = %d and width = %d.\n",
-            img.getHeight(), img.getWidth()));
+  public void lumaGreyscale(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public int getHeight() {
-    log.append("Inside getHeight. \n");
-    return uniqueCode;
+  public void valueGreyscale(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public int getWidth() {
-    log.append("Inside getWidth. \n");
-    return uniqueCode;
+  public void intensityGreyscale(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public int getRed(int i, int j) {
-    return 0;
+  public void brighten(String imageName, String destImageName, int increment) {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(destImageName).append("\n");
   }
 
   @Override
-  public int getGreen(int i, int j) {
-    return 0;
+  public void blur(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public int getBlue(int i, int j) {
-    return 0;
+  public void sharpen(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public int getPackedPixel(int i, int j) {
-    log.append(String.format("Inside getPackedPixel with i = %d, j = %d. \n", i, j));
-    return uniqueCode;
+  public void horizontalFlip(String imageName, String destImageName) {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(destImageName).append("\n");
   }
 
   @Override
-  public Pixel getPixel(int i, int j) {
-    return null;
+  public void verticalFlip(String imageName, String destImageName) {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(destImageName).append("\n");
   }
 
   @Override
-  public ImageModel deepCopy() {
-    log.append("Inside deepCopy. \n");
-    return null;
+  public void rgbSplit(String imageName, String destRedImgName, String destGreenImageName, String destBlueImgName) {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(destRedImgName).append(" ").append(destGreenImageName).append(" ").append(destBlueImgName).append("\n");
   }
 
   @Override
-  public void applyColorFilter(Filter filter) {
-    log.append("In applyColorFilter. \n");
+  public void rgbCombine(String destImageName, String redImageName, String greenImageName, String blueImageName) {
+    log.append("Command Arguments: ").append(destImageName).append(" ").append(redImageName).append(" ").append(greenImageName).append(" ").append(blueImageName).append("\n");
   }
 
   @Override
-  public void applyImageFilter(Filter filter) {
-    log.append("In applyImageFilter. \n");
+  public void colorCorrect(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 
   @Override
-  public void valueComponent() {
-    log.append("Inside valueComponent. \n");
+  public void compress(int percentage, String imageName, String destImageName) {
+    log.append("Command Arguments: ").append(percentage).append(" ").append(imageName).append(" ").append(destImageName).append("\n");
   }
 
   @Override
-  public void brighten(int val) {
-    log.append(String.format("Inside brighten with val = %d. \n", val));
+  public void histogram(String imageName, String destImageName) {
+    log.append("Command Arguments: ").append(imageName).append(" ").append(destImageName).append("\n");
   }
 
   @Override
-  public void horizontalFlip() {
-    log.append("Inside horizontalFlip. \n");
-  }
-
-  @Override
-  public void verticalFlip() {
-    log.append("Inside verticalFlip. \n");
-  }
-
-  @Override
-  public ImageModel[] splitComponents() {
-    log.append("Inside splitComponents. \n");
-    return null;
-  }
-
-  @Override
-  public void combineComponents(ImageModel img) {
-    log.append(String.format("Inside combineComponents with img height = %d and width = %d. \n",
-            img.getHeight(), img.getWidth()));
+  public void levelsAdjust(String[] args) {
+    log.append("Command Arguments: ").append(String.join(" ",args)).append("\n");
   }
 }

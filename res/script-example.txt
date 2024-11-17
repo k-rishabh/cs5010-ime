@@ -23,7 +23,7 @@ save res/ex-image-actual-component-luma.png ex-image-actual-component-luma
 
 # intensity component
 intensity-component ex-image ex-image-actual-component-intensity
-save res/ex-image-actual-component-intensity.png ex-image-actual-component-intensity
+save res/ex-image-actual-component-intensity1.png ex-image-actual-component-intensity
 
 # horizontal flip
 horizontal-flip ex-image ex-image-actual-flip-horizontal
@@ -84,7 +84,7 @@ sepia ex-image ex-image-actual-sepia-split split 60
 save res/ex-image-actual-sepia-split.png ex-image-actual-sepia-split
 
 # run another script
-run res/script-submission.txt
+#run res/script-submission.txt
 
 # loading a PPM image
 load res/ppm-original.ppm original-image-ppm
