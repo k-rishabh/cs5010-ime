@@ -1,13 +1,13 @@
 package view;
 
-import controller.Features;
+import controller.ImageController;
 
-public interface ViewInterface {
+public interface ImageView {
   void refreshScreen(String imageName, String histogram);
 
   void splitView(String imageName);
 
   void displayErrorMessage(String errorMessage);
 
-  void addFeatures(Features features);
+  void addFeatures(ImageController features);
 }

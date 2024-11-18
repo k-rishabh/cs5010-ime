@@ -224,10 +224,9 @@ public class RGBImage extends AbstractImage {
             - black * (255 * Math.pow(mid, 2) - 128 * Math.pow(white, 2));
 
     double a = valueAa / valueA;
-
     double b = valueAb / valueA;
-
     double c = valueAc / valueA;
+
     return Math.max(0, Math.min(255, (int) (a * Math.pow(signal, 2) + b * signal + c)));
   }
 

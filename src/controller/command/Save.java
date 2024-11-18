@@ -1,9 +1,6 @@
 package controller.command;
 
-import java.io.IOException;
-import java.util.Map;
-
-import model.ImageMapInterface;
+import model.ImageMap;
 import model.ImageModel;
 import util.ImageUtil;
 
@@ -22,20 +19,33 @@ public class Save implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Save(String[] args) {
-    if (args.length == 2) {
-      filePath = args[0];
-      imageName = args[1];
+    if (args.length == 3) {
+      filePath = args[1];
+      imageName = args[2];
     } else {
       throw new IllegalArgumentException("Unknown number of arguments for load command!");
     }
   }
 
   @Override
-  public void apply(ImageMapInterface images) {
-    try {
-      images.save(imageName,filePath);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+  public int apply(ImageMap images) {
+    ImageModel img = images.get(imageName);
+
+    if (img == null) {
+      System.out.println("Image " + imageName + " not found!");
+      return 1;
     }
+
+    String extension = filePath.substring(filePath.lastIndexOf('.')).toLowerCase();
+
+    if (extension.equals(".jpg") || extension.equals(".png")) {
+      ImageUtil.saveImageRaster(filePath, img);
+    } else if (extension.equalsIgnoreCase(".ppm")) {
+      ImageUtil.saveImageRaw(filePath, img);
+    } else {
+      System.out.printf("Error: Did not recognize file extension: %s!\n", extension);
+    }
+
+    return 0;
   }
 }

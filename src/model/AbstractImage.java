@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.image.BufferedImage;
+
 import controller.filter.Filter;
 
 import model.pixel.Pixel;
@@ -149,6 +151,20 @@ public abstract class AbstractImage implements ImageModel {
     }
 
     this.pixels = merged;
+  }
+
+  @Override
+  public BufferedImage getBufferedImage() {
+    BufferedImage buffImg =
+            new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+    for (int i = 0; i < this.getHeight(); i++) {
+      for (int j = 0; j < this.getWidth(); j++) {
+        buffImg.setRGB(j, i, this.getPackedPixel(i, j));
+      }
+    }
+
+    return buffImg;
   }
 
   @Override

@@ -1,10 +1,6 @@
 package controller.command;
 
-import java.util.Map;
-
-import model.ImageMapInterface;
-import model.ImageModel;
-import util.ImageTransformer;
+import model.ImageMap;
 
 /**
  * A class that represents the Levels Adjust transformation on an image.
@@ -13,7 +9,12 @@ import util.ImageTransformer;
  */
 public class LevelsAdjust implements ImageCommand {
 
-  private final String[] args;
+  private final String source;
+  private final String result;
+  private final int b;
+  private final int m;
+  private final int w;
+  private final int split;
 
   /**
    * Constructor function for the Levels Adjust transformation. Requires an array of Strings,
@@ -22,18 +23,27 @@ public class LevelsAdjust implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public LevelsAdjust(String[] args) {
-    if (args.length == 7 && !args[5].equals("split")) {
-      throw new IllegalArgumentException("Error: Illegal argument in levels adjust.!");
-    } else if (args.length == 5 || args.length == 7) {
-      this.args = args;
+    if (args.length != 6 && args.length != 8) {
+      throw new IllegalArgumentException("Illegal number of arguments in levels-adjust command!");
+    } else if (args.length == 8 && !args[6].equals("split")) {
+      throw new IllegalArgumentException("Illegal argument in levels-adjust command!");
+    }
+
+    this.b = Integer.parseInt(args[1]);
+    this.m = Integer.parseInt(args[2]);
+    this.w = Integer.parseInt(args[3]);
+    this.source = args[4];
+    this.result = args[5];
+
+    if (args.length == 8) {
+      this.split = Integer.parseInt(args[7]);
     } else {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in levels adjust.!");
+      this.split = 0;
     }
   }
 
-
   @Override
-  public void apply(ImageMapInterface images) {
-    images.levelsAdjust(args);
+  public int apply(ImageMap images) {
+    return images.apply(source, result, img -> img.levelsAdjust(b, m, w), split);
   }
 }

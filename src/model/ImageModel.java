@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.image.BufferedImage;
+
 import controller.filter.Filter;
 import model.pixel.Pixel;
 
@@ -192,4 +194,6 @@ public interface ImageModel {
   void mergeSplits(ImageModel img);
 
   void downscale(int newHeight, int newWidth);
+
+  BufferedImage getBufferedImage();
 }

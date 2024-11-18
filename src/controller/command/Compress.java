@@ -1,10 +1,6 @@
 package controller.command;
 
-import java.util.Map;
-
-import model.ImageMapInterface;
-import model.ImageModel;
-import util.ImageTransformer;
+import model.ImageMap;
 
 /**
  * A class that represents the Compress transformation on an image.
@@ -22,10 +18,10 @@ public class Compress implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Compress(String[] args) {
-    if (args.length == 3) {
-      this.ratio = Integer.parseInt(args[0]);
-      this.source = args[1];
-      this.result = args[2];
+    if (args.length == 4) {
+      this.ratio = Integer.parseInt(args[1]);
+      this.source = args[2];
+      this.result = args[3];
     } else {
       throw new IllegalArgumentException(
               "Error: Illegal number of arguments in compress!");
@@ -33,8 +29,7 @@ public class Compress implements ImageCommand {
   }
 
   @Override
-  public void apply(ImageMapInterface images) {
-    images.compress(ratio,source,result);
+  public int apply(ImageMap images) {
+    return images.apply(source, result, img -> img.compress(ratio), 0);
   }
-
 }

@@ -1,18 +1,15 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.Scanner;
 
+import controller.GUIController;
 import controller.ImageController;
+import controller.ScriptController;
+import model.ImageMapModel;
 import model.ImageMap;
-import model.ImageMapInterface;
-import model.ImageModel;
-import model.RGBImage;
-
-import static java.lang.System.in;
+import view.ImageGUI;
+import view.ImageView;
 
 /**
  * Contains the main method.
@@ -27,35 +24,33 @@ public class ProgramRunner {
    * @param args takes in a single String which is the file path of the script file to be run.
    */
   public static void main(String[] args) throws IOException {
-    ImageMapInterface imageMap = new ImageMap();
+    ImageMap model = new ImageMapModel();
+    ImageView view = new ImageGUI();
     ImageController controller;
 
     if (args.length == 0) {
+      // GUI mode
+      controller = new GUIController(model, view);
+
+    } else if (args.length == 1) {
       // CLI mode
-      controller = new ImageController(new InputStreamReader(System.in), System.out);
-    } else if (args.length == 2) {
-      if (args[0].equals("-file")) {
-        File file = new File(args[1]);
-        FileInputStream fis = new FileInputStream(file);
-        Scanner sc = new Scanner(fis);
-        StringBuilder builder = new StringBuilder();
-        while (sc.hasNextLine()) {
-          String s = sc.nextLine();
-          if (s.isEmpty()) {
-            continue;
-          }
-          if (s.charAt(0) != '#') {
-            builder.append(s).append(System.lineSeparator());
-          }
-        }
-        Readable in = new StringReader(builder.toString());
-        controller = new ImageController(in, System.out);
-      } else {
+      if (!args[0].equals("-text")) {
         throw new IllegalArgumentException("Invalid command line argument!");
       }
+      controller = new ScriptController(model, new InputStreamReader(System.in), System.out);
+
+    } else if (args.length == 2) {
+      // script mode
+      if (!args[0].equals("-file")) {
+        throw new IllegalArgumentException("Invalid command line argument!");
+      }
+      File file = new File(args[1]);
+      controller = new ScriptController(model, new FileReader(file), System.out);
+
     } else {
       throw new IllegalArgumentException("Unknown command line arguments!");
     }
-    controller.execute(imageMap);
+
+    controller.execute();
   }
 }

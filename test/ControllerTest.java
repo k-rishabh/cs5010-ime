@@ -6,9 +6,9 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import controller.ScriptController;
 import controller.ImageController;
-import controller.ImageControllerInterface;
-import model.ImageMapInterface;
+import model.ImageMap;
 import model.MockImage;
 
 import static org.junit.Assert.assertEquals;
@@ -18,10 +18,10 @@ import static org.junit.Assert.assertEquals;
  * A test class for the controller package. Uses mock models for testing purposes.
  */
 public class ControllerTest {
-  private ImageControllerInterface controller;
+  private ImageController controller;
   private Reader in;
   private Appendable out;
-  private ImageMapInterface mock;
+  private ImageMap mock;
   private StringBuilder log;
   @Before
   public void setUp(){
@@ -35,7 +35,7 @@ public class ControllerTest {
     in = new StringReader("sepia test-image test-image-sepia");
     out = new StringWriter();
 
-    controller = new ImageController(in, out);
+    controller = new ScriptController(in, out);
     try {
       controller.execute(mock);
     } catch (IOException e) {
@@ -51,7 +51,7 @@ public class ControllerTest {
     in = new StringReader("blur test-image test-image-blur");
     out = new StringWriter();
 
-    controller = new ImageController(in, out);
+    controller = new ScriptController(in, out);
     try {
       controller.execute(mock);
     } catch (IOException e) {

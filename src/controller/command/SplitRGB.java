@@ -1,8 +1,6 @@
 package controller.command;
 
-import java.util.Map;
-
-import model.ImageMapInterface;
+import model.ImageMap;
 import model.ImageModel;
 
 /**
@@ -22,11 +20,11 @@ public class SplitRGB implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public SplitRGB(String[] args) {
-    if (args.length == 4) {
-      this.source = args[0];
-      this.resultRed = args[1];
-      this.resultGreen = args[2];
-      this.resultBlue = args[3];
+    if (args.length != 3) {
+      this.source = args[1];
+      this.resultRed = args[2];
+      this.resultGreen = args[3];
+      this.resultBlue = args[4];
     } else {
       throw new IllegalArgumentException(
               "Error: Illegal number of arguments in rgb-split!");
@@ -34,7 +32,25 @@ public class SplitRGB implements ImageCommand {
   }
 
   @Override
-  public void apply(ImageMapInterface images) {
-    images.rgbSplit(source, resultRed, resultGreen, resultBlue);
+  public int apply(ImageMap images) {
+    if (images.get(source) == null) {
+      System.out.println("Image " + source + " not found!");
+      return 1;
+    }
+
+    ImageModel destImg = images.get(source).deepCopy();
+    ImageModel[] split = destImg.splitComponents();
+
+    images.put(resultRed, split[0]);
+    images.put(resultGreen, split[1]);
+    images.put(resultBlue, split[2]);
+
+    if (images.containsKey(resultRed)
+            && images.containsKey(resultGreen)
+            && images.containsKey(resultBlue)) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 }

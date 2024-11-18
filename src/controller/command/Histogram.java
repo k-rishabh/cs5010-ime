@@ -1,9 +1,6 @@
 package controller.command;
 
-import java.util.Map;
-
-import model.ImageMapInterface;
-import model.ImageModel;
+import model.ImageMap;
 
 /**
  * A class that represents the Histogram transformation on an image.
@@ -20,18 +17,17 @@ public class Histogram implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Histogram(String[] args) {
-    if (args.length == 2) {
-      this.source = args[0];
-      this.result = args[1];
+    if (args.length == 3) {
+      this.source = args[1];
+      this.result = args[2];
     } else {
       throw new IllegalArgumentException(
               "Error: Illegal number of arguments in histogram command!");
     }
   }
 
-
   @Override
-  public void apply(ImageMapInterface images) {
-    images.histogram(source, result);
+  public int apply(ImageMap images) {
+    return images.apply(source, result, img -> img.histogram(), 0);
   }
 }

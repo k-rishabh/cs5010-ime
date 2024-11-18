@@ -109,14 +109,7 @@ public class ImageUtil {
    * @param img      the image to be saved, in the form of our internal representation
    */
   public static void saveImageRaster(String filePath, ImageModel img) {
-    BufferedImage buffImg =
-            new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-    for (int i = 0; i < img.getHeight(); i++) {
-      for (int j = 0; j < img.getWidth(); j++) {
-        buffImg.setRGB(j, i, img.getPackedPixel(i, j));
-      }
-    }
+    BufferedImage buffImg = img.getBufferedImage();
 
     try {
       write(buffImg, filePath.substring(filePath.lastIndexOf('.') + 1), new File(filePath));

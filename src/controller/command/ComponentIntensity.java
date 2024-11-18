@@ -1,18 +1,16 @@
 package controller.command;
 
-import java.util.Map;
-
 import controller.filter.IntensityFilter;
-import model.ImageMapInterface;
-import model.ImageModel;
-import util.ImageTransformer;
+import model.ImageMap;
 
 /**
  * A class that represents the Intensity Component transformation on an image.
  * It is represented by the source image, destination image, and split (if required).
  */
 public class ComponentIntensity implements ImageCommand {
-  private final String[] args;
+  private final String source;
+  private final String result;
+  private final int split;
 
   /**
    * Constructor function for the Component Intensity transformation. Requires an array of Strings,
@@ -21,18 +19,25 @@ public class ComponentIntensity implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public ComponentIntensity(String[] args) {
-    if (args.length == 4 && !args[2].equals("split")) {
+    if (args.length != 3 && args.length != 5) {
+      throw new IllegalArgumentException(
+              "Error: Illegal number of arguments in component-intensity!");
+    } else if (args.length == 5 && !args[3].equals("split")) {
       throw new IllegalArgumentException("Error: Illegal argument in component-intensity!");
-    } else if (args.length == 2 || args.length == 4) {
-      this.args = args;
+    }
+
+    this.source = args[1];
+    this.result = args[2];
+
+    if (args.length == 5) {
+      this.split = Integer.parseInt(args[4]);
     } else {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in component-intensity!");
+      this.split = 0;
     }
   }
 
   @Override
-  public void apply(ImageMapInterface images) {
-    images.intensityGreyscale(args);
+  public int apply(ImageMap images) {
+    return images.apply(source, result, img -> img.applyColorFilter(new IntensityFilter()), split);
   }
-
 }

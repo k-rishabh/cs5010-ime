@@ -1,18 +1,16 @@
 package controller.command;
 
-import java.util.Map;
-
 import controller.filter.BlurFilter;
-import model.ImageMapInterface;
-import model.ImageModel;
-import util.ImageTransformer;
+import model.ImageMap;
 
 /**
  * A class that represents the Blur transformation on an image.
  * It is represented by the source image, destination image, and split (if required).
  */
 public class Blur implements ImageCommand {
-  private String[] args;
+  private final String source;
+  private final String result;
+  private final int split;
 
   /**
    * Constructor function for the Blur transformation. Requires an array of Strings, each
@@ -21,17 +19,24 @@ public class Blur implements ImageCommand {
    * @param args the parameters for the transformation
    */
   public Blur(String[] args) {
-    if (args.length == 4 && !args[2].equals("split")) {
-      throw new IllegalArgumentException("Error: Illegal argument in blur!");
-    } else if (args.length == 2 || args.length == 4) {
-      this.args = args;
+    if (args.length != 3 && args.length != 5) {
+      throw new IllegalArgumentException("Error: Illegal number of arguments in blur command!");
+    } else if (args.length == 5 && !args[3].equals("split")) {
+      throw new IllegalArgumentException("Error: Illegal argument in blur command!");
+    }
+
+    this.source = args[1];
+    this.result = args[2];
+
+    if (args.length == 5) {
+      this.split = Integer.parseInt(args[4]);
     } else {
-      throw new IllegalArgumentException("Error: Illegal number of arguments in blur!");
+      this.split = 0;
     }
   }
 
   @Override
-  public void apply(ImageMapInterface images) {
-    images.blur(args);
+  public int apply(ImageMap images) {
+    return images.apply(source, result, img -> img.applyImageFilter(new BlurFilter()), split);
   }
 }
