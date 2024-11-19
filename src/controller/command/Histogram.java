@@ -1,6 +1,7 @@
 package controller.command;
 
 import model.ImageMap;
+import model.ImageModel;
 
 /**
  * A class that represents the Histogram transformation on an image.
@@ -28,6 +29,9 @@ public class Histogram implements ImageCommand {
 
   @Override
   public int apply(ImageMap images) {
-    return images.apply(source, result, img -> img.histogram(), 0);
+    ImageModel srcImage = images.get(source).deepCopy();
+    ImageModel destImage = srcImage.histogram();
+    images.put(result, destImage);
+    return 0;
   }
 }
