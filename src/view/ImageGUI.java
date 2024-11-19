@@ -1,14 +1,18 @@
 package view;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import controller.ImageController;
+
+import static java.lang.Integer.parseInt;
 
 public class ImageGUI extends JFrame implements ImageView {
 
@@ -17,22 +21,21 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
   private JLabel imageLabel, histogramLabel;
   private JTextField brightnessValue, compressValue, blackLevelAdjustValue, midLevelAdjustValue, whiteLevelAdjustValue;
   private JButton brightenButton, compressButton, horizontalFlipButton, verticalFlipButton, sepiaButton, colorCorrectButton, levelAdjustButton, blurButton;
-  private JComboBox<String> greyscaleTypes, componentTypes, filterTypes;
-  private JButton greyscaleExecuteButton, componentExecuteButton, filterTypesButton;
+  private JComboBox<String> greyscaleTypes;
+  private JButton greyscaleExecuteButton;
   private JPanel splitPreviewPanel;
   private FileNameExtensionFilter filter;
   private JTextField splitPreviewPercentageValue;
-  private JButton splitPreviewButton, applyFilterButton, cancelFilterButton;
-  private final ViewAdapter model;
+  private JButton applyFilterButton;
   private String selectedGreyscale, selectedComponent, selectedFilter;
 
 
 
-  public ImageGUI(ViewAdapter model) {
+  public ImageGUI() {
 
     filter = new FileNameExtensionFilter("JPG, PNG, & PPM Images", "jpg", "png", "ppm");
 
-    this.model = model;
+//    this.model = model;
     // Set up menu bar
     JMenuBar menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
@@ -45,6 +48,7 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
     fileMenu.add(loadItem);
     fileMenu.add(saveItem);
+    fileMenu.add(undoItem);
     fileMenu.add(exitItem);
     setJMenuBar(menuBar);
 
@@ -298,12 +302,9 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
 
   @Override
-  public void refreshScreen(String imageName, String histogram) {
-    Image BufferedImage = model.getBufferedImage(imageName);
-    imageLabel.setIcon(new ImageIcon(BufferedImage));
-
-    Image BufferedHistogramImage = model.getBufferedImage(histogram);
-    histogramLabel.setIcon(new ImageIcon(BufferedHistogramImage));
+  public void refreshScreen(BufferedImage currentImage, BufferedImage histogram) {
+    imageLabel.setIcon(new ImageIcon(currentImage));
+    histogramLabel.setIcon(new ImageIcon(histogram));
   }
 
   @Override
@@ -311,38 +312,45 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
   }
 
+  @Override
   public void displayErrorMessage(String errorMessage) {
     JOptionPane.showMessageDialog(mainPanel, errorMessage, "Error!!",
             JOptionPane.ERROR_MESSAGE);
   }
 
+  @Override
   public void addFeatures(ImageController features) {
-    exitItem.addActionListener(evt -> features.exitProgram());
-    loadItem.addActionListener(evt -> loadImage(features));
+    int splitRatio = parseInt(splitPreviewPercentageValue.getText());
+    exitItem.addActionListener(e -> System.exit(0));
+    loadItem.addActionListener(e -> loadImage(features,0));
 //    saveImageButton.addActionListener(evt -> saveImage(features));
-    blurButton.addActionListener(evt -> blur(features));
-    horizontalFlipButton.addActionListener(evt -> horizontalFlip(features));
-    verticalFlipButton.addActionListener(evt -> verticalFlip(features));
-    greyscaleExecuteButton.addActionListener(evt -> greyScale(features));
+    blurButton.addActionListener(e -> blur(features,splitRatio));
+    horizontalFlipButton.addActionListener(e -> horizontalFlip(features,splitRatio));
+    verticalFlipButton.addActionListener(e -> verticalFlip(features,splitRatio));
+    greyscaleExecuteButton.addActionListener(e -> greyScale(features,splitRatio));
 
-    brightenButton.addActionListener(e -> brighten(features));
+    brightenButton.addActionListener(e -> brighten(features,splitRatio));
   }
 
-  private void loadImage(Features features) {
+  private void loadImage(ImageController features, int ratio) {
     final JFileChooser fChooser = new JFileChooser();
+    System.out.println("hi");
     fChooser.setFileFilter(filter);
     int retValue = fChooser.showOpenDialog(this);
     if (retValue == JFileChooser.APPROVE_OPTION) {
       File f = fChooser.getSelectedFile();
       try {
-        features.load(f.getPath());
+        List<String> tokens = new ArrayList<>();
+        tokens.add("load");
+        tokens.add(f.getPath());
+        features.applyImageTransform(tokens,ratio);
         imagePanel.setBorder(BorderFactory.createTitledBorder(f.getPath()));
         brightenButton.setEnabled(true);
         brightnessValue.setEnabled(true);
         horizontalFlipButton.setEnabled(true);
         verticalFlipButton.setEnabled(true);
         displayCompletionMessage(mainPanel, "Successfully loaded the image.");
-      } catch (IOException | InputMismatchException e) {
+      } catch (InputMismatchException e) {
         displayErrorMessage("Please provide a valid file and try again");
       }
     }
@@ -350,16 +358,18 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
 
 
-  private void saveImage(Features features) {
+  private void saveImage(ImageController features, int ratio) {
     final JFileChooser fChooser = new JFileChooser();
     int retValue = fChooser.showSaveDialog(this);
     if (retValue == JFileChooser.APPROVE_OPTION) {
       File f = fChooser.getSelectedFile();
       try {
-        String path = f.getAbsolutePath();
-        features.save(path);
+//        String path = f.getAbsolutePath();
+        List<String> tokens = new ArrayList<>();
+        tokens.add("save");
+        features.applyImageTransform(tokens,ratio);
         displayCompletionMessage(mainPanel, "Successfully saved the image.");
-      } catch (IOException | InputMismatchException e) {
+      } catch (InputMismatchException e) {
         displayErrorMessage("Could not save the image. Please provide a valid path and try "
                 + "again");
       }
@@ -371,65 +381,80 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
             JOptionPane.INFORMATION_MESSAGE);
   }
 //
-  private void horizontalFlip(Features features) {
+  private void horizontalFlip(ImageController features, int ratio) {
+    List<String> tokens = new ArrayList<>();
     try {
-      features.horizontalFlip();
-    } catch (IOException | InputMismatchException e) {
+      tokens.add("horizontal-flip");
+      features.applyImageTransform(tokens,ratio);
+    } catch (InputMismatchException e) {
       displayErrorMessage("Horizontal flip operation could not be performed");
     }
   }
 
-  private void greyScale(Features features){
+  private void greyScale(ImageController features,int ratio){
+    List<String> tokens = new ArrayList<>();
     try{
       switch(selectedGreyscale){
         case "Red Component":
-          features.redComponent();
+          tokens.add("red-component");
+          features.applyImageTransform(tokens,ratio);
           break;
         case "Green Component":
-          features.greenComponent();
+          tokens.add("green-component");
+          features.applyImageTransform(tokens,ratio);
           break;
         case "Blue Component":
-          features.blueComponent();
+          tokens.add("blue-component");
+          features.applyImageTransform(tokens,ratio);
           break;
         case "Luma":
-          features.lumaGreyscale();
+          tokens.add("luma-component");
+          features.applyImageTransform(tokens,ratio);
           break;
         case "Intensity":
-          features.intensityGreyscale();
+          tokens.add("intensity-component");
+          features.applyImageTransform(tokens,ratio);
           break;
         case "Value":
-          features.valueGreyscale();
+          tokens.add("value-component");
+          features.applyImageTransform(tokens,ratio);
           break;
       }
-    } catch (IOException | InputMismatchException e){
+    } catch (InputMismatchException e){
       displayErrorMessage(selectedGreyscale + "operation could not be performed");
     }
   }
 
-  private void blur(Features features){
+  private void blur(ImageController features, int ratio) {
+    List<String> tokens = new ArrayList<>();
     try{
-      features.blur();
-    } catch (IOException | InputMismatchException e){
+      tokens.add("blur");
+      features.applyImageTransform(tokens,ratio);
+    } catch (InputMismatchException e){
       displayErrorMessage("Blur operation could not be performed");
     }
   }
 
 
-  private void verticalFlip(Features features) {
+  private void verticalFlip(ImageController features, int ratio) {
+    List<String> tokens = new ArrayList<>();
     try {
-      features.verticalFlip();
-    } catch (IOException | InputMismatchException e) {
+      tokens.add("vertical-flip");
+      features.applyImageTransform(tokens,ratio);
+    } catch (InputMismatchException e) {
       displayErrorMessage("Vertical flip operation could not be performed");
     }
   }
 
-  private void brighten(Features features) {
+  private void brighten(ImageController features, int ratio) {
+    List<String> tokens = new ArrayList<>();
     try {
-
       String value = brightnessValue.getText();
-      features.brighten(Integer.parseInt(value));
+      tokens.add("brighten");
+      tokens.add(value);
+      features.applyImageTransform(tokens,ratio);
       brightnessValue.setText("");
-    } catch (IOException | InputMismatchException e) {
+    } catch (InputMismatchException e) {
       displayErrorMessage("Brighten operation could not be performed");
       brightnessValue.setText("");
     } catch (NumberFormatException e) {
