@@ -334,7 +334,6 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
   private void loadImage(ImageController features, int ratio) {
     final JFileChooser fChooser = new JFileChooser();
-    System.out.println("hi");
     fChooser.setFileFilter(filter);
     int retValue = fChooser.showOpenDialog(this);
     if (retValue == JFileChooser.APPROVE_OPTION) {
