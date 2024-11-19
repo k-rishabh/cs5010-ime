@@ -51,12 +51,13 @@ public class GUIController extends AbstractController {
 
   public void applyImageTransform(List<String> tokens, int ratio) {
     int currImg;
+
     if (!recents.isEmpty()) {
       currImg = Integer.parseInt(recents.peek());
     } else {
       currImg = 0;
     }
-
+    System.out.println(recents.toString());
     // if user tries to split a non-split command
     // TODO: split with load is ok
     if (0 < ratio && ratio < 100 && !splitCommands.contains(tokens.get(0))) {
@@ -65,7 +66,7 @@ public class GUIController extends AbstractController {
     }
 
     // first command must be load
-    if (currImg == 0 && !tokens.get(0).equals("load")) {
+    if (recents.empty() && !tokens.get(0).equals("load")) {
       return;
     } else if (currImg != 0 && tokens.get(0).equals("load") && !isSaved) {
 //      boolean go = view.popUpConfirmation("Would you like to load the new image without saving?");
@@ -106,6 +107,7 @@ public class GUIController extends AbstractController {
     ImageCommand fn = commands.get(args[0]).apply(args);
 
     fn.apply(this.imageMap);
+//    System.out.println(recents.peek());
 //    BufferedImage curr = ImageUtil.toBufferedImage(imageMap.get("0"));
 //    this.out.append(String.format("%s performed successfully!", args[0]));
     this.display();
