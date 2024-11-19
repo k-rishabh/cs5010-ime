@@ -18,10 +18,10 @@ public class ImageGUI extends JFrame implements ImageView {
 private JMenuItem loadItem, saveItem, exitItem,undoItem;
   private JPanel mainPanel, imagePanel, leftPane, rightPane, operationPanel, histogramPanel;
   private JLabel imageLabel, histogramLabel;
-  private JTextField brightnessValue, compressValue, blackLevelAdjustValue, midLevelAdjustValue, whiteLevelAdjustValue;
+  private JTextField brightnessValue, compressValue, blackLevelAdjustValue, midLevelAdjustValue, whiteLevelAdjustValue, heightValue, widthValue;
   private JButton brightenButton, compressButton, horizontalFlipButton, verticalFlipButton, sepiaButton, colorCorrectButton, levelAdjustButton, blurButton;
   private JComboBox<String> greyscaleTypes;
-  private JButton greyscaleExecuteButton;
+  private JButton greyscaleExecuteButton, downscaleButton;
   JButton sharpenButton;
   JRadioButton toggleButton;
   private JPanel splitPreviewPanel;
@@ -209,6 +209,32 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
     operationPanel.add(levelAdjustPanel);
 
+    JPanel downscalePanel = new JPanel(new GridBagLayout());
+    downscalePanel.setBorder(BorderFactory.createTitledBorder("Downscaling"));
+
+    GridBagConstraints downscalePanelConstraints = new GridBagConstraints();
+    downscalePanelConstraints.anchor = GridBagConstraints.CENTER;
+    downscalePanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+    downscalePanelConstraints.weightx = 1;
+    downscalePanelConstraints.weighty = 1;
+    downscalePanelConstraints.insets = new Insets(3, 3, 3, 3);
+
+    heightValue = new JTextField("Enter Height", 3);
+    downscalePanelConstraints.gridx = 1;
+    downscalePanelConstraints.gridy = 0;
+    downscalePanel.add(heightValue, downscalePanelConstraints);
+
+    widthValue = new JTextField("Enter Width", 3);
+    downscalePanelConstraints.gridx = 2;
+    downscalePanel.add(widthValue, downscalePanelConstraints);
+
+    downscaleButton = new JButton("Downscale");
+    downscaleButton.setToolTipText("Apply Downscaling");
+    downscalePanelConstraints.gridx = 3;
+    downscalePanel.add(downscaleButton, downscalePanelConstraints);
+
+    operationPanel.add(downscalePanel);
+
     splitPreviewPanel = new JPanel(new GridBagLayout());
     splitPreviewPanel.setBorder(BorderFactory.createTitledBorder("Split Preview"));
     GridBagConstraints splitPreviewPanelConstraints = new GridBagConstraints();
@@ -232,14 +258,7 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     splitPreviewPanelConstraints.gridx = 3;
     splitPreviewPanel.add(toggleButton, splitPreviewPanelConstraints);
 
-//    applyFilterButton = new JButton("Apply");
-//    applyFilterButton.setToolTipText("Apply the current operation on entire image.");
-//    splitPreviewPanelConstraints.gridx = 2;
-//    splitPreviewPanel.add(applyFilterButton, splitPreviewPanelConstraints);
-
     operationPanel.add(splitPreviewPanel);
-
-
 
     leftPane.add(operationPanel);
 
@@ -330,7 +349,7 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
     exitItem.addActionListener(e -> System.exit(0));
     loadItem.addActionListener(e -> loadImage(features));
-//    saveImageButton.addActionListener(evt -> saveImage(features));
+    saveItem.addActionListener(evt -> saveImage(features));
 
     blurButton.addActionListener(e -> blur(features));
     sharpenButton.addActionListener(e -> sharpen(features));
@@ -341,6 +360,7 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     brightenButton.addActionListener(e -> brighten(features));
     colorCorrectButton.addActionListener(e -> colorCorrect(features));
     levelAdjustButton.addActionListener(e -> levelAdjust(features));
+    downscaleButton.addActionListener(e -> downscale(features));
     compressButton.addActionListener(e -> compress(features));
 
   }
@@ -376,9 +396,9 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     if (retValue == JFileChooser.APPROVE_OPTION) {
       File f = fChooser.getSelectedFile();
       try {
-//        String path = f.getAbsolutePath();
         List<String> tokens = new ArrayList<>();
         tokens.add("save");
+        tokens.add(f.getPath());
         features.applyImageTransform(tokens,0);
         displayCompletionMessage(mainPanel, "Successfully saved the image.");
       } catch (InputMismatchException e) {
@@ -469,6 +489,7 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     }
   }
 
+
   private void colorCorrect(ImageController features) {
     List<String> tokens = new ArrayList<>();
     try{
@@ -491,6 +512,19 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
       displayErrorMessage("Levels Adjust operation could not be performed");
     }
   }
+
+  private void downscale(ImageController features) {
+    List<String> tokens = new ArrayList<>();
+    try{
+      tokens.add("downscale");
+      tokens.add(heightValue.getText());
+      tokens.add(widthValue.getText());
+      features.applyImageTransform(tokens,splitRatio());
+    } catch (InputMismatchException e){
+      displayErrorMessage("Downscale operation could not be performed");
+    }
+  }
+
 
   private void compress(ImageController features) {
     List<String> tokens = new ArrayList<>();

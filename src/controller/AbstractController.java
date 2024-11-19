@@ -15,6 +15,7 @@ import controller.command.ComponentLuma;
 import controller.command.ComponentRed;
 import controller.command.ComponentValue;
 import controller.command.Compress;
+import controller.command.Downscale;
 import controller.command.FlipHorizontal;
 import controller.command.FlipVertical;
 import controller.command.Histogram;
@@ -53,6 +54,7 @@ public abstract class AbstractController implements ImageController {
     commands.put("histogram", args -> new Histogram(args));
     commands.put("color-correct", args -> new ColorCorrect(args));
     commands.put("levels-adjust", args -> new LevelsAdjust(args));
+    commands.put("downscale", args -> new Downscale(args));
 
     // all commands that can be previewed/split
     splitCommands = new ArrayList<>();

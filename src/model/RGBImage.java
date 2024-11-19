@@ -245,5 +245,56 @@ public class RGBImage extends AbstractImage {
 
   @Override
   public void downscale(int newHeight, int newWidth) {
+    int existingHeight = this.getHeight();
+    int existingWidth = this.getWidth();
+    Pixel[][] downsizedPixels = new RGBPixel[newHeight][newWidth];
+    for (int y = 0; y < newHeight; y++) {
+      for (int x = 0; x < newWidth; x++) {
+        float originalX = (float) x * existingWidth / newWidth;
+        float originalY = (float) y * existingHeight / newHeight;
+
+        int x1 = (int) Math.floor(originalX);
+        int y1 = (int) Math.floor(originalY);
+        int x2 = (int) Math.ceil(originalX);
+        int y2 = (int) Math.ceil(originalY);
+
+        x1 = Math.min(x1, existingWidth - 1);
+        x2 = Math.min(x2, existingWidth - 1);
+        y1 = Math.min(y1, existingHeight - 1);
+        y2 = Math.min(y2, existingHeight - 1);
+
+        RGBPixel cA = (RGBPixel) this.pixels[y1][x1];
+        RGBPixel cB = (RGBPixel) this.pixels[y1][x2];
+        RGBPixel cC = (RGBPixel) this.pixels[y2][x1];
+        RGBPixel cD = (RGBPixel) this.pixels[y2][x2];
+
+        float xWeight = originalX - x1;
+        float yWeight = originalY - y1;
+
+        int red = (int) Math.round(
+                (1 - xWeight) * (1 - yWeight) * cA.getRed() +
+                        xWeight * (1 - yWeight) * cB.getRed() +
+                        (1 - xWeight) * yWeight * cC.getRed() +
+                        xWeight * yWeight * cD.getRed()
+        );
+
+        int green = (int) Math.round(
+                (1 - xWeight) * (1 - yWeight) * cA.getGreen() +
+                        xWeight * (1 - yWeight) * cB.getGreen() +
+                        (1 - xWeight) * yWeight * cC.getGreen() +
+                        xWeight * yWeight * cD.getGreen()
+        );
+
+        int blue = (int) Math.round(
+                (1 - xWeight) * (1 - yWeight) * cA.getBlue() +
+                        xWeight * (1 - yWeight) * cB.getBlue() +
+                        (1 - xWeight) * yWeight * cC.getBlue() +
+                        xWeight * yWeight * cD.getBlue()
+        );
+
+        downsizedPixels[y][x] = new RGBPixel(red, green, blue);
+      }
+    }
+    this.pixels = downsizedPixels;
   }
 }
