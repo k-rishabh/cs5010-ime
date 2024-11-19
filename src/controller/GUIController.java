@@ -1,12 +1,15 @@
 package controller;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
 import controller.command.Histogram;
 import controller.command.ImageCommand;
 import model.ImageMap;
+import model.ImageModel;
 import util.ImageUtil;
 import view.ImageView;
 
@@ -20,6 +23,9 @@ public class GUIController extends AbstractController {
   public GUIController(ImageMap model, ImageView view) {
     this.imageMap = model;
     this.view = view;
+    view.addFeatures(this);
+    commands = new HashMap<>();
+    this.initializeCommands();
     this.recents = new Stack<>();
     isSaved = false;
   }
@@ -31,18 +37,18 @@ public class GUIController extends AbstractController {
 
   private void display() {
     if (recents.isEmpty()) {
-//      view.refresh(null, null);
+      view.refreshScreen(null, null);
       return;
     }
 
     String currImg = recents.peek();
-    ImageCommand fn = new Histogram(new String[]{currImg, "currHistogram"});
+    ImageCommand fn = new Histogram(new String[]{"histogram", currImg, "currHistogram"});
     fn.apply(imageMap);
-
+//    System.out.println(imageMap.toString());
     BufferedImage curr = ImageUtil.toBufferedImage(imageMap.get(currImg));
     BufferedImage currHist = ImageUtil.toBufferedImage(imageMap.get("currHistogram"));
 
-//    view.refresh(curr, currHist);
+    view.refreshScreen(curr, currHist);
   }
 
   public void applyImageTransform(List<String> tokens, int ratio) {
@@ -52,11 +58,11 @@ public class GUIController extends AbstractController {
     } else {
       currImg = 0;
     }
-
+    System.out.println(tokens);
     // if user tries to split a non-split command
     // TODO: split with load is ok
     if (0 < ratio && ratio < 100 && !splitCommands.contains(tokens.get(0))) {
-//      view.popUpError("This operation cannot be previewed!");
+      view.displayErrorMessage("This operation cannot be previewed!");
       return;
     }
 
@@ -81,9 +87,14 @@ public class GUIController extends AbstractController {
 
     // append image names to command
     tokens.add(Integer.toString(currImg));
-    this.isSaved = true;
-    if (!tokens.get(0).equals("load") && !tokens.get(0).equals("save")) {
+
+    if(!tokens.get(0).equals("load") && !tokens.get(0).equals("save")){
       tokens.add(Integer.toString(currImg + 1));
+    }
+
+    this.isSaved = true;
+
+    if (!tokens.get(0).equals("save")) {
       recents.push(Integer.toString(currImg + 1));
       this.isSaved = false;
     }
@@ -96,9 +107,11 @@ public class GUIController extends AbstractController {
 
     String[] args = new String[tokens.size()];
     args = tokens.toArray(args);
+    System.out.println(Arrays.toString(args));
     ImageCommand fn = commands.get(args[0]).apply(args);
 
-    fn.apply(imageMap);
+    fn.apply(this.imageMap);
+//    BufferedImage curr = ImageUtil.toBufferedImage(imageMap.get("0"));
 //    this.out.append(String.format("%s performed successfully!", args[0]));
     this.display();
   }
