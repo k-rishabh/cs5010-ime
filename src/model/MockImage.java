@@ -32,17 +32,17 @@ public class MockImage implements ImageModel {
 
   @Override
   public ImageModel deepCopy() {
-    return null;
+    return this;
   }
 
   @Override
   public void applyColorFilter(Filter filter) {
-    log.append("In applyColorFilter.\n");
+    log.append(String.format("In applyColorFilter with filter %s.\n", filter.getClass().getName()));
   }
 
   @Override
   public void applyImageFilter(Filter filter) {
-    log.append("In applyImageFilter.\n");
+    log.append(String.format("In applyImageFilter with filter %s.\n", filter.getClass().getName()));
   }
 
   @Override
@@ -106,7 +106,7 @@ public class MockImage implements ImageModel {
 
   @Override
   public void mergeSplits(ImageModel img) {
-    return;
+    log.append("In mergeSplits.\n");
   }
 
   @Override

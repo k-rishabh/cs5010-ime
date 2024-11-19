@@ -40,9 +40,9 @@ public class ImageTest {
         int expectedPixelG = expected[y][x][1];
         int expectedPixelB = expected[y][x][2];
 
-        int actualPixelR = actual.getRed(y, x);
-        int actualPixelG = actual.getGreen(y, x);
-        int actualPixelB = actual.getBlue(y, x);
+        int actualPixelR = actual.getPixel(y, x).getRed();
+        int actualPixelG = actual.getPixel(y, x).getGreen();
+        int actualPixelB = actual.getPixel(y, x).getBlue();
         System.out.println(actualPixelR + " " + actualPixelG + " " + actualPixelB);
         assertEquals(expectedPixelR, actualPixelR);
         assertEquals(expectedPixelG, actualPixelG);
