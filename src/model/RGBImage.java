@@ -12,7 +12,6 @@ import util.HaarTransform;
 import util.Histogram;
 import util.PixelProcessor;
 
-
 /**
  * Class representing an RGB image, extending the abstract class Image.
  * This class provides the implementation for applying filters, splitting the image
@@ -72,7 +71,8 @@ public class RGBImage extends AbstractImage {
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        copyImage.pixels[i][j] = new RGBPixel(pixels[i][j].getPacked());
+        copyImage.pixels[i][j] = new RGBPixel(
+                pixels[i][j].getRed(), pixels[i][j].getGreen(), pixels[i][j].getBlue());
       }
     }
 
@@ -138,9 +138,9 @@ public class RGBImage extends AbstractImage {
     // initialize reds, greens, and blues
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        reds[i][j] = this.getRed(i, j);
-        greens[i][j] = this.getGreen(i, j);
-        blues[i][j] = this.getBlue(i, j);
+        reds[i][j] = this.getPixel(i, j).getRed();
+        greens[i][j] = this.getPixel(i, j).getGreen();
+        blues[i][j] = this.getPixel(i, j).getBlue();
       }
     }
 
@@ -158,6 +158,33 @@ public class RGBImage extends AbstractImage {
     }
 
     this.pixels = compressed;
+  }
+
+  private void applyTransform(Function<Pixel, Integer> transformFunction) {
+    int height = this.pixels.length;
+    int width = this.pixels[0].length;
+    int[][] result = new int[height][width];
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        result[i][j] = transformFunction.apply(this.pixels[i][j]);
+        RGBPixel pixel = new RGBPixel(result[i][j]);
+        this.pixels[i][j] = pixel;
+      }
+    }
+  }
+
+  private int findChannelPeak(int[] histogram) {
+    int peakValue = 0;
+    int peakPosition = 0;
+    for (int i = 10; i <= 245; i++) {
+      if (histogram[i] > peakValue) {
+        peakValue = histogram[i];
+        peakPosition = i;
+      }
+    }
+
+    return peakPosition;
   }
 
   @Override
@@ -182,33 +209,6 @@ public class RGBImage extends AbstractImage {
     };
 
     this.applyTransform(colorCorrect);
-  }
-
-  private int findChannelPeak(int[] histogram) {
-    int peakValue = 0;
-    int peakPosition = 0;
-    for (int i = 10; i <= 245; i++) {
-      if (histogram[i] > peakValue) {
-        peakValue = histogram[i];
-        peakPosition = i;
-      }
-    }
-
-    return peakPosition;
-  }
-
-  private void applyTransform(Function<Pixel, Integer> transformFunction) {
-    int height = this.pixels.length;
-    int width = this.pixels[0].length;
-    int[][] result = new int[height][width];
-
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        result[i][j] = transformFunction.apply(this.pixels[i][j]);
-        RGBPixel pixel = new RGBPixel(result[i][j]);
-        this.pixels[i][j] = pixel;
-      }
-    }
   }
 
   private int fittingProcess(int black, int mid, int white, int signal) {
@@ -242,7 +242,6 @@ public class RGBImage extends AbstractImage {
 
     this.applyTransform(levelAdjust);
   }
-
 
   @Override
   public void downscale(int newHeight, int newWidth) {

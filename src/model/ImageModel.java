@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.image.BufferedImage;
-
 import controller.filter.Filter;
 import model.pixel.Pixel;
 
@@ -27,43 +25,6 @@ public interface ImageModel {
    * @return the width of the image
    */
   int getWidth();
-
-  /**
-   * Returns the red value of the pixel at the specified coordinate.
-   *
-   * @param i the row number of the pixel
-   * @param j the col of the pixel
-   * @return the red value at the given pixel
-   */
-  int getRed(int i, int j);
-
-  /**
-   * Returns the green value of the pixel at the specified coordinate.
-   *
-   * @param i the row number of the pixel
-   * @param j the col of the pixel
-   * @return the green value at the given pixel
-   */
-  int getGreen(int i, int j);
-
-  /**
-   * Returns the blue value of the pixel at the specified coordinate.
-   *
-   * @param i the row number of the pixel
-   * @param j the col of the pixel
-   * @return the blue value at the given pixel
-   */
-  int getBlue(int i, int j);
-
-  /**
-   * Retrieves the packed pixel at the specified coordinates.
-   * A packed pixel is typically an integer representing the red, green, and blue values.
-   *
-   * @param i the row index of the pixel
-   * @param j the column index of the pixel
-   * @return the packed pixel at the specified position
-   */
-  int getPackedPixel(int i, int j);
 
   /**
    * Retrieves the pixel at the specified coordinates.
@@ -194,6 +155,4 @@ public interface ImageModel {
   void mergeSplits(ImageModel img);
 
   void downscale(int newHeight, int newWidth);
-
-  BufferedImage getBufferedImage();
 }

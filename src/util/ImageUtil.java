@@ -22,6 +22,26 @@ import static javax.imageio.ImageIO.write;
  */
 public class ImageUtil {
   /**
+   * Converts our implementation of an image (ImageModel) to the ImageIO implementation,
+   * in the form of a BufferedImage.
+   *
+   * @param img the ImageModel to be converted
+   * @return the resulting BufferedImage
+   */
+  public static BufferedImage toBufferedImage(ImageModel img) {
+    BufferedImage buffImg =
+            new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+    for (int i = 0; i < img.getHeight(); i++) {
+      for (int j = 0; j < img.getWidth(); j++) {
+        buffImg.setRGB(j, i, img.getPixel(i, j).getPacked());
+      }
+    }
+
+    return buffImg;
+  }
+
+  /**
    * Loads a raster type image from the given file path.
    *
    * @param filePath the file path of the raster image
@@ -109,7 +129,7 @@ public class ImageUtil {
    * @param img      the image to be saved, in the form of our internal representation
    */
   public static void saveImageRaster(String filePath, ImageModel img) {
-    BufferedImage buffImg = img.getBufferedImage();
+    BufferedImage buffImg = toBufferedImage(img);
 
     try {
       write(buffImg, filePath.substring(filePath.lastIndexOf('.') + 1), new File(filePath));
@@ -147,17 +167,18 @@ public class ImageUtil {
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        int pixel = img.getPackedPixel(i, j);
+        int red = img.getPixel(i, j).getRed();
+        int green = img.getPixel(i, j).getGreen();
+        int blue = img.getPixel(i, j).getBlue();
 
-        int red = pixel >> 16;
-        int green = pixel >> 8;
         try {
-          writer.write(red + " " + green + " " + pixel + "\n");
+          writer.write(red + " " + green + " " + blue + "\n");
         } catch (IOException e) {
           System.out.println("Exception: Failed to save raw image!");
         }
       }
     }
+
     try {
       writer.close();
     } catch (IOException e) {

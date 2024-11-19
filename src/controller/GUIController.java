@@ -7,6 +7,7 @@ import java.util.Stack;
 import controller.command.Histogram;
 import controller.command.ImageCommand;
 import model.ImageMap;
+import util.ImageUtil;
 import view.ImageView;
 
 public class GUIController extends AbstractController {
@@ -38,8 +39,8 @@ public class GUIController extends AbstractController {
     ImageCommand fn = new Histogram(new String[]{currImg, "currHistogram"});
     fn.apply(imageMap);
 
-    BufferedImage curr = imageMap.get(currImg).getBufferedImage();
-    BufferedImage currHist = imageMap.get("currHistogram").getBufferedImage();
+    BufferedImage curr = ImageUtil.toBufferedImage(imageMap.get(currImg));
+    BufferedImage currHist = ImageUtil.toBufferedImage(imageMap.get("currHistogram"));
 
 //    view.refresh(curr, currHist);
   }
