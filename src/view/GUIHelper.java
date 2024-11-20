@@ -1,8 +1,11 @@
 package view;
 
 import java.awt.*;
+import java.util.Hashtable;
 
 import javax.swing.*;
+
+import static java.lang.Math.ceil;
 
 public class GUIHelper {
   JPanel panel;
@@ -68,9 +71,17 @@ public class GUIHelper {
 
   public JSlider createSlider(int min, int max, int def, int x, int y) {
     JSlider slider = new JSlider(min, max, def);
+
+    Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+    labelTable.put(min, new JLabel(String.valueOf(min)));
+    labelTable.put((min+max)/2, new JLabel(String.valueOf((min+max)/2)));
+    labelTable.put(max, new JLabel(String.valueOf(max)));
+
+    // Apply the label table to the slider
+    slider.setLabelTable(labelTable);
+    slider.setPaintLabels(true);
     slider.setPaintTrack(true);
     slider.setPaintTicks(true);
-    slider.setPaintLabels(true);
 
     if (x >= 0) {
       constraints.gridx = x;
