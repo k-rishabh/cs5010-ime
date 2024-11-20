@@ -4,44 +4,104 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import controller.ImageController;
 
 import static java.lang.Integer.parseInt;
 
 public class ImageGUI extends JFrame implements ImageView {
 
-private JMenuItem loadItem, saveItem, exitItem,undoItem;
-  private JPanel mainPanel, imagePanel, leftPane, rightPane, operationPanel, histogramPanel;
-  private JLabel imageLabel, histogramLabel;
-  private JTextField brightnessValue, compressValue, blackLevelAdjustValue, midLevelAdjustValue, whiteLevelAdjustValue, heightValue, widthValue;
-  private JButton brightenButton, compressButton, horizontalFlipButton, verticalFlipButton, sepiaButton, colorCorrectButton, levelAdjustButton, blurButton;
-  private JComboBox<String> greyscaleTypes;
-  private JButton greyscaleExecuteButton, downscaleButton;
-  JButton sharpenButton;
-  JRadioButton toggleButton;
-  private JPanel splitPreviewPanel;
-  private FileNameExtensionFilter filter;
-  private JTextField splitPreviewPercentageValue;
-  private JButton applyFilterButton;
-  private String selectedGreyscale, selectedComponent, selectedFilter;
+  private GUIHelper helper;
 
+  private final JMenuItem loadItem;
+  private final JMenuItem saveItem;
+  private final JMenuItem exitItem;
+  private final JMenuItem undoItem;
+
+  private final JPanel mainScreen;
+  private final JPanel parentPanel;
+  private final JPanel leftPanel;
+  private final JPanel rightPanel;
+  private final JPanel colorPanel;
+  private final JPanel imageTFPanel;
+  //  private final JPanel levelsAdjustPanel;
+//  private final JPanel downscalePanel;
+  private final JPanel histogramPanel;
+  private final JPanel imagePanel;
+  private final JPanel splitPreviewPanel;
+
+  // file menu
+  private FileNameExtensionFilter fileFilter;
+
+  // split view transformations
+  private final ButtonGroup splitView;
+  private final JRadioButton previewMode;
+  private final JRadioButton standardMode;
+  private final JSlider splitViewSlider;
+
+  private final JComboBox<String> greyscaleTypes;
+  private final JButton greyscaleButton;
+  private String selectedGreyscale;
+
+  private final JButton blurButton;
+  private final JButton sharpenButton;
+  private final JButton sepiaButton;
+  private final JButton colorCorrectButton;
+  private final JButton levelsAdjustButton;
+  private final JSlider blackLevelSlider;
+  private final JSlider midLevelSlider;
+  private final JSlider whiteLevelSlider;
+
+  // non-split view transformations
+  private final JSlider brightnessValueSlider;
+  private final JButton brightenButton;
+  private final JButton horizontalFlipButton;
+  private final JButton verticalFlipButton;
+  private final JSlider compressValueSlider;
+  private final JButton compressButton;
+  private final JTextField heightValue;
+  private final JTextField widthValue;
+  private final JButton downscaleButton;
+
+  private final JLabel splitPreviewLabel;
+  private final JButton cancelFilterButton;
+  private final JButton applyFilterButton;
+  private final AtomicBoolean splitOperation =new AtomicBoolean(false);
+
+
+  // histogram
+  private final JLabel imageLabel;
+
+  // image
+  private final JLabel histogramLabel;
+
+  // slider values
+  private int brightnessValue;
+  private int blacklevelValue;
+  private int midLevelValue;
+  private int whiteLevelValue;
+  private int compressValue;
+  private int splitValue;
 
 
   public ImageGUI() {
-
-    filter = new FileNameExtensionFilter("JPG, PNG, & PPM Images", "jpg", "png", "ppm");
-//    this.model = model;
-    // Set up menu bar
+    super("Image Processing Application");
+    // set up file menu
     JMenuBar menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
     menuBar.add(fileMenu);
 
-    loadItem = new JMenuItem("Open...");
+    fileFilter = new FileNameExtensionFilter(".png, .jpg, .ppm",
+            "jpg", "png", "ppm");
+
+    loadItem = new JMenuItem("Load Image");
     saveItem = new JMenuItem("Save As");
     undoItem = new JMenuItem("Undo");
     exitItem = new JMenuItem("Exit");
@@ -52,223 +112,142 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     fileMenu.add(exitItem);
     setJMenuBar(menuBar);
 
-    mainPanel = new JPanel(new GridBagLayout());
+    // main screen
+    mainScreen = new JPanel(new GridBagLayout());
 
-    JPanel mainScreen = new JPanel(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
-    c.weightx = 1.0;
-    c.fill = GridBagConstraints.BOTH;
-    c.insets = new Insets(5, 2, 5, 2);
-    c.gridx = 0;
-    c.gridy = 1;
-    c.weighty = 0.95;
-    mainPanel.add(mainScreen, c);
+    parentPanel = new JPanel(new GridBagLayout());
+    helper = new GUIHelper(parentPanel, null);
+    GridBagConstraints c = helper.createConstraints(-1, GridBagConstraints.BOTH,
+            0, 1, 1, 0.95, new Insets(1, 1, 1, 1));
 
-    leftPane = new JPanel();
-    leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.Y_AXIS));
-    rightPane = new JPanel(new GridBagLayout());
+    mainScreen.add(parentPanel, c);
 
+    leftPanel = new JPanel();
+    leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+//    leftPanel.setPreferredSize(new Dimension(500, 600));
+    rightPanel = new JPanel(new GridBagLayout());
 
-    JPanel operationPanel = new JPanel();
-    operationPanel.setLayout(new BoxLayout(operationPanel, BoxLayout.Y_AXIS));
+    // color transformations
+    colorPanel = new JPanel(new GridBagLayout());
+    colorPanel.setBorder(BorderFactory.createTitledBorder("Color Operations"));
+    GridBagConstraints colorConstraints = helper.createConstraints(
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, 1, 1, 0, 0,
+            new Insets(3, 3, 3, 3));
 
+    helper.changePanel(colorPanel, colorConstraints);
 
-
-    JPanel basicOperationsPanel = new JPanel(new GridBagLayout());
-    basicOperationsPanel.setBorder(BorderFactory.createTitledBorder("Basic Operations"));
-    GridBagConstraints basicOperationsPanelConstraints = new GridBagConstraints();
-    basicOperationsPanelConstraints.anchor = GridBagConstraints.CENTER;
-    basicOperationsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-    basicOperationsPanelConstraints.weightx = 1;
-    basicOperationsPanelConstraints.weighty = 1;
-    basicOperationsPanelConstraints.insets = new Insets(3, 3, 3, 3);
-
-    brightnessValue = new JTextField("0", 3);
-    basicOperationsPanelConstraints.gridx = 0;
-    basicOperationsPanelConstraints.gridy = 1;
-    basicOperationsPanel.add(brightnessValue, basicOperationsPanelConstraints);
-
-    brightenButton = new JButton("Execute Brightness");
-    brightenButton.setToolTipText("Apply brightness");
-    basicOperationsPanelConstraints.gridx = 1;
-
-    basicOperationsPanel.add(brightenButton, basicOperationsPanelConstraints);
-
-    compressValue = new JTextField("0", 3);
-    basicOperationsPanelConstraints.gridx = 0;
-    basicOperationsPanelConstraints.gridy = 2;
-    basicOperationsPanel.add(compressValue, basicOperationsPanelConstraints);
-
-    compressButton = new JButton("Compress");
-    compressButton.setToolTipText("Compress image");
-    basicOperationsPanelConstraints.gridx = 1;
-    basicOperationsPanel.add(compressButton, basicOperationsPanelConstraints);
+    JLabel splitLabel = new JLabel("Split Preview Ratio:");
+    colorConstraints.gridx = 0;
+    colorConstraints.gridy = 0;
+    colorPanel.add(splitLabel, colorConstraints);
+    splitViewSlider = helper.createSlider(0, 100, 50, 1, 0);
+    splitViewSlider.addChangeListener(e -> {
+      splitValue = splitViewSlider.getValue();
+      splitViewSlider.setToolTipText(splitValue + "%");
+    });
+    previewMode = helper.createRadioButton("Preview Mode", false, 2, 0);
+    standardMode = helper.createRadioButton("Standard Mode", true, 3, 0);
+    splitView = new ButtonGroup();
+    splitView.add(previewMode);
+    splitView.add(standardMode);
 
 
-    horizontalFlipButton = new JButton("Horizontal Flip");
-    horizontalFlipButton.setToolTipText("Apply horizontal flip");
-    basicOperationsPanelConstraints.gridx = 0;
-    basicOperationsPanelConstraints.gridy = 4;
-    basicOperationsPanel.add(horizontalFlipButton, basicOperationsPanelConstraints);
-
-    verticalFlipButton = new JButton("Vertical Flip");
-    verticalFlipButton.setToolTipText("Apply vertical flip");
-    basicOperationsPanelConstraints.gridx = 1;
-    basicOperationsPanelConstraints.gridy = 4;
-    basicOperationsPanel.add(verticalFlipButton, basicOperationsPanelConstraints);
-
-    sepiaButton = new JButton("Sepia");
-    sepiaButton.setToolTipText("Apply Sepia Filter");
-    basicOperationsPanelConstraints.gridx = 0;
-    basicOperationsPanelConstraints.gridy = 5;
-    basicOperationsPanel.add(sepiaButton, basicOperationsPanelConstraints);
-
-    colorCorrectButton = new JButton("Color Correct");
-    colorCorrectButton.setToolTipText("Apply Color correction");
-    basicOperationsPanelConstraints.gridx = 1;
-    basicOperationsPanelConstraints.gridy = 5;
-    basicOperationsPanel.add(colorCorrectButton, basicOperationsPanelConstraints);
-
-    operationPanel.add(basicOperationsPanel);
-
-    JPanel colorTransformAndFilterPanel = new JPanel();
-    colorTransformAndFilterPanel.setBorder(BorderFactory.createTitledBorder("Greyscale & Filters"));
-    JPanel colorTransformAndFilterControlsPanel = new JPanel(new GridBagLayout());
-
-    GridBagConstraints controlsPanelConstraints = new GridBagConstraints();
-    controlsPanelConstraints.anchor = GridBagConstraints.CENTER;
-    controlsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-    controlsPanelConstraints.weightx = 1;
-    controlsPanelConstraints.weighty = 1;
-    controlsPanelConstraints.insets = new Insets(3, 3, 3, 3);
-
-
-    greyscaleTypes = new JComboBox<>(new String[]{"Select Greyscale", "Luma", "Intensity", "Value","Red Component", "Blue Component", "Green Component"});
-    greyscaleTypes.setToolTipText("Select Greyscale");
-    greyscaleTypes.addActionListener(e -> this.selectedGreyscale = (String) greyscaleTypes.getSelectedItem());
-    controlsPanelConstraints.gridx = 0;
-    colorTransformAndFilterControlsPanel.add(greyscaleTypes, controlsPanelConstraints);
-
+    greyscaleTypes = new JComboBox<>(new String[]{"Luma", "Intensity", "Value", "Red Component",
+            "Blue Component", "Green Component"});
+    greyscaleTypes.setToolTipText("Select the grayscale filter to be applied.");
+    greyscaleTypes.setSelectedItem(null);
+    colorConstraints.gridx = 0;
+    colorConstraints.gridy = 1;
     greyscaleTypes.addActionListener(e -> this.selectedGreyscale =
             (String) greyscaleTypes.getSelectedItem());
+    colorPanel.add(greyscaleTypes, colorConstraints);
 
-    greyscaleExecuteButton = new JButton("Execute");
-    greyscaleExecuteButton.setToolTipText("Execute the selected greyscale type operation");
-    controlsPanelConstraints.gridx = 1;
+    greyscaleButton = helper.createButton("Apply",
+            "Applies the selected grayscale filter on the image", 1, 1);
 
-    colorTransformAndFilterControlsPanel.add(greyscaleExecuteButton, controlsPanelConstraints);
+    blurButton = helper.createButton("Blur",
+            "Blurs the image", 0, 2);
 
+    sharpenButton = helper.createButton("Sharpen",
+            "Sharpens the image", 1, 2);
 
+    sepiaButton = helper.createButton("Sepia",
+            "Applies a sepia color filter on the image", 2, 2);
 
-    blurButton = new JButton("Blur");
-    blurButton.setToolTipText("Apply Blur Filter");
-    controlsPanelConstraints.gridx = 0;
-    controlsPanelConstraints.gridy = 1;
-    colorTransformAndFilterControlsPanel.add(blurButton, controlsPanelConstraints);
+    colorCorrectButton = helper.createButton("Color Correct",
+            "Corrects the colors of the image by aligning the peaks", 3, 2);
 
-    sharpenButton = new JButton("Sharpen");
-    sharpenButton.setToolTipText("Apply Sharpen Filter");
-    basicOperationsPanelConstraints.gridx = 1;
-    basicOperationsPanelConstraints.gridy = 1;
-    colorTransformAndFilterControlsPanel.add(sharpenButton, basicOperationsPanelConstraints);
+    blackLevelSlider = helper.createSlider(0, 255, 0, 0, 3);
+    blackLevelSlider.addChangeListener(e -> {
+      blacklevelValue = blackLevelSlider.getValue();
+      blackLevelSlider.setToolTipText(String.valueOf(blacklevelValue));
+    });
 
-    colorTransformAndFilterPanel.add(colorTransformAndFilterControlsPanel);
-    operationPanel.add(colorTransformAndFilterPanel);
+    midLevelSlider = helper.createSlider(0, 255, 0, 1, 3);
+    midLevelSlider.addChangeListener(e -> {
+      midLevelValue = midLevelSlider.getValue();
+      midLevelSlider.setToolTipText(String.valueOf(midLevelValue));
+    });
 
+    whiteLevelSlider = helper.createSlider(0, 255, 0, 2, 3);
+    whiteLevelSlider.addChangeListener(e -> {
+      whiteLevelValue = whiteLevelSlider.getValue();
+      whiteLevelSlider.setToolTipText(String.valueOf(whiteLevelValue));
+    });
 
+    levelsAdjustButton = helper.createButton("Levels Adjust",
+            "Adjusts the black, mid, and white components of the image", 3, 3);
 
+    leftPanel.add(colorPanel);
 
+    // non-split view operations
+    imageTFPanel = new JPanel(new GridBagLayout());
+    imageTFPanel.setBorder(BorderFactory.createTitledBorder("Image Operations"));
+    GridBagConstraints imageTFconstraints = helper.createConstraints(GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, 1, 1, 0, 0,
+            new Insets(1, 1, 1, 1));
 
-    JPanel levelAdjustPanel = new JPanel(new GridBagLayout());
-    levelAdjustPanel.setBorder(BorderFactory.createTitledBorder("Level Adjustment"));
+    helper.changePanel(imageTFPanel, imageTFconstraints);
 
-    GridBagConstraints levelAdjustPanelConstraints = new GridBagConstraints();
-    levelAdjustPanelConstraints.anchor = GridBagConstraints.CENTER;
-    levelAdjustPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-    levelAdjustPanelConstraints.weightx = 1;
-    levelAdjustPanelConstraints.weighty = 1;
-    levelAdjustPanelConstraints.insets = new Insets(3, 3, 3, 3);
+    brightnessValueSlider = helper.createSlider(-255, 255, 0, 0, 0);
+    brightnessValueSlider.addChangeListener(e -> {
+      brightnessValue = brightnessValueSlider.getValue();
+      brightnessValueSlider.setToolTipText(String.valueOf(brightnessValue));
+    });
 
-    blackLevelAdjustValue = new JTextField("Enter black", 3);
-    levelAdjustPanelConstraints.gridx = 1;
-    levelAdjustPanelConstraints.gridy = 0;
-    levelAdjustPanel.add(blackLevelAdjustValue, levelAdjustPanelConstraints);
+    brightenButton = helper.createButton("Brighten",
+            "Brightens the image by the given amount", 1, 0);
 
-    midLevelAdjustValue = new JTextField("Enter mid", 3);
-    levelAdjustPanelConstraints.gridx = 2;
-    levelAdjustPanel.add(midLevelAdjustValue, levelAdjustPanelConstraints);
+    horizontalFlipButton = helper.createButton("Flip Horizontally",
+            "Flips the image horizontally", 0, 1);
 
-    whiteLevelAdjustValue = new JTextField("Enter white", 3);
-    levelAdjustPanelConstraints.gridx = 3;
-    levelAdjustPanel.add(whiteLevelAdjustValue, levelAdjustPanelConstraints);
+    verticalFlipButton = helper.createButton("Flip Vertically",
+            "Flips the image vertically", 1, 1);
 
-    levelAdjustButton = new JButton("Level Adjust");
-    levelAdjustButton.setToolTipText("Apply level adjust");
-    levelAdjustPanelConstraints.gridx = 4;
-    levelAdjustPanel.add(levelAdjustButton, levelAdjustPanelConstraints);
+    compressValueSlider = helper.createSlider(0, 100, 0, 0, 2);
+    compressValueSlider.addChangeListener(e -> {
+      compressValue = compressValueSlider.getValue();
+      compressValueSlider.setToolTipText(String.valueOf(compressValue));
+    });
 
-    operationPanel.add(levelAdjustPanel);
+    compressButton = helper.createButton("Compress",
+            "Compresses the image by the given amount", 1, 2);
 
-    JPanel downscalePanel = new JPanel(new GridBagLayout());
-    downscalePanel.setBorder(BorderFactory.createTitledBorder("Downscaling"));
+    heightValue = helper.createTextField("Enter Height", 3, 0, 3);
+    widthValue = helper.createTextField("Enter Width", 3, 1, 3);
+    downscaleButton = helper.createButton("Downscale",
+            "Downscales the image by the given height and width", 2, 3);
 
-    GridBagConstraints downscalePanelConstraints = new GridBagConstraints();
-    downscalePanelConstraints.anchor = GridBagConstraints.CENTER;
-    downscalePanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-    downscalePanelConstraints.weightx = 1;
-    downscalePanelConstraints.weighty = 1;
-    downscalePanelConstraints.insets = new Insets(3, 3, 3, 3);
+    leftPanel.add(imageTFPanel);
 
-    heightValue = new JTextField("Enter Height", 3);
-    downscalePanelConstraints.gridx = 1;
-    downscalePanelConstraints.gridy = 0;
-    downscalePanel.add(heightValue, downscalePanelConstraints);
-
-    widthValue = new JTextField("Enter Width", 3);
-    downscalePanelConstraints.gridx = 2;
-    downscalePanel.add(widthValue, downscalePanelConstraints);
-
-    downscaleButton = new JButton("Downscale");
-    downscaleButton.setToolTipText("Apply Downscaling");
-    downscalePanelConstraints.gridx = 3;
-    downscalePanel.add(downscaleButton, downscalePanelConstraints);
-
-    operationPanel.add(downscalePanel);
-
-    splitPreviewPanel = new JPanel(new GridBagLayout());
-    splitPreviewPanel.setBorder(BorderFactory.createTitledBorder("Split Preview"));
-    GridBagConstraints splitPreviewPanelConstraints = new GridBagConstraints();
-    splitPreviewPanelConstraints.anchor = GridBagConstraints.CENTER;
-    splitPreviewPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-    splitPreviewPanelConstraints.weightx = 1;
-    splitPreviewPanelConstraints.weighty = 1;
-    splitPreviewPanelConstraints.insets = new Insets(2, 2, 2, 2);
-
-
-
-
-
-    splitPreviewPercentageValue = new JTextField("0", 3);
-    splitPreviewPanelConstraints.gridx = 0;
-    splitPreviewPanelConstraints.gridy = 0;
-    splitPreviewPanel.add(splitPreviewPercentageValue, splitPreviewPanelConstraints);
-
-    toggleButton = new JRadioButton();
-    toggleButton.setText("Split Preview");
-    splitPreviewPanelConstraints.gridx = 3;
-    splitPreviewPanel.add(toggleButton, splitPreviewPanelConstraints);
-
-    operationPanel.add(splitPreviewPanel);
-
-    leftPane.add(operationPanel);
-
+    // histogram
     histogramLabel = new JLabel();
     histogramPanel = new JPanel();
     histogramPanel.setBorder(BorderFactory.createTitledBorder("Histogram"));
     histogramPanel.setSize(300, 300);
     histogramPanel.setPreferredSize(new Dimension(350, 350));
     histogramPanel.add(histogramLabel);
-    leftPane.add(histogramPanel);
+    leftPanel.add(histogramPanel);
 
     GridBagConstraints leftConstraints = new GridBagConstraints();
     leftConstraints.gridx = 0;
@@ -276,30 +255,59 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     leftConstraints.weightx = 0.1;
     leftConstraints.weighty = 1;
     leftConstraints.fill = GridBagConstraints.BOTH;
-    mainScreen.add(leftPane, leftConstraints);
+    parentPanel.add(leftPanel, leftConstraints);
 
-    rightPane.setLayout(new BorderLayout());
+    // image
+    rightPanel.setLayout(new BorderLayout());
     imagePanel = new JPanel();
-    imagePanel.setSize(960, 720);
-    imagePanel.setPreferredSize(new Dimension(350, 350));
+    imagePanel.setSize(700, 720);
+//    imagePanel.setPreferredSize(new Dimension(700, 720));
     imagePanel.setBorder(BorderFactory.createTitledBorder("Image preview"));
     imageLabel = new JLabel();
     imagePanel.add(imageLabel);
     JScrollPane scroller = new JScrollPane(imagePanel);
     scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    rightPane.add(scroller, BorderLayout.CENTER);
+    rightPanel.add(scroller, BorderLayout.CENTER);
 
     GridBagConstraints rightConstraints = new GridBagConstraints();
     rightConstraints.gridx = 1;
     rightConstraints.gridy = 0;
 
-    rightConstraints.weightx =0.9;
+    rightConstraints.weightx = 0.9;
     rightConstraints.weighty = 1;
     rightConstraints.fill = GridBagConstraints.BOTH;
-    mainScreen.add(rightPane, rightConstraints);
+    parentPanel.add(rightPanel, rightConstraints);
 
-    add(mainPanel);
+    add(mainScreen);
+
+    splitPreviewPanel = new JPanel(new GridBagLayout());
+    splitPreviewPanel.setBorder(BorderFactory.createTitledBorder("Split preview"));
+    GridBagConstraints splitPreviewPanelConstraints = new GridBagConstraints();
+    splitPreviewPanelConstraints.anchor = GridBagConstraints.CENTER;
+    splitPreviewPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+    splitPreviewPanelConstraints.weightx = 1;
+    splitPreviewPanelConstraints.weighty = 1;
+    splitPreviewPanelConstraints.insets = new Insets(3, 3, 3, 3);
+    splitPreviewPanel.setSize(960, 720);
+
+    splitPreviewLabel = new JLabel();
+    splitPreviewPanel.add(splitPreviewLabel);
+
+    applyFilterButton = new JButton("Apply");
+    applyFilterButton.setToolTipText("Apply the current operation on entire image.");
+    splitPreviewPanelConstraints.gridx = 2;
+    splitPreviewPanelConstraints.gridy = 0;
+    splitPreviewPanel.add(applyFilterButton, splitPreviewPanelConstraints);
+
+    cancelFilterButton = new JButton("Cancel");
+    cancelFilterButton.setToolTipText("Cancel the current operation.");
+    splitPreviewPanelConstraints.gridx = 3;
+    splitPreviewPanelConstraints.gridy = 0;
+    splitPreviewPanel.add(cancelFilterButton, splitPreviewPanelConstraints);
+
+
+
 
     setExtendedState(JFrame.MAXIMIZED_BOTH);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -311,63 +319,169 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
 
   }
 
-//  private void showSplitPreviewDialog() {
-//    JDialog dialog = new JDialog(this, "Split Preview", true);
-//    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//    dialog.setSize(200, 100);
-//    dialog.setLocationRelativeTo(this);
-//
-//    JPanel dialogPanel = new JPanel(new GridBagLayout());
-//
-//    dialogPanel.add(splitPreviewPanel);
-//
-//    dialog.add(dialogPanel);
-//    dialog.setVisible(true);
-//  }
-
-
   @Override
   public void refreshScreen(BufferedImage currentImage, BufferedImage histogram) {
     imageLabel.setIcon(new ImageIcon(currentImage));
     histogramLabel.setIcon(new ImageIcon(histogram));
   }
 
-  @Override
-  public void splitView(String imageName) {
+  private void nonSplitView(ImageController features, String command) {
+    List<String> tokens = new ArrayList<>();
+    try {
+      switch (command) {
+        case "Horizontal Flip":
+          tokens.add("horizontal-flip");
+          features.applyImageTransform(tokens, 0);
+          break;
+        case "Vertical Flip":
+          tokens.add("vertical-flip");
+          features.applyImageTransform(tokens, 0);
+          break;
+        case "Compress":
+          tokens.add("compress");
+          tokens.add(String.valueOf(compressValue));
+          features.applyImageTransform(tokens, 0);
+          break;
+        case "Downscale":
+          tokens.add("downscale");
+          tokens.add(heightValue.getText());
+          tokens.add(widthValue.getText());
+          features.applyImageTransform(tokens, 0);
+          break;
+        case "Brighten":
+          tokens.add("brighten");
+          System.out.println(brightnessValue);
+          tokens.add(String.valueOf(brightnessValue));
+          features.applyImageTransform(tokens, 0);
+          break;
+      }
+    } catch (InputMismatchException e) {
+      displayErrorMessage("Downscale operation could not be performed");
+    }
+  }
 
+  private void splitView(ImageController features, String command) {
+    if (command == "Greyscale") {
+      command = selectedGreyscale;
+    }
+    List<String> tokens = new ArrayList<>();
+    int ratio = splitRatio();
+    try {
+      switch (command) {
+        case "Red Component":
+          tokens.add("red-component");
+          features.applyImageTransform(tokens, ratio);
+//          if(ratio>0) {
+//            this.showSplitPreviewDialog(features,List.of(new String[]{"red-component"}));
+//          }
+          break;
+        case "Green Component":
+          tokens.add("green-component");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Blue Component":
+          tokens.add("blue-component");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Luma":
+          tokens.add("luma-component");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Intensity":
+          tokens.add("intensity-component");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Value":
+          tokens.add("value-component");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Sepia":
+          tokens.add("sepia");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Color Correct":
+          tokens.add("color-correct");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Levels Adjust":
+          tokens.add("levels-adjust");
+          tokens.add(String.valueOf(blacklevelValue));
+          tokens.add(String.valueOf(midLevelValue));
+          tokens.add(String.valueOf(whiteLevelValue));
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Blur":
+          tokens.add("blur");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+        case "Sharpen":
+          tokens.add("sharpen");
+          features.applyImageTransform(tokens, ratio);
+//          this.showSplitPreviewDialog();
+          break;
+
+      }
+    } catch (InputMismatchException e) {
+      displayErrorMessage(command + "operation could not be performed");
+    }
+  }
+
+  private void undoImage(ImageController features) {
+    try {
+      List<String> tokens = new ArrayList<>();
+      tokens.add("undo");
+      features.applyImageTransform(tokens, 0);
+    }
+    catch (InputMismatchException e) {
+      displayErrorMessage("Undo operation could not be performed");
+    }
   }
 
   @Override
   public void displayErrorMessage(String errorMessage) {
-    JOptionPane.showMessageDialog(mainPanel, errorMessage, "Error!!",
+    JOptionPane.showMessageDialog(mainScreen, errorMessage, "Error!!",
             JOptionPane.ERROR_MESSAGE);
   }
 
   @Override
   public void addFeatures(ImageController features) {
-
-
     exitItem.addActionListener(e -> System.exit(0));
     loadItem.addActionListener(e -> loadImage(features));
-    saveItem.addActionListener(evt -> saveImage(features));
+    saveItem.addActionListener(e -> saveImage(features));
+    undoItem.addActionListener(e -> undoImage(features));
 
-    blurButton.addActionListener(e -> blur(features));
-    sharpenButton.addActionListener(e -> sharpen(features));
-    horizontalFlipButton.addActionListener(e -> horizontalFlip(features));
-    verticalFlipButton.addActionListener(e -> verticalFlip(features));
-    greyscaleExecuteButton.addActionListener(e -> greyScale(features));
-    sepiaButton.addActionListener(e -> sepia(features));
-    brightenButton.addActionListener(e -> brighten(features));
-    colorCorrectButton.addActionListener(e -> colorCorrect(features));
-    levelAdjustButton.addActionListener(e -> levelAdjust(features));
-    downscaleButton.addActionListener(e -> downscale(features));
-    compressButton.addActionListener(e -> compress(features));
+    brightenButton.addActionListener(e -> nonSplitView(features, "Brighten"));
+    compressButton.addActionListener(e -> nonSplitView(features, "Compress"));
+    downscaleButton.addActionListener(e -> nonSplitView(features, "Downscale"));
+    horizontalFlipButton.addActionListener(e -> nonSplitView(features, "Horizontal Flip"));
+    verticalFlipButton.addActionListener(e -> nonSplitView(features, "Vertical Flip"));
 
+    blurButton.addActionListener(e -> splitView(features, "Blur"));
+    sharpenButton.addActionListener(e -> splitView(features, "Sharpen"));
+    greyscaleButton.addActionListener(e -> splitView(features, "Greyscale"));
+    sepiaButton.addActionListener(e -> splitView(features, "Sepia"));
+    colorCorrectButton.addActionListener(e -> splitView(features, "ColorCorrect"));
+    levelsAdjustButton.addActionListener(e -> splitView(features, "Levels Adjust"));
+
+  }
+
+  @Override
+  public void splitView(BufferedImage splitImage) {
+    splitPreviewLabel.setIcon(new ImageIcon(splitImage));
   }
 
   private void loadImage(ImageController features) {
     final JFileChooser fChooser = new JFileChooser();
-    fChooser.setFileFilter(filter);
+    fChooser.setFileFilter(fileFilter);
     int retValue = fChooser.showOpenDialog(this);
     if (retValue == JFileChooser.APPROVE_OPTION) {
       File f = fChooser.getSelectedFile();
@@ -378,17 +492,15 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
         features.applyImageTransform(tokens, 0);
         imagePanel.setBorder(BorderFactory.createTitledBorder("Image Preview"));
         brightenButton.setEnabled(true);
-        brightnessValue.setEnabled(true);
+        brightnessValueSlider.setEnabled(true);
         horizontalFlipButton.setEnabled(true);
         verticalFlipButton.setEnabled(true);
-        displayCompletionMessage(mainPanel, "Successfully loaded the image.");
+        displayCompletionMessage(mainScreen, "Successfully loaded the image.");
       } catch (InputMismatchException e) {
         displayErrorMessage("Please provide a valid file and try again");
       }
     }
   }
-
-
 
   private void saveImage(ImageController features) {
     final JFileChooser fChooser = new JFileChooser();
@@ -399,8 +511,8 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
         List<String> tokens = new ArrayList<>();
         tokens.add("save");
         tokens.add(f.getPath());
-        features.applyImageTransform(tokens,0);
-        displayCompletionMessage(mainPanel, "Successfully saved the image.");
+        features.applyImageTransform(tokens, 0);
+        displayCompletionMessage(mainScreen, "Successfully saved the image.");
       } catch (InputMismatchException e) {
         displayErrorMessage("Could not save the image. Please provide a valid path and try "
                 + "again");
@@ -412,162 +524,33 @@ private JMenuItem loadItem, saveItem, exitItem,undoItem;
     JOptionPane.showMessageDialog(parentFrame, informMessage, "Operation Performed",
             JOptionPane.INFORMATION_MESSAGE);
   }
-//
-  private void horizontalFlip(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try {
-      tokens.add("horizontal-flip");
-      features.applyImageTransform(tokens,0);
-    } catch (InputMismatchException e) {
-      displayErrorMessage("Horizontal flip operation could not be performed");
-    }
-  }
 
-
-  private void sepia(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try {
-      tokens.add("sepia");
-      features.applyImageTransform(tokens,splitRatio());
-    } catch (InputMismatchException e) {
-      displayErrorMessage("Sepia operation could not be performed");
-    }
-  }
-
-  private void greyScale(ImageController features){
-    List<String> tokens = new ArrayList<>();
-    int ratio = splitRatio();
-    try{
-      switch(selectedGreyscale){
-        case "Red Component":
-          tokens.add("red-component");
-          features.applyImageTransform(tokens,ratio);
-          break;
-        case "Green Component":
-          tokens.add("green-component");
-          features.applyImageTransform(tokens,ratio);
-          break;
-        case "Blue Component":
-          tokens.add("blue-component");
-          features.applyImageTransform(tokens,ratio);
-          break;
-        case "Luma":
-          tokens.add("luma-component");
-          features.applyImageTransform(tokens,ratio);
-          break;
-        case "Intensity":
-          tokens.add("intensity-component");
-          features.applyImageTransform(tokens,ratio);
-          break;
-        case "Value":
-          tokens.add("value-component");
-          features.applyImageTransform(tokens,ratio);
-          break;
-      }
-    } catch (InputMismatchException e){
-      displayErrorMessage(selectedGreyscale + "operation could not be performed");
-    }
-  }
-
-  private void blur(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try{
-      tokens.add("blur");
-      features.applyImageTransform(tokens,splitRatio());
-    } catch (InputMismatchException e){
-      displayErrorMessage("Blur operation could not be performed");
-    }
-  }
-
-  private void sharpen(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try{
-      tokens.add("sharpen");
-      features.applyImageTransform(tokens,splitRatio());
-    } catch (InputMismatchException e){
-      displayErrorMessage("Sharpen operation could not be performed");
-    }
-  }
-
-
-  private void colorCorrect(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try{
-      tokens.add("color-correct");
-      features.applyImageTransform(tokens,splitRatio());
-    } catch (InputMismatchException e){
-      displayErrorMessage("Color Correct operation could not be performed");
-    }
-  }
-
-  private void levelAdjust(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try{
-      tokens.add("levels-adjust");
-      tokens.add(blackLevelAdjustValue.getText());
-      tokens.add(midLevelAdjustValue.getText());
-      tokens.add(whiteLevelAdjustValue.getText());
-      features.applyImageTransform(tokens,splitRatio());
-    } catch (InputMismatchException e){
-      displayErrorMessage("Levels Adjust operation could not be performed");
-    }
-  }
-
-  private void downscale(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try{
-      tokens.add("downscale");
-      tokens.add(heightValue.getText());
-      tokens.add(widthValue.getText());
-      features.applyImageTransform(tokens,splitRatio());
-    } catch (InputMismatchException e){
-      displayErrorMessage("Downscale operation could not be performed");
-    }
-  }
-
-
-  private void compress(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try{
-      tokens.add("compress");
-      tokens.add(compressValue.getText());
-      features.applyImageTransform(tokens,0);
-    } catch (InputMismatchException e){
-      displayErrorMessage("Compress operation could not be performed");
-    }
-  }
-
-
-  private void verticalFlip(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try {
-      tokens.add("vertical-flip");
-      features.applyImageTransform(tokens,0);
-    } catch (InputMismatchException e) {
-      displayErrorMessage("Vertical flip operation could not be performed");
-    }
-  }
-
-  private void brighten(ImageController features) {
-    List<String> tokens = new ArrayList<>();
-    try {
-      tokens.add("brighten");
-      tokens.add(brightnessValue.getText());
-      features.applyImageTransform(tokens,0);
-      brightnessValue.setText("");
-    } catch (InputMismatchException e) {
-      displayErrorMessage("Brighten operation could not be performed");
-      brightnessValue.setText("");
-    } catch (NumberFormatException e) {
-      displayErrorMessage("Provided brighten value is invalid. Please enter a valid number.");
-      brightnessValue.setText("");
-    }
-  }
-
-  private int splitRatio(){
-    if(toggleButton.isSelected()){
-      return parseInt(splitPreviewPercentageValue.getText());
+  private int splitRatio() {
+    if (previewMode.isSelected()) {
+      return splitValue;
     }
     return 0;
+  }
+
+    private void showSplitPreviewDialog(ImageController features,List<String> tokens) {
+    JDialog dialog = new JDialog(this, "Split Preview", true);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    dialog.setSize(200, 100);
+    dialog.setLocationRelativeTo(this);
+    JPanel dialogPanel = new JPanel(new GridBagLayout());
+    dialogPanel.add(splitPreviewPanel);
+    dialog.add(dialogPanel);
+    dialog.setVisible(true);
+    applyFilterButton.addActionListener(e -> {
+        features.applyImageTransform(List.of(new String[]{"undo"}), 0);
+      System.out.println(tokens);
+        features.applyImageTransform(tokens, 0);
+        dialog.setEnabled(false);
+      });
+      cancelFilterButton.addActionListener(e -> {
+        features.applyImageTransform(List.of(new String[]{"undo"}), 0);
+        dialog.setEnabled(false);
+      });
+
   }
 }
