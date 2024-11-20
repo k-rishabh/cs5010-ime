@@ -36,6 +36,7 @@ public class Load implements ImageCommand {
       images.put(imageName, ImageUtil.loadImageRaw(filePath));
     } else {
       System.out.printf("Error: Did not recognize file extension: %s!\n", extension);
+      return 1;
     }
 
     return 0;

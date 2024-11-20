@@ -9,6 +9,8 @@ public interface ImageView {
 
   boolean displayConfirmation(String message, String title);
 
+  void setAllInputs(boolean set);
+
   void listen(ImageController controller);
 
   void refreshScreen(BufferedImage imageName, BufferedImage histogram);

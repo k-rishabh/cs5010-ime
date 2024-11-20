@@ -8,12 +8,6 @@ public class Downscale implements ImageCommand{
   private final int newHeight;
   private final int newWidth;
 
-  /**
-   * Constructor function for the Levels Adjust transformation. Requires an array of Strings,
-   * each in order, representing one word of the command in correct syntax.
-   *
-   * @param args the parameters for the transformation
-   */
   public Downscale(String[] args) {
     if (args.length != 5) {
       throw new IllegalArgumentException("Illegal number of arguments in downscale command!");
@@ -27,6 +21,9 @@ public class Downscale implements ImageCommand{
 
   @Override
   public int apply(ImageMap images) {
+    if (images.get(source).getHeight() < newHeight || images.get(source).getWidth() < newWidth) {
+      return 1;
+    }
     return images.apply(source, result, img -> img.downscale(newHeight,newWidth),0);
   }
 }

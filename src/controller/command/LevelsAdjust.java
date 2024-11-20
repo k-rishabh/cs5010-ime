@@ -44,6 +44,10 @@ public class LevelsAdjust implements ImageCommand {
 
   @Override
   public int apply(ImageMap images) {
+    if (b > m || m > w) {
+      return 1;
+    }
+
     return images.apply(source, result, img -> img.levelsAdjust(b, m, w), split);
   }
 }

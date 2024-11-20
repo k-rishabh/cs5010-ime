@@ -1,10 +1,11 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,7 +32,7 @@ public class GUIView extends JFrame implements ImageView {
   private final JMenuItem saveItem;
   private final JMenuItem exitItem;
   private final JMenuItem undoItem;
-  private FileNameExtensionFilter fileFilter;
+  private final FileNameExtensionFilter fileFilter;
 
   // split view transformations
   private final ButtonGroup splitView;
@@ -116,7 +117,6 @@ public class GUIView extends JFrame implements ImageView {
 
     leftPanel = new JPanel();
     leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-//    leftPanel.setPreferredSize(new Dimension(500, 600));
     rightPanel = new JPanel();
     rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
@@ -130,7 +130,7 @@ public class GUIView extends JFrame implements ImageView {
     helper.changePanel(colorPanel, colorConstraints);
 
     helper.createLabel("Split Preview Ratio:", 0, 0);
-    splitViewSlider = helper.createSlider(0, 100, 50, 20, 10, 1, 0);
+    splitViewSlider = helper.createSlider(0, 100, 0, 20, 10, 1, 0);
     splitViewSlider.addChangeListener(e -> {
       splitValue = splitViewSlider.getValue();
       splitViewSlider.setToolTipText(splitValue + "%");
@@ -209,9 +209,8 @@ public class GUIView extends JFrame implements ImageView {
     // image
 //    rightPanel.setLayout(new BorderLayout(rightPanel,BoxLayout.Y_AXIS));
     imagePanel = new JPanel();
-    imagePanel.setSize(700, 500);
-    imagePanel.setPreferredSize(new Dimension(720, 650));
-    imagePanel.setBorder(BorderFactory.createTitledBorder("Image preview"));
+    imagePanel.setPreferredSize(new Dimension(1200, 750));
+    imagePanel.setBorder(BorderFactory.createTitledBorder("Image Preview"));
     imageLabel = new JLabel();
     imagePanel.add(imageLabel);
 
@@ -223,26 +222,26 @@ public class GUIView extends JFrame implements ImageView {
     // non-split view operations
     imageTFPanel = new JPanel(new GridBagLayout());
     imageTFPanel.setBorder(BorderFactory.createTitledBorder("Image Operations"));
-    GridBagConstraints imageTFconstraints = helper.createConstraints(GridBagConstraints.CENTER,
+    GridBagConstraints imageTFConstraints = helper.createConstraints(GridBagConstraints.CENTER,
             GridBagConstraints.HORIZONTAL, 1, 1, 0, 0,
             new Insets(1, 1, 1, 1));
 
-    helper.changePanel(imageTFPanel, imageTFconstraints);
+    helper.changePanel(imageTFPanel, imageTFConstraints);
 
-    brightnessValueSlider = helper.createSlider(-255, 255, 0, 100, 50, 0, 0);
+    horizontalFlipButton = helper.createButton("Flip Horizontally",
+            "Flips the image horizontally", 0, 0);
+
+    verticalFlipButton = helper.createButton("Flip Vertically",
+            "Flips the image vertically", 0, 1);
+
+    brightnessValueSlider = helper.createSlider(-255, 255, 0, 85, 17, 2, 0);
     brightnessValueSlider.addChangeListener(e -> {
       brightnessValue = brightnessValueSlider.getValue();
       brightnessValueSlider.setToolTipText(String.valueOf(brightnessValue));
     });
 
     brightenButton = helper.createButton("Brighten",
-            "Brightens the image by the given amount", 1, 0);
-
-    horizontalFlipButton = helper.createButton("Flip Horizontally",
-            "Flips the image horizontally", 2, 0);
-
-    verticalFlipButton = helper.createButton("Flip Vertically",
-            "Flips the image vertically", 3, 0);
+            "Brightens the image by the given amount", 2, 2);
 
     compressValueSlider = helper.createSlider(0, 100, 0, 20, 10, 4, 0);
     compressValueSlider.addChangeListener(e -> {
@@ -251,12 +250,12 @@ public class GUIView extends JFrame implements ImageView {
     });
 
     compressButton = helper.createButton("Compress",
-            "Compresses the image by the given amount", 5, 0);
+            "Compresses the image by the given amount", 4, 2);
 
-    heightValue = helper.createTextField("Enter Height", 3, 0, 3);
-    widthValue = helper.createTextField("Enter Width", 3, 1, 3);
+    heightValue = helper.createTextField("", 3, 6, 0);
+    widthValue = helper.createTextField("", 3, 6, 1);
     downscaleButton = helper.createButton("Downscale",
-            "Downscales the image by the given height and width", 2, 3);
+            "Downscales the image by the given height and width", 6, 2);
     rightPanel.add(imageTFPanel);
 
     GridBagConstraints rightConstraints = helper.createConstraints(-1, GridBagConstraints.BOTH,
@@ -266,8 +265,8 @@ public class GUIView extends JFrame implements ImageView {
     add(mainScreen);
 
     splitPreviewPanel = new JPanel();
-    splitPreviewPanel.setLayout(new BoxLayout(splitPreviewPanel,BoxLayout.Y_AXIS));
-//    splitPreviewPanel.setPreferredSize(new Dimension(1280, 720));
+    splitPreviewPanel.setLayout(new BoxLayout(splitPreviewPanel, BoxLayout.Y_AXIS));
+    splitPreviewPanel.setPreferredSize(new Dimension(1920, 1080));
 
     GridBagConstraints splitPreviewPanelConstraints = helper.createConstraints(
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, 1, 1,
@@ -279,20 +278,23 @@ public class GUIView extends JFrame implements ImageView {
 
     applyFilterButton = helper.createButton("Apply",
             "Applies the previewed operation on entire image", 0, 2);
-    splitPreviewPanel.add(applyFilterButton, splitPreviewPanelConstraints);
 
     cancelFilterButton = helper.createButton("Cancel",
             "Cancel the current operation", 2, 2);
-    splitPreviewPanel.add(cancelFilterButton, splitPreviewPanelConstraints);
 
     setExtendedState(JFrame.MAXIMIZED_BOTH);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setPreferredSize(new Dimension(1500, 800));
-    setMinimumSize(new Dimension(1200, 500));
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    setPreferredSize(new Dimension(1920, 1080));
+    setMinimumSize(new Dimension(1280, 720));
     pack();
   }
 
-  private void setAllInputs(boolean set) {
+  private void exitProcedure(ImageController controller) {
+    controller.applyImageTransform(List.of(new String[]{"q"}), 0);
+  }
+
+  @Override
+  public void setAllInputs(boolean set) {
     this.grayscaleButton.setEnabled(set);
     this.blurButton.setEnabled(set);
     this.sharpenButton.setEnabled(set);
@@ -305,8 +307,19 @@ public class GUIView extends JFrame implements ImageView {
     this.compressButton.setEnabled(set);
     this.downscaleButton.setEnabled(set);
 
-    // TODO: check
-    this.leftPanel.setEnabled(set);
+    this.previewMode.setEnabled(set);
+    this.standardMode.setEnabled(set);
+
+    this.splitViewSlider.setEnabled(set);
+    this.blackLevelSlider.setEnabled(set);
+    this.midLevelSlider.setEnabled(set);
+    this.whiteLevelSlider.setEnabled(set);
+    this.brightnessValueSlider.setEnabled(set);
+    this.compressValueSlider.setEnabled(set);
+
+    this.heightValue.setEnabled(set);
+    this.widthValue.setEnabled(set);
+    this.greyscaleTypes.setEnabled(set);
   }
 
   @Override
@@ -321,13 +334,12 @@ public class GUIView extends JFrame implements ImageView {
 
   @Override
   public void listen(ImageController controller) {
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
-      System.out.println("Exception while setting theme!\n" + e);
-    }
-
-    setVisible(true);
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        exitProcedure(controller);
+      }
+    });
 
     loadItem.addActionListener(e -> loadImage(controller));
     saveItem.addActionListener(e -> saveImage(controller));
@@ -347,6 +359,8 @@ public class GUIView extends JFrame implements ImageView {
     downscaleButton.addActionListener(e -> nonSplitView(controller, "downscale"));
 
     undoItem.addActionListener(e -> nonSplitView(controller, "undo"));
+
+    setVisible(true);
   }
 
   @Override
@@ -443,7 +457,6 @@ public class GUIView extends JFrame implements ImageView {
         controller.applyImageTransform(tokens, 0);
         break;
       case "brighten":
-        System.out.println(brightnessValue);
         tokens.add(String.valueOf(brightnessValue));
         controller.applyImageTransform(tokens, 0);
         break;
@@ -460,7 +473,7 @@ public class GUIView extends JFrame implements ImageView {
     AtomicBoolean ret = new AtomicBoolean(false);
     JDialog dialog = new JDialog(this, "Split Preview", true);
     JPanel dialogPanel = new JPanel();
-    dialogPanel.setLayout(new BoxLayout(dialogPanel,BoxLayout.Y_AXIS));
+    dialogPanel.setLayout(new BoxLayout(dialogPanel, BoxLayout.Y_AXIS));
 
     applyFilterButton.addActionListener(e -> {
       dialog.setEnabled(false);

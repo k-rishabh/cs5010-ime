@@ -1,7 +1,6 @@
 package controller;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -40,6 +39,7 @@ public class GUIController extends AbstractController {
 
   @Override
   public void execute() {
+    view.setAllInputs(false);
     view.listen(this);
   }
 
@@ -73,6 +73,11 @@ public class GUIController extends AbstractController {
   public void applyImageTransform(List<String> tokens, int ratio) {
     int currImg;
 
+    // TODO
+    if(tokens.get(0).equals("q")) {
+      System.exit(0);
+    }
+
     if (!recents.isEmpty()) {
       currImg = Integer.parseInt(recents.peek());
     } else {
@@ -94,7 +99,7 @@ public class GUIController extends AbstractController {
       boolean go = view.displayConfirmation("Would you like to load the new image without saving?",
               "Confirmation");
       if (!go) {
-         return;
+        return;
       }
     }
 
@@ -109,7 +114,6 @@ public class GUIController extends AbstractController {
 
     // append image names to command
     tokens.add(Integer.toString(currImg));
-    System.out.println(tokens);
     if (tokens.get(0).equals("load") || tokens.get(0).equals("save")) {
       recents.push(Integer.toString(currImg));
       this.isSaved = true;
@@ -146,8 +150,16 @@ public class GUIController extends AbstractController {
     args = tokens.toArray(args);
 
     ImageCommand fn = commands.get(args[0]).apply(args);
-    fn.apply(this.imageMap);
+    int fail = fn.apply(this.imageMap);
+
+    if (fail == 1) {
+      view.displayMessage(String.format(
+              "ERROR: Unable to perform operation %s, invalid inputs provided!", args[0]),
+              "ERROR", JOptionPane.ERROR_MESSAGE);
+      recents.pop();
+    }
 
     this.display();
+    view.setAllInputs(true);
   }
 }

@@ -40,6 +40,11 @@ public class MockGUI implements ImageView {
   }
 
   @Override
+  public void setAllInputs(boolean set) {
+
+  }
+
+  @Override
   public void listen(ImageController controller) {
     try {
       out.append("Listening for input from user...\n");
