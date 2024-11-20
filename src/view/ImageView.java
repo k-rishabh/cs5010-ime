@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 import controller.ImageController;
 
 public interface ImageView {
-  void displayMessage(String errorMessage, String title, int type);
+  void displayMessage(String message, String title, int type);
 
-  boolean displayConfirmation(String confirmationMessage, String title);
+  boolean displayConfirmation(String message, String title);
 
   void listen(ImageController controller);
 

@@ -1,9 +1,12 @@
 package controller;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+
+import javax.swing.*;
 
 import controller.command.Histogram;
 import controller.command.ImageCommand;
@@ -26,6 +29,12 @@ public class GUIController extends AbstractController {
     this.initializeCommands();
 
     this.recents = new Stack<>();
+
+    // mock test mode
+    if (model.containsKey("0")) {
+      recents.push("0");
+    }
+
     isSaved = false;
   }
 
@@ -60,6 +69,7 @@ public class GUIController extends AbstractController {
     return view.splitViewWindow(currImg);
   }
 
+  @Override
   public void applyImageTransform(List<String> tokens, int ratio) {
     int currImg;
 
@@ -72,7 +82,8 @@ public class GUIController extends AbstractController {
     // if user tries to split a non-split command
     // TODO: split with load is ok
     if (0 < ratio && ratio < 100 && !splitCommands.contains(tokens.get(0))) {
-      view.displayErrorMessage("This operation cannot be previewed!");
+      view.displayMessage("This operation cannot be previewed!", "ERROR",
+              JOptionPane.ERROR_MESSAGE);
       return;
     }
 
@@ -80,10 +91,11 @@ public class GUIController extends AbstractController {
     if (recents.empty() && !tokens.get(0).equals("load")) {
       return;
     } else if (currImg != 0 && tokens.get(0).equals("load") && !isSaved) {
-//      boolean go = view.popUpConfirmation("Would you like to load the new image without saving?");
-//      if (!go) {
-//         return;
-//      }
+      boolean go = view.displayConfirmation("Would you like to load the new image without saving?",
+              "Confirmation");
+      if (!go) {
+         return;
+      }
     }
 
     // if load command, check if saved, set curr to 0
@@ -97,6 +109,7 @@ public class GUIController extends AbstractController {
 
     // append image names to command
     tokens.add(Integer.toString(currImg));
+    System.out.println(tokens);
     if (tokens.get(0).equals("load") || tokens.get(0).equals("save")) {
       recents.push(Integer.toString(currImg));
       this.isSaved = true;

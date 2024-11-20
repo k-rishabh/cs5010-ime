@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * A test class for the controller package. Uses mock models for testing purposes.
  */
-public class ControllerTest {
+public class ScriptControllerTest {
   private ImageMap mockMap;
   private ImageModel mock;
   private ImageController controller;

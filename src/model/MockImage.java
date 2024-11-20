@@ -17,12 +17,12 @@ public class MockImage implements ImageModel {
 
   @Override
   public int getHeight() {
-    return 0;
+    return 1;
   }
 
   @Override
   public int getWidth() {
-    return 0;
+    return 1;
   }
 
   @Override
