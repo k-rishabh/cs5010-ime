@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import javax.swing.*;
+
 import controller.command.Histogram;
 import controller.command.ImageCommand;
 import model.ImageMap;
@@ -72,7 +74,7 @@ public class GUIController extends AbstractController {
     // if user tries to split a non-split command
     // TODO: split with load is ok
     if (0 < ratio && ratio < 100 && !splitCommands.contains(tokens.get(0))) {
-      view.displayErrorMessage("This operation cannot be previewed!");
+      view.displayMessage("This operation cannot be previewed!","Error", JOptionPane.ERROR_MESSAGE);
       return;
     }
 
