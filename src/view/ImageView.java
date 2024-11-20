@@ -5,11 +5,13 @@ import java.awt.image.BufferedImage;
 import controller.ImageController;
 
 public interface ImageView {
+  void displayMessage(String errorMessage, String title, int type);
+
+  boolean displayConfirmation(String confirmationMessage, String title);
+
+  void listen(ImageController controller);
+
   void refreshScreen(BufferedImage imageName, BufferedImage histogram);
 
-  void splitView(String imageName);
-
-  void displayErrorMessage(String errorMessage);
-
-  void addFeatures(ImageController features);
+  boolean splitViewWindow(BufferedImage splitImage);
 }

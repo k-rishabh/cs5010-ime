@@ -21,16 +21,17 @@ public class GUIController extends AbstractController {
   public GUIController(ImageMap model, ImageView view) {
     this.imageMap = model;
     this.view = view;
-    view.addFeatures(this);
+
     commands = new HashMap<>();
     this.initializeCommands();
+
     this.recents = new Stack<>();
     isSaved = false;
   }
 
   @Override
   public void execute() {
-//    view.listen(this);
+    view.listen(this);
   }
 
   private void display() {
@@ -49,6 +50,16 @@ public class GUIController extends AbstractController {
     view.refreshScreen(curr, currHist);
   }
 
+  private boolean displayPreview() {
+    if (recents.isEmpty()) {
+      view.refreshScreen(null, null);
+      return false;
+    }
+
+    BufferedImage currImg = ImageUtil.toBufferedImage(imageMap.get(recents.peek()));
+    return view.splitViewWindow(currImg);
+  }
+
   public void applyImageTransform(List<String> tokens, int ratio) {
     int currImg;
 
@@ -57,7 +68,7 @@ public class GUIController extends AbstractController {
     } else {
       currImg = 0;
     }
-    System.out.println(recents.toString());
+
     // if user tries to split a non-split command
     // TODO: split with load is ok
     if (0 < ratio && ratio < 100 && !splitCommands.contains(tokens.get(0))) {
@@ -95,21 +106,35 @@ public class GUIController extends AbstractController {
       this.isSaved = false;
     }
 
-    // append split to command if applicable
+    // if it is a valid split command
     if (0 < ratio && ratio < 100 && splitCommands.contains(tokens.get(0))) {
       tokens.add("split");
       tokens.add(Integer.toString(ratio));
+
+      String[] args = new String[tokens.size()];
+      args = tokens.toArray(args);
+      ImageCommand fn = commands.get(args[0]).apply(args);
+
+      fn.apply(this.imageMap);
+
+      // if user cancels the operation
+      if (!this.displayPreview()) {
+        recents.pop();
+//        this.display();
+        return;
+      } else {
+        tokens.remove(tokens.size() - 1);
+        tokens.remove(tokens.size() - 1);
+      }
     }
 
+    // apply complete operation
     String[] args = new String[tokens.size()];
     args = tokens.toArray(args);
 
     ImageCommand fn = commands.get(args[0]).apply(args);
-
     fn.apply(this.imageMap);
-//    System.out.println(recents.peek());
-//    BufferedImage curr = ImageUtil.toBufferedImage(imageMap.get("0"));
-//    this.out.append(String.format("%s performed successfully!", args[0]));
+
     this.display();
   }
 }

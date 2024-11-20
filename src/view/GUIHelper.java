@@ -5,8 +5,6 @@ import java.util.Hashtable;
 
 import javax.swing.*;
 
-import static java.lang.Math.ceil;
-
 public class GUIHelper {
   JPanel panel;
   GridBagConstraints constraints;
@@ -35,9 +33,19 @@ public class GUIHelper {
     constraints.weightx = Math.max(weightx, 0);
     constraints.weighty = Math.max(weighty, 0);
 
-    constraints.insets = insets;
+    if (insets != null) {
+      constraints.insets = insets;
+    }
 
     return constraints;
+  }
+
+  public JLabel createLabel(String text, int x, int y) {
+    JLabel label = new JLabel(text);
+    constraints.gridx = x;
+    constraints.gridy = y;
+    panel.add(label, constraints);
+    return label;
   }
 
   public JRadioButton createRadioButton(String name, boolean set, int x, int y) {
@@ -69,19 +77,14 @@ public class GUIHelper {
     return button;
   }
 
-  public JSlider createSlider(int min, int max, int def, int x, int y) {
+  public JSlider createSlider(int min, int max, int def, int majTicks, int minTicks,
+                              int x, int y) {
     JSlider slider = new JSlider(min, max, def);
-
-    Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-    labelTable.put(min, new JLabel(String.valueOf(min)));
-    labelTable.put((min+max)/2, new JLabel(String.valueOf((min+max)/2)));
-    labelTable.put(max, new JLabel(String.valueOf(max)));
-
-    // Apply the label table to the slider
-    slider.setLabelTable(labelTable);
     slider.setPaintLabels(true);
-    slider.setPaintTrack(true);
     slider.setPaintTicks(true);
+
+    slider.setMajorTickSpacing(majTicks);
+    slider.setMinorTickSpacing(minTicks);
 
     if (x >= 0) {
       constraints.gridx = x;

@@ -8,7 +8,7 @@ import controller.ImageController;
 import controller.ScriptController;
 import model.ImageMapModel;
 import model.ImageMap;
-import view.ImageGUI;
+import view.GUIView;
 import view.ImageView;
 
 /**
@@ -25,7 +25,7 @@ public class ProgramRunner {
    */
   public static void main(String[] args) throws IOException {
     ImageMap model = new ImageMapModel();
-    ImageView view = new ImageGUI();
+    ImageView view = new GUIView();
     ImageController controller;
 
     if (args.length == 0) {
