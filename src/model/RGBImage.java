@@ -245,6 +245,9 @@ public class RGBImage extends AbstractImage {
 
   @Override
   public void downscale(int newHeight, int newWidth) {
+    if (newHeight > this.getHeight() || newWidth > this.getWidth() || newHeight <= 0 || newWidth <= 0) {
+      throw new IllegalArgumentException("Height and width must be greater than the original.");
+    }
     int existingHeight = this.getHeight();
     int existingWidth = this.getWidth();
     Pixel[][] downsizedPixels = new RGBPixel[newHeight][newWidth];
@@ -296,5 +299,35 @@ public class RGBImage extends AbstractImage {
       }
     }
     this.pixels = downsizedPixels;
+  }
+
+  @Override
+  public ImageModel applyMasking(ImageModel maskImage, ImageModel operatedImage) {
+    if (!(this.getWidth() == maskImage.getWidth() && this.getHeight() == maskImage.getHeight())) {
+      throw new IllegalArgumentException("Original image and mask image must have the same dimensions.");
+    }
+
+    int width = this.getWidth();
+    int height = this.getHeight();
+
+    RGBImage resultMask = new RGBImage(height, width);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        Pixel p = blendPixel(this.getPixel(y, x),
+                operatedImage.getPixel(y, x),
+                maskImage.getPixel(y, x).getRed());
+        resultMask.pixels[y][x] = p;
+      }
+    }
+    return resultMask;
+  }
+
+  private Pixel blendPixel(Pixel originalPixel, Pixel processedPixel, int maskValue) {
+    if (maskValue == 0) {
+      return processedPixel;
+    } else {
+      return originalPixel;
+    }
   }
 }

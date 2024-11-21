@@ -139,5 +139,4 @@ public abstract class AbstractImage implements ImageModel {
 
   @Override
   public abstract ImageModel[] splitComponents();
-
 }

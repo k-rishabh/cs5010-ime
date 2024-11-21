@@ -21,7 +21,7 @@ public class Downscale implements ImageCommand{
 
   @Override
   public int apply(ImageMap images) {
-    if (images.get(source).getHeight() < newHeight || images.get(source).getWidth() < newWidth) {
+    if (images.get(source).getHeight() < newHeight || images.get(source).getWidth() < newWidth || newHeight <= 0 || newWidth <= 0) {
       return 1;
     }
     return images.apply(source, result, img -> img.downscale(newHeight,newWidth),0);

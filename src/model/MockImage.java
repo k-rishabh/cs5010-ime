@@ -113,4 +113,9 @@ public class MockImage implements ImageModel {
   public void downscale(int newHeight, int newWidth) {
     log.append(String.format("In downscale with height %d and width %d.\n", newHeight, newWidth));
   }
+
+  @Override
+  public ImageModel applyMasking(ImageModel maskImage, ImageModel operatedImage) {
+    return null;
+  }
 }

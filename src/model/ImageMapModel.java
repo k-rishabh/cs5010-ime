@@ -4,10 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Class which represents a HashMap which stores the ImageModel with the associated image name.
+ * Class implements the ImageMap interface.
+ */
 public class ImageMapModel implements ImageMap {
 
   private final Map<String, ImageModel> images;
 
+  /**
+   * Initialises an empty ImageMapModel.
+   */
   public ImageMapModel() {
     this.images = new HashMap<>();
   }
@@ -51,6 +58,29 @@ public class ImageMapModel implements ImageMap {
     destImg[0].mergeSplits(destImg[1]);
 
     images.put(destName, destImg[0]);
+
+    if (images.containsKey(destName)) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
+  @Override
+  public int applyMask(String srcName, String destName, String maskImage, Consumer<ImageModel> func, int ratio) {
+    if (images.get(srcName) == null) {
+      System.out.println("Image " + srcName + " not found!");
+      return 1;
+    }
+    ImageModel srcImg = images.get(srcName).deepCopy();
+    ImageModel destImg = images.get(srcName).deepCopy();
+    ImageModel maskImg = images.get(maskImage).deepCopy();
+    func.accept(destImg);
+    if (maskImage != null) {
+      images.put(destName, srcImg.applyMasking(maskImg, destImg));
+    } else {
+      images.put(destName, destImg);
+    }
 
     if (images.containsKey(destName)) {
       return 0;

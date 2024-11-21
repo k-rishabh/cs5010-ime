@@ -4,15 +4,12 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import controller.ImageController;
+import controller.Features;
 
 public class GUIView extends JFrame implements ImageView {
 
@@ -264,33 +261,34 @@ public class GUIView extends JFrame implements ImageView {
 
     add(mainScreen);
 
-    splitPreviewPanel = new JPanel();
-    splitPreviewPanel.setLayout(new BoxLayout(splitPreviewPanel, BoxLayout.Y_AXIS));
-    splitPreviewPanel.setPreferredSize(new Dimension(1920, 1080));
+    JPanel labelWrapperPanel = new JPanel(new GridBagLayout());
+    splitPreviewLabel = new JLabel();
+    labelWrapperPanel.add(splitPreviewLabel);
 
-    GridBagConstraints splitPreviewPanelConstraints = helper.createConstraints(
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, 1, 1,
-            0, 0, new Insets(3, 3, 3, 3));
 
-    helper.changePanel(splitPreviewPanel, splitPreviewPanelConstraints);
-    splitPreviewLabel = helper.createLabel("", 0, 0);
-    splitPreviewLabel.setPreferredSize(new Dimension(1280, 720));
+    JPanel combinedLabelPanel = new JPanel(new BorderLayout());
+    JLabel topLabel = new JLabel("Click on apply if you would like to apply this operation or else click cancel", JLabel.CENTER);
+    JScrollPane scrollPane = new JScrollPane(labelWrapperPanel);
+    scrollPane.setPreferredSize(new Dimension(600, 600));
+    combinedLabelPanel.add(topLabel, BorderLayout.NORTH);
+    combinedLabelPanel.add(scrollPane, BorderLayout.CENTER);
 
-    applyFilterButton = helper.createButton("Apply",
-            "Applies the previewed operation on entire image", 0, 2);
+    applyFilterButton = new JButton("Apply");
+    cancelFilterButton = new JButton("Cancel");
 
-    cancelFilterButton = helper.createButton("Cancel",
-            "Cancel the current operation", 2, 2);
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.add(applyFilterButton);
+    buttonPanel.add(cancelFilterButton);
+
+    splitPreviewPanel = new JPanel(new BorderLayout());
+    splitPreviewPanel.add(combinedLabelPanel, BorderLayout.CENTER);
+    splitPreviewPanel.add(buttonPanel, BorderLayout.SOUTH);
 
     setExtendedState(JFrame.MAXIMIZED_BOTH);
     setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     setPreferredSize(new Dimension(1920, 1080));
     setMinimumSize(new Dimension(1280, 720));
     pack();
-  }
-
-  private void exitProcedure(ImageController controller) {
-    controller.applyImageTransform(List.of(new String[]{"q"}), 0);
   }
 
   @Override
@@ -327,143 +325,75 @@ public class GUIView extends JFrame implements ImageView {
     JOptionPane.showMessageDialog(mainScreen, informMessage, title, type);
   }
 
+  // TODO
   @Override
   public boolean displayConfirmation(String confirmationMessage, String title) {
-    return false;
+    return true;
   }
 
   @Override
-  public void listen(ImageController controller) {
+  public void listen(Features controller) {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
-        exitProcedure(controller);
+        controller.exit();
       }
     });
 
+    // file menu
     loadItem.addActionListener(e -> loadImage(controller));
     saveItem.addActionListener(e -> saveImage(controller));
-    exitItem.addActionListener(e -> System.exit(0));
+    undoItem.addActionListener(e -> controller.undo());
+    exitItem.addActionListener(e -> controller.exit());
 
-    grayscaleButton.addActionListener(e -> splitView(controller, "grayscale"));
-    blurButton.addActionListener(e -> splitView(controller, "blur"));
-    sharpenButton.addActionListener(e -> splitView(controller, "sharpen"));
-    sepiaButton.addActionListener(e -> splitView(controller, "sepia"));
-    colorCorrectButton.addActionListener(e -> splitView(controller, "color-correct"));
-    levelsAdjustButton.addActionListener(e -> splitView(controller, "levels-adjust"));
+    // split view operations
+    grayscaleButton.addActionListener(e ->
+            controller.applyGrayscale(selectedGrayscale, getSplit()));
+    blurButton.addActionListener(e -> controller.applyBlur(getSplit()));
+    sharpenButton.addActionListener(e -> controller.applySharpen(getSplit()));
+    sepiaButton.addActionListener(e -> controller.applySepia(getSplit()));
+    colorCorrectButton.addActionListener(e -> controller.applyColorCorrect(getSplit()));
+    levelsAdjustButton.addActionListener(e -> controller.applyLevelsAdjust(
+            blackLevelValue, midLevelValue, whiteLevelValue, getSplit()));
 
-    brightenButton.addActionListener(e -> nonSplitView(controller, "brighten"));
-    horizontalFlipButton.addActionListener(e -> nonSplitView(controller, "horizontal-flip"));
-    verticalFlipButton.addActionListener(e -> nonSplitView(controller, "vertical-flip"));
-    compressButton.addActionListener(e -> nonSplitView(controller, "compress"));
-    downscaleButton.addActionListener(e -> nonSplitView(controller, "downscale"));
-
-    undoItem.addActionListener(e -> nonSplitView(controller, "undo"));
+    // non-split view operations
+    brightenButton.addActionListener(e -> controller.applyBrighten(brightnessValue));
+    horizontalFlipButton.addActionListener(e -> controller.applyHorizontalFlip());
+    verticalFlipButton.addActionListener(e -> controller.applyVerticalFlip());
+    compressButton.addActionListener(e -> controller.applyCompress(compressValue));
+    downscaleButton.addActionListener(e -> controller.applyDownscale(
+            Integer.parseInt(heightValue.getText()), Integer.parseInt(widthValue.getText())));
 
     setVisible(true);
   }
 
   @Override
   public void refreshScreen(BufferedImage currentImage, BufferedImage histogram) {
-    imageLabel.setIcon(new ImageIcon(currentImage));
-    histogramLabel.setIcon(new ImageIcon(histogram));
+    if (currentImage == null || histogram == null) {
+      imageLabel.setIcon(null);
+      histogramLabel.setIcon(null);
+    } else {
+      imageLabel.setIcon(new ImageIcon(currentImage));
+      histogramLabel.setIcon(new ImageIcon(histogram));
+    }
   }
 
-  private void loadImage(ImageController controller) {
+  private void loadImage(Features controller) {
     final JFileChooser fChooser = new JFileChooser();
     fChooser.setFileFilter(fileFilter);
     int retValue = fChooser.showOpenDialog(this);
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      File f = fChooser.getSelectedFile();
-      List<String> tokens = new ArrayList<>();
-      tokens.add("load");
-      tokens.add(f.getPath());
-      controller.applyImageTransform(tokens, 0);
-      imagePanel.setBorder(BorderFactory.createTitledBorder("Image Preview"));
 
-      displayMessage("Successfully loaded the image!", "Success",
-              JOptionPane.INFORMATION_MESSAGE);
+    if (retValue == JFileChooser.APPROVE_OPTION) {
+      controller.load(fChooser.getSelectedFile());
     }
   }
 
-  private void saveImage(ImageController controller) {
+  private void saveImage(Features controller) {
     final JFileChooser fChooser = new JFileChooser();
     int retValue = fChooser.showSaveDialog(this);
+
     if (retValue == JFileChooser.APPROVE_OPTION) {
-      File f = fChooser.getSelectedFile();
-      List<String> tokens = new ArrayList<>();
-      tokens.add("save");
-      tokens.add(f.getPath());
-      controller.applyImageTransform(tokens, 0);
-      displayMessage("Successfully saved the image!", "Success",
-              JOptionPane.INFORMATION_MESSAGE);
-    }
-  }
-
-  private void splitView(ImageController controller, String command) {
-    List<String> tokens = new ArrayList<>();
-
-    if (command.equals("grayscale")) {
-      if (selectedGrayscale == null) {
-        return;
-      }
-
-      switch (selectedGrayscale) {
-        case "Red Component":
-          command = "red-component";
-          break;
-        case "Green Component":
-          command = "green-component";
-          break;
-        case "Blue Component":
-          command = "blue-component";
-          break;
-        case "Luma Component":
-          command = "luma-component";
-          break;
-        case "Intensity Component":
-          command = "intensity-component";
-          break;
-        case "Value Component":
-          command = "value-component";
-          break;
-      }
-    }
-
-    tokens.add(command);
-    int ratio = splitRatio();
-
-    if (command.equals("levels-adjust")) {
-      tokens.add(String.valueOf(blackLevelValue));
-      tokens.add(String.valueOf(midLevelValue));
-      tokens.add(String.valueOf(whiteLevelValue));
-    }
-
-    controller.applyImageTransform(tokens, ratio);
-  }
-
-  private void nonSplitView(ImageController controller, String command) {
-    List<String> tokens = new ArrayList<>();
-    tokens.add(command);
-
-    switch (command) {
-      case "compress":
-        tokens.add(String.valueOf(compressValue));
-        controller.applyImageTransform(tokens, 0);
-        break;
-      case "downscale":
-        tokens.add(heightValue.getText());
-        tokens.add(widthValue.getText());
-        controller.applyImageTransform(tokens, 0);
-        break;
-      case "brighten":
-        tokens.add(String.valueOf(brightnessValue));
-        controller.applyImageTransform(tokens, 0);
-        break;
-      default:
-        // horizontal and vertical flip
-        controller.applyImageTransform(tokens, 0);
-        break;
+      controller.save(fChooser.getSelectedFile());
     }
   }
 
@@ -498,7 +428,7 @@ public class GUIView extends JFrame implements ImageView {
     return ret.get();
   }
 
-  private int splitRatio() {
+  private int getSplit() {
     if (previewMode.isSelected()) {
       return splitValue;
     }

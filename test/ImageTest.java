@@ -43,7 +43,7 @@ public class ImageTest {
         int actualPixelR = actual.getPixel(y, x).getRed();
         int actualPixelG = actual.getPixel(y, x).getGreen();
         int actualPixelB = actual.getPixel(y, x).getBlue();
-        System.out.println(actualPixelR + " " + actualPixelG + " " + actualPixelB);
+//        System.out.println(actualPixelR + " " + actualPixelG + " " + actualPixelB);
         assertEquals(expectedPixelR, actualPixelR);
         assertEquals(expectedPixelG, actualPixelG);
         assertEquals(expectedPixelB, actualPixelB);
@@ -123,7 +123,7 @@ public class ImageTest {
     CompGreenFilter green_filter = new CompGreenFilter();
     actualImage.applyImageFilter(green_filter);
     assertImageEquals(new int[][][]{
-            {{124, 255, 255}, {81, 215, 255}, {183, 255, 105}, {230, 255, 255},
+                    {{124, 255, 255}, {81, 215, 255}, {183, 255, 105}, {230, 255, 255},
                             {167, 255, 60}, {237, 253, 208}, {184, 255, 255}},
                     {{255, 255, 255}, {180, 255, 255}, {255, 255, 214}, {250, 255, 255},
                             {255, 255, 240}, {255, 255, 255}, {196, 255, 255}},
@@ -151,7 +151,7 @@ public class ImageTest {
                     {38, 56, 34}, {244, 25, 99}},
             {{149, 5, 49}, {200, 233, 187}, {72, 55, 139}, {221, 100, 34}, {17, 199, 23},
                     {145, 170, 199}, {128, 90, 115}}
-            }, actualImage);
+    }, actualImage);
   }
 
   @Test
@@ -198,15 +198,15 @@ public class ImageTest {
     CompRedFilter redFilter = new CompRedFilter();
     actualImage.applyImageFilter(redFilter);
     assertImageEquals(new int[][][]{
-          {{0, 0, 0}, {124, 255, 255}, {81, 215, 255}, {183, 255, 105}, {230, 255, 255},
+            {{0, 0, 0}, {124, 255, 255}, {81, 215, 255}, {183, 255, 105}, {230, 255, 255},
                     {167, 255, 60}, {237, 253, 208}},
-          {{0, 0, 0}, {255, 255, 255}, {180, 255, 255}, {255, 255, 214}, {250, 255, 255},
+            {{0, 0, 0}, {255, 255, 255}, {180, 255, 255}, {255, 255, 214}, {250, 255, 255},
                     {255, 255, 240}, {255, 255, 255}},
-          {{0, 0, 0}, {255, 255, 255}, {151, 255, 223}, {255, 255, 182}, {255, 255, 255},
+            {{0, 0, 0}, {255, 255, 255}, {151, 255, 223}, {255, 255, 182}, {255, 255, 255},
                     {255, 255, 255}, {196, 255, 255}},
-          {{0, 0, 0}, {255, 170, 255}, {255, 255, 255}, {255, 255, 145}, {255, 255, 205},
+            {{0, 0, 0}, {255, 170, 255}, {255, 255, 255}, {255, 255, 145}, {255, 255, 205},
                     {255, 255, 255}, {255, 255, 255}},
-          {{0, 0, 0}, {255, 115, 214}, {183, 226, 233}, {167, 255, 36}, {255, 140, 112},
+            {{0, 0, 0}, {255, 115, 214}, {183, 226, 233}, {167, 255, 36}, {255, 140, 112},
                     {173, 205, 255}, {255, 255, 255}}
     }, actualImage);
   }
@@ -624,4 +624,36 @@ public class ImageTest {
                     {13, 26, 13}}
     }, actualImage);
   }
+
+  @Test
+  public void testDownscaleValid() {
+    ImageModel actualImage = testImage.deepCopy();
+    actualImage.downscale(4, 3);
+    assertImageEquals(new int[][][]{
+            {{34, 125, 244}, {92, 147, 49}, {173, 193, 64}},
+            {{128, 146, 213}, {101, 179, 118}, {55, 99, 102}},
+            {{244, 40, 131}, {126, 126, 69}, {89, 115, 140}},
+            {{157, 74, 111}, {106, 161, 29}, {139, 163, 167}}
+    }, actualImage);
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testDownscaleInvalidGreaterDimensions() {
+    ImageModel actualImage = testImage.deepCopy();
+    actualImage.downscale(10, 9);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testDownscaleInvalidDimensionZero() {
+    ImageModel actualImage = testImage.deepCopy();
+    actualImage.downscale(0, 0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testDownscaleInvalidDimensionNegative() {
+    ImageModel actualImage = testImage.deepCopy();
+    actualImage.downscale(-2, -2);
+  }
+
 }

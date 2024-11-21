@@ -2,7 +2,7 @@ package view;
 
 import java.awt.image.BufferedImage;
 
-import controller.ImageController;
+import controller.Features;
 
 public interface ImageView {
   void displayMessage(String message, String title, int type);
@@ -11,7 +11,7 @@ public interface ImageView {
 
   void setAllInputs(boolean set);
 
-  void listen(ImageController controller);
+  void listen(Features controller);
 
   void refreshScreen(BufferedImage imageName, BufferedImage histogram);
 

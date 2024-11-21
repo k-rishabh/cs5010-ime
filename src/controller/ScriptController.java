@@ -3,10 +3,8 @@ package controller;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 import controller.command.CombineRGB;
@@ -117,10 +115,5 @@ public class ScriptController extends AbstractController {
         exit(1);
       }
     }
-  }
-
-  @Override
-  public void applyImageTransform(List<String> tokens, int ratio) {
-    return;
   }
 }

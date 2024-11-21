@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import controller.ImageController;
+import controller.Features;
 
 public class MockGUI implements ImageView {
   Scanner sc;
@@ -45,7 +45,7 @@ public class MockGUI implements ImageView {
   }
 
   @Override
-  public void listen(ImageController controller) {
+  public void listen(Features controller) {
     try {
       out.append("Listening for input from user...\n");
     } catch (IOException e) {
