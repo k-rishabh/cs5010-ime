@@ -177,35 +177,25 @@ public class GUIControllerTest {
     controller = new GUIController(mockMap, mockView);
 
     controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
+    assertEquals("Setting all inputs to false.\n" +
+                    "Listening for input from user...\n" +
+                    "In levelsAdjust with black 10, mid 20, white 30.\n" +
+                    "In histogram.\n" +
+                    "Refreshing screen with new image and histogram.",
             out.toString().trim());
   }
 
   @Test
-  public void testLevelsAdjustInvalid1() {
+  public void testLevelsAdjustInvalid() {
     in = new StringReader("levels-adjust 30 20 10 0");
     mockView = new MockGUI(in, out);
     controller = new GUIController(mockMap, mockView);
 
     controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
-            out.toString().trim());
-  }
-
-  @Test
-  public void testLevelsAdjustInvalid2() {
-    in = new StringReader("levels-adjust a 10 20 0");
-    mockView = new MockGUI(in, out);
-    controller = new GUIController(mockMap, mockView);
-
-    controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
+    assertEquals("Setting all inputs to false.\n" +
+                    "Listening for input from user...\n" +
+                    "Displaying type 0 message: " +
+                    "The value of black, mid, and white must be in ascending order!",
             out.toString().trim());
   }
 
@@ -235,9 +225,11 @@ public class GUIControllerTest {
     controller = new GUIController(mockMap, mockView);
 
     controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
+    assertEquals("Setting all inputs to false.\n" +
+                    "Listening for input from user...\n" +
+                    "In brighten with value 50.\n" +
+                    "In histogram.\n" +
+                    "Refreshing screen with new image and histogram.",
             out.toString().trim());
   }
 
@@ -278,22 +270,24 @@ public class GUIControllerTest {
     controller = new GUIController(mockMap, mockView);
 
     controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
+    assertEquals("Setting all inputs to false.\n" +
+                    "Listening for input from user...\n" +
+                    "In compress with ratio 50.\n" +
+                    "In histogram.\n" +
+                    "Refreshing screen with new image and histogram.",
             out.toString().trim());
   }
 
   @Test
   public void testDownscaleInvalid() {
-    in = new StringReader("downscale 500 500");
+    in = new StringReader("downscale a b");
     mockView = new MockGUI(in, out);
     controller = new GUIController(mockMap, mockView);
 
     controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
+    assertEquals("Setting all inputs to false.\n" +
+                    "Listening for input from user...\n" +
+                    "Displaying type 0 message: Entered height/width are not numbers!",
             out.toString().trim());
   }
 
@@ -304,9 +298,16 @@ public class GUIControllerTest {
     controller = new GUIController(mockMap, mockView);
 
     controller.execute();
-    assertEquals("Setting all inputs to false.\n" + "Listening for input from user...\n" +
-                    "In applyColorFilter with filter controller.filter.CompBlueFilter.\n" +
-                    "In histogram.\n" + "Refreshing screen with new image and histogram.",
+    assertEquals("Setting all inputs to false.\n" +
+                    "Listening for input from user...\n" +
+                    "In applyImageFilter with filter controller.filter.BlurFilter.\n" +
+                    "In histogram.\n" +
+                    "Refreshing screen with new image and histogram.\n" +
+                    "Asking for confirmation with message: Image not saved! " +
+                    "Are you sure you want to load new?\n" +
+                    "Refreshing screen with new image and histogram.\n" +
+                    "Setting all inputs to true.\n" +
+                    "Displaying type 1 message: Successfully loaded the image!",
             out.toString().trim());
   }
 }

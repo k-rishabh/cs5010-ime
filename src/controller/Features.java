@@ -31,5 +31,5 @@ public interface Features {
 
   void applyCompress(int ratio);
 
-  void applyDownscale(int h, int w);
+  void applyDownscale(String h, String w);
 }

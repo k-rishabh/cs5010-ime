@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -88,7 +89,10 @@ public class MockGUI implements ImageView {
           controller.applyCompress(Integer.parseInt(tokens[1]));
           break;
         case "downscale":
-          controller.applyDownscale(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+          controller.applyDownscale(tokens[1], tokens[2]);
+          break;
+        case "load":
+          controller.load(new File(tokens[1]));
           break;
         default:
           controller.applyGrayscale(tokens[0], Integer.parseInt(tokens[1]));

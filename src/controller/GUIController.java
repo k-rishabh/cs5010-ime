@@ -193,6 +193,11 @@ public class GUIController extends AbstractController implements Features {
 
   @Override
   public void undo() {
+    if (recents.isEmpty()) {
+      view.displayMessage("Nothing to undo!", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+
     recents.pop();
     this.display();
   }
@@ -218,9 +223,8 @@ public class GUIController extends AbstractController implements Features {
    * @param ratio the split ratio, if required, else provide 0
    */
   private void applyTransformation(String command, int ratio) {
-    List<String> tokens = new ArrayList<>();
-
-    tokens.add(command);
+    String[] words = command.split(" ");
+    List<String> tokens = new ArrayList<>(Arrays.asList(words));
 
     // apply transformation on most recent image
     int curr = Integer.parseInt(recents.peek());
@@ -291,6 +295,11 @@ public class GUIController extends AbstractController implements Features {
 
   @Override
   public void applyLevelsAdjust(int b, int m, int w, int ratio) {
+    if (b > m || m > w) {
+      view.displayMessage("The value of black, mid, and white must be in ascending order!",
+              "ERROR", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
     String cmd = String.format("levels-adjust %d %d %d", b, m, w);
     applyTransformation(cmd, ratio);
   }
@@ -318,7 +327,19 @@ public class GUIController extends AbstractController implements Features {
   }
 
   @Override
-  public void applyDownscale(int h, int w) {
+  public void applyDownscale(String height, String width) {
+    int h;
+    int w;
+
+    try {
+      h = Integer.parseInt(height);
+      w = Integer.parseInt(width);
+    } catch (NumberFormatException e) {
+      view.displayMessage("Entered height/width are not numbers!", "ERROR",
+              JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+
     String cmd = String.format("downscale %d %d", h, w);
     applyTransformation(cmd, 0);
   }

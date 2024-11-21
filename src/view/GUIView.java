@@ -362,7 +362,7 @@ public class GUIView extends JFrame implements ImageView {
     verticalFlipButton.addActionListener(e -> controller.applyVerticalFlip());
     compressButton.addActionListener(e -> controller.applyCompress(compressValue));
     downscaleButton.addActionListener(e -> controller.applyDownscale(
-            Integer.parseInt(heightValue.getText()), Integer.parseInt(widthValue.getText())));
+            heightValue.getText(), widthValue.getText()));
 
     setVisible(true);
   }
