@@ -246,7 +246,7 @@ public class ScriptControllerTest {
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyColorFilter with filter controller.filter.SharpenFilter.\n" +
+    assertEquals("In applyImageFilter with filter controller.filter.SharpenFilter.\n" +
             "sharpen performed successfully!", out.toString().trim());
   }
 
