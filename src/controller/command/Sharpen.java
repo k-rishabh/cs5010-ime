@@ -46,10 +46,10 @@ public class Sharpen implements ImageCommand {
   @Override
   public int apply(ImageMap images) {
     if (maskImage == null) {
-      return images.apply(source, result, img -> img.applyColorFilter(new SharpenFilter()), split);
+      return images.apply(source, result, img -> img.applyImageFilter(new SharpenFilter()), split);
     } else {
       return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new SharpenFilter()), split);
+              img -> img.applyImageFilter(new SharpenFilter()), split);
     }
   }
 }

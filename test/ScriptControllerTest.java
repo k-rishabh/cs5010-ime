@@ -3,7 +3,6 @@ import org.junit.Test;
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 
 import controller.ScriptController;
 import controller.ImageController;
@@ -14,16 +13,13 @@ import model.MockImage;
 
 import static org.junit.Assert.assertEquals;
 
-
 /**
  * A test class for the controller package. Uses mock models for testing purposes.
  */
 public class ScriptControllerTest {
   private ImageMap mockMap;
-  private ImageModel mock;
   private ImageController controller;
 
-  private StringBuilder log;
   private Reader in;
   private Appendable out;
 
@@ -31,163 +27,149 @@ public class ScriptControllerTest {
   public void setup() {
     mockMap = new ImageMapModel();
 
-    log = new StringBuilder();
-    mock = new MockImage(log);
+    out = new StringBuilder();
+    ImageModel mock = new MockImage(out);
 
     mockMap.put("mock", mock);
   }
 
+  // TODO
   @Test
   public void testScriptParse() {
 
   }
 
   @Test
-  public void testLoad() {
-
-  }
-
-  @Test
-  public void testSave() {
-
-  }
-
-  @Test
   public void testComments() {
+    in = new StringReader("# this is a comment");
+    controller = new ScriptController(mockMap, in, out);
 
+    controller.execute();
+    assertEquals("", out.toString().trim());
   }
 
   @Test
   public void testUnknownCommand() {
     in = new StringReader("darken mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.ComponentRed.",
-            log.toString().trim());
+    assertEquals("ERROR: Unknown command \"darken\" on line 1.", out.toString().trim());
   }
 
   @Test
   public void testFilterCompValid() {
     in = new StringReader("red-component mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyColorFilter with filter controller.filter.CompRedFilter.",
-            log.toString().trim());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFilterCompInvalid() {
-    in = new StringReader("red-component mock mock-res 20");
-    out = new StringWriter();
-    controller = new ScriptController(mockMap, in, out);
-    controller.execute();
+    assertEquals("In applyColorFilter with filter controller.filter.CompRedFilter.\n" +
+            "red-component performed successfully!", out.toString().trim());
   }
 
   @Test
-  public void downscale() {
-    in = new StringReader("downscale 300 200 mock mock-res");
-    out = new StringWriter();
+  public void testFilterCompInvalid() {
+    in = new StringReader("red-component mock mock-res 20");
     controller = new ScriptController(mockMap, in, out);
-    controller.execute();
 
-    assertEquals("In downscale with height 300 and width 200.",
-            log.toString().trim());
+    controller.execute();
+    assertEquals("Error while performing red-component on line 1!", out.toString().trim());
+  }
+
+  @Test
+  public void downscaleInvalid() {
+    in = new StringReader("downscale 300 200 mock mock-res");
+    controller = new ScriptController(mockMap, in, out);
+
+    controller.execute();
+    assertEquals("Error while performing downscale on line 1!",
+            out.toString().trim());
 
   }
 
   @Test
   public void testValCompValid() {
     in = new StringReader("value-component mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In valueComponent.",
-            log.toString().trim());
+    assertEquals("In valueComponent.\n" +
+            "value-component performed successfully!", out.toString().trim());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testValCompInvalid() {
     in = new StringReader("value-component mock mock-res 20");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
+    assertEquals("Error while performing value-component on line 1!",
+            out.toString().trim());
   }
 
   @Test
   public void testFlipValid() {
     in = new StringReader("vertical-flip mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In verticalFlip.",
-            log.toString().trim());
+    assertEquals("In verticalFlip.\n" +
+            "vertical-flip performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testFlipInvalid() {
     in = new StringReader("vertical-flip mock mock-res split 50");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
+
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("ERROR: Command \"vertical-flip\" on line 1 cannot be previewed!",
+            out.toString().trim());
   }
 
   @Test
   public void testBrightenValid() {
     in = new StringReader("brighten 50 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In brighten with value 50.",
-            log.toString().trim());
+    assertEquals("In brighten with value 50.\n" +
+            "brighten performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testBrightenOutOfBounds() {
     in = new StringReader("brighten 256 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In brighten with value 256.",
-            log.toString().trim());
+    assertEquals("In brighten with value 256.\n" +
+            "brighten performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testDarkenValid() {
     in = new StringReader("brighten -50 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In brighten with value -50.",
-            log.toString().trim());
+    assertEquals("In brighten with value -50.\n" +
+            "brighten performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testDarkenOutOfBounds() {
     in = new StringReader("brighten -500 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In brighten with value -500.",
-            log.toString().trim());
+    assertEquals("In brighten with value -500.\n" +
+            "brighten performed successfully!", out.toString().trim());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testBrightenTooFewArgs() {
     in = new StringReader("brighten mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
@@ -196,29 +178,26 @@ public class ScriptControllerTest {
   @Test
   public void testBrightenInvalid() {
     in = new StringReader("brighten 50 mock mock-res split 20");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("ERROR: Command \"brighten\" on line 1 cannot be previewed!",
+            out.toString().trim());
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void testRGBSplitValid() {
     in = new StringReader("rgb-split mock mock-red mock-green mock-blue");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("In splitComponents.\n" +
+            "rgb-split performed successfully!", out.toString().trim());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testRGBSplitTooLessArgs() {
     in = new StringReader("rgb-split mock mock-rgb");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
@@ -226,17 +205,17 @@ public class ScriptControllerTest {
 
   @Test
   public void testRGBCombineValid() {
-    in = new StringReader("rgb-combine mock mock-red mock-green mock-blue");
-    out = new StringWriter();
+    in = new StringReader("rgb-combine mock-res mock mock mock");
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
+    assertEquals("In combineComponents.\n" + "In combineComponents.\n" +
+            "rgb-combine performed successfully!", out.toString().trim());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testRGBCombineTooLessArgs() {
     in = new StringReader("rgb-combine mock mock-rgb");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
@@ -245,253 +224,206 @@ public class ScriptControllerTest {
   @Test
   public void testBlurValid() {
     in = new StringReader("blur mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.\n" +
+            "blur performed successfully!", out.toString().trim());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testBlurTooManyArgs() {
     in = new StringReader("blur 10 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
+    assertEquals("Error while performing blur on line 1!", out.toString().trim());
   }
 
   @Test
   public void testSharpenValid() {
     in = new StringReader("sharpen mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.SharpenFilter.",
-            log.toString().trim());
+    assertEquals("In applyColorFilter with filter controller.filter.SharpenFilter.\n" +
+            "sharpen performed successfully!", out.toString().trim());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testSharpenTooManyArgs() {
     in = new StringReader("sharpen 10 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("Error while performing sharpen on line 1!",
+            out.toString().trim());
   }
 
   @Test
   public void testSepiaValid() {
     in = new StringReader("sepia mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyColorFilter with filter controller.filter.SepiaFilter.",
-            log.toString().trim());
+    assertEquals("In applyColorFilter with filter controller.filter.SepiaFilter.\n" +
+            "sepia performed successfully!", out.toString().trim());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testSepiaTooManyArgs() {
     in = new StringReader("sepia 10 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
-  }
-
-  @Test
-  public void testRunValid() {
-  }
-
-  @Test
-  public void testRunInvalid() {
+    assertEquals("Error while performing sepia on line 1!",
+            out.toString().trim());
   }
 
   @Test
   public void testCompressValid() {
     in = new StringReader("compress 40 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In compress with ratio 40.",
-            log.toString().trim());
+    assertEquals("In compress with ratio 40.\n" +
+            "compress performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testCompressOutOfBounds() {
     in = new StringReader("compress 120 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In compress with ratio 120.",
-            log.toString().trim());
+    assertEquals("In compress with ratio 120.\n" +
+            "compress performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testCompressInvalid() {
     in = new StringReader("compress 40 mock mock-res split");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("ERROR: Command \"compress\" on line 1 cannot be previewed!",
+            out.toString().trim());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testCompressTooFewArgs() {
     in = new StringReader("compress mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-
   }
 
   @Test
   public void testHistogramValid() {
     in = new StringReader("histogram mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In histogram.",
-            log.toString().trim());
+    assertEquals("In histogram.\n" + "histogram performed successfully!",
+            out.toString().trim());
   }
 
   @Test
   public void testHistogramInvalid() {
     in = new StringReader("histogram mock mock-res split 20");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("ERROR: Command \"histogram\" on line 1 cannot be previewed!",
+            out.toString().trim());
   }
 
   @Test
   public void testColorCorrectValid() {
     in = new StringReader("color-correct mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In colorCorrect.",
-            log.toString().trim());
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void testColorCorrectInvalid() {
-    in = new StringReader("color-correct mock mock-res split 20");
-    out = new StringWriter();
-    controller = new ScriptController(mockMap, in, out);
-
-    controller.execute();
+    assertEquals("In colorCorrect.\n" + "color-correct performed successfully!",
+            out.toString().trim());
   }
 
   @Test
   public void testLevelsAdjustValid() {
     in = new StringReader("levels-adjust 10 20 30 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In levelsAdjust with black 10, mid 20, white 30.",
-            log.toString().trim());
+    assertEquals("In levelsAdjust with black 10, mid 20, white 30.\n" +
+            "levels-adjust performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testLevelsAdjustOutOfBounds1() {
     in = new StringReader("levels-adjust 10 20 300 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In levelsAdjust with black 10, mid 20, white 300.",
-            log.toString().trim());
+    assertEquals("In levelsAdjust with black 10, mid 20, white 300.\n" +
+            "levels-adjust performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testLevelsAdjustOutOfBounds2() {
     in = new StringReader("levels-adjust -10 20 30 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In levelsAdjust with black -10, mid 20, white 30.",
-            log.toString().trim());
+    assertEquals("In levelsAdjust with black -10, mid 20, white 30.\n" +
+            "levels-adjust performed successfully!", out.toString().trim());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testLevelsAdjustTooFewArgs() {
     in = new StringReader("levels-adjust 50 100 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
   }
 
   @Test
   public void testLevelsAdjustInvalidOrder() {
     in = new StringReader("levels-adjust 10 30 20 mock mock-res");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("Error while performing levels-adjust on line 1!",
+            out.toString().trim());
   }
 
-  @Test(expected = NullPointerException.class)
-  public void testLevelsAdjustInvalid() {
-    in = new StringReader("levels-adjust 10 20 30 mock mock-res split 20");
-    out = new StringWriter();
-    controller = new ScriptController(mockMap, in, out);
-
-    controller.execute();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testSplitViewValid() {
-    in = new StringReader("rgb-split mock mock-rgb");
-    out = new StringWriter();
+    in = new StringReader("blur mock mock-res split 20");
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-
+    assertEquals("In splitImage with ratio 20.\n" +
+            "In applyImageFilter with filter controller.filter.BlurFilter.\n" +
+            "In mergeSplits.\n" + "blur performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testSplitViewOutOfBounds1() {
     in = new StringReader("blur mock mock-res split 120");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.\n" +
+            "blur performed successfully!", out.toString().trim());
   }
 
   @Test
   public void testSplitViewOutOfBounds2() {
     in = new StringReader("blur mock mock-res split -20");
-    out = new StringWriter();
     controller = new ScriptController(mockMap, in, out);
 
     controller.execute();
-    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.",
-            log.toString().trim());
+    assertEquals("In applyImageFilter with filter controller.filter.BlurFilter.\n" +
+            "blur performed successfully!", out.toString().trim());
   }
 }

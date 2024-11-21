@@ -91,7 +91,7 @@ public class ScriptController extends AbstractController {
                   tokens[0], lineNo));
           continue;
         } else if (Arrays.asList(tokens).contains("split") && !splitCommands.contains(tokens[0])) {
-          this.out.append(String.format("ERROR: Command \"%s\" on line %d cannot be previewed!.\n",
+          this.out.append(String.format("ERROR: Command \"%s\" on line %d cannot be previewed!\n",
                   tokens[0], lineNo));
           continue;
         }
@@ -103,9 +103,15 @@ public class ScriptController extends AbstractController {
         }
 
         ImageCommand fn = commands.get(tokens[0]).apply(tokens);
+
         if (fn != null) {
-          fn.apply(imageMap);
-          this.out.append(String.format("%s performed successfully!\n", tokens[0]));
+          if (fn.apply(imageMap) == 0) {
+            this.out.append(String.format("%s performed successfully!\n", tokens[0]));
+          } else {
+            this.out.append(String.format("Error while performing %s on line %d!\n",
+                    tokens[0], lineNo));
+          }
+
         } else {
           this.out.append(String.format("ERROR: Unknown command \"%s\" on line %d.\n",
                   tokens[0], lineNo));

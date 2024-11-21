@@ -2,9 +2,6 @@ package view;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import controller.Features;
@@ -41,7 +38,11 @@ public class MockGUI implements ImageView {
 
   @Override
   public void setAllInputs(boolean set) {
-
+    try {
+      out.append(String.format("Setting all inputs to %s.\n", set));
+    } catch (IOException e) {
+      System.out.println("ERROR: Unable to append to out!\n");
+    }
   }
 
   @Override
@@ -53,17 +54,46 @@ public class MockGUI implements ImageView {
     }
 
     while (sc.hasNextLine()) {
-      List<String> tokens = new ArrayList<>(Arrays.asList(sc.nextLine().split(" ")));
+      String line = sc.nextLine();
+      String[] tokens = line.split(" ");
 
-      int n = tokens.size();
-      int ratio = 0;
-      if (n > 2 && tokens.get(n - 2).equals("split")) {
-        ratio = Integer.parseInt(tokens.get(n - 1));
-        tokens.remove(n - 1);
-        tokens.remove(n - 1);
+      // calls respective callback functions
+      switch (tokens[0]) {
+        case "blur":
+          controller.applyBlur(Integer.parseInt(tokens[1]));
+          break;
+        case "sharpen":
+          controller.applySharpen(Integer.parseInt(tokens[1]));
+          break;
+        case "sepia":
+          controller.applySepia(Integer.parseInt(tokens[1]));
+          break;
+        case "color-correct":
+          controller.applyColorCorrect(Integer.parseInt(tokens[1]));
+          break;
+        case "levels-adjust":
+          controller.applyLevelsAdjust(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
+                  Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]));
+          break;
+        case "brighten":
+          controller.applyBrighten(Integer.parseInt(tokens[1]));
+          break;
+        case "horizontal-flip":
+          controller.applyHorizontalFlip();
+          break;
+        case "vertical-flip":
+          controller.applyVerticalFlip();
+          break;
+        case "compress":
+          controller.applyCompress(Integer.parseInt(tokens[1]));
+          break;
+        case "downscale":
+          controller.applyDownscale(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+          break;
+        default:
+          controller.applyGrayscale(tokens[0], Integer.parseInt(tokens[1]));
+          break;
       }
-
-//      controller.applyImageTransform(tokens, ratio);
     }
   }
 

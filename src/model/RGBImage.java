@@ -274,21 +274,21 @@ public class RGBImage extends AbstractImage {
         float xWeight = originalX - x1;
         float yWeight = originalY - y1;
 
-        int red = (int) Math.round(
+        int red = Math.round(
                 (1 - xWeight) * (1 - yWeight) * cA.getRed() +
                         xWeight * (1 - yWeight) * cB.getRed() +
                         (1 - xWeight) * yWeight * cC.getRed() +
                         xWeight * yWeight * cD.getRed()
         );
 
-        int green = (int) Math.round(
+        int green = Math.round(
                 (1 - xWeight) * (1 - yWeight) * cA.getGreen() +
                         xWeight * (1 - yWeight) * cB.getGreen() +
                         (1 - xWeight) * yWeight * cC.getGreen() +
                         xWeight * yWeight * cD.getGreen()
         );
 
-        int blue = (int) Math.round(
+        int blue = Math.round(
                 (1 - xWeight) * (1 - yWeight) * cA.getBlue() +
                         xWeight * (1 - yWeight) * cB.getBlue() +
                         (1 - xWeight) * yWeight * cC.getBlue() +

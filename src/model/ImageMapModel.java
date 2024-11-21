@@ -67,14 +67,20 @@ public class ImageMapModel implements ImageMap {
   }
 
   @Override
-  public int applyMask(String srcName, String destName, String maskImage, Consumer<ImageModel> func, int ratio) {
+  public int applyMask(String srcName, String destName, String maskImage,
+                       Consumer<ImageModel> func, int ratio) {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
       return 1;
+    } else  if (images.get(maskImage) == null) {
+      System.out.println("Image " + maskImage + " not found!");
+      return 1;
     }
+
     ImageModel srcImg = images.get(srcName).deepCopy();
     ImageModel destImg = images.get(srcName).deepCopy();
     ImageModel maskImg = images.get(maskImage).deepCopy();
+
     func.accept(destImg);
     if (maskImage != null) {
       images.put(destName, srcImg.applyMasking(maskImg, destImg));

@@ -3,6 +3,7 @@ package controller;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -261,6 +262,9 @@ public class GUIController extends AbstractController implements Features {
         break;
       case "Value Component":
         applyTransformation("value-component", ratio);
+        break;
+      default:
+        applyTransformation(feature, ratio);
         break;
     }
   }

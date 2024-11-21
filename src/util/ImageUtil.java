@@ -29,6 +29,10 @@ public class ImageUtil {
    * @return the resulting BufferedImage
    */
   public static BufferedImage toBufferedImage(ImageModel img) {
+    if (img == null || img.getHeight() == 0 || img.getWidth() == 0) {
+      return null;
+    }
+
     BufferedImage buffImg =
             new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 

@@ -1,7 +1,10 @@
 package model;
 
+import java.io.IOException;
+
 import controller.filter.Filter;
 import model.pixel.Pixel;
+import model.pixel.RGBPixel;
 
 /**
  * A mock implementation of the model used for testing the controller.
@@ -9,25 +12,25 @@ import model.pixel.Pixel;
  * It may also return a uniqueCode that it is initialized with, if return type is int.
  */
 public class MockImage implements ImageModel {
-  private StringBuilder log;
+  private final Appendable out;
 
-  public MockImage(StringBuilder log) {
-    this.log = log;
+  public MockImage(Appendable out) {
+    this.out = out;
   }
 
   @Override
   public int getHeight() {
-    return 1;
+    return 0;
   }
 
   @Override
   public int getWidth() {
-    return 1;
+    return 0;
   }
 
   @Override
   public Pixel getPixel(int i, int j) {
-    return null;
+    return new RGBPixel(0, 0, 0);
   }
 
   @Override
@@ -37,81 +40,142 @@ public class MockImage implements ImageModel {
 
   @Override
   public void applyColorFilter(Filter filter) {
-    log.append(String.format("In applyColorFilter with filter %s.\n", filter.getClass().getName()));
+    try {
+      out.append(String.format("In applyColorFilter with filter %s.\n", filter.getClass().getName()));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void applyImageFilter(Filter filter) {
-    log.append(String.format("In applyImageFilter with filter %s.\n", filter.getClass().getName()));
+    try {
+      out.append(String.format("In applyImageFilter with filter %s.\n",
+              filter.getClass().getName()));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void valueComponent() {
-    log.append("In valueComponent.\n");
+    try {
+      out.append("In valueComponent.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void brighten(int val) {
-    log.append(String.format("In brighten with value %d.\n", val));
+    try {
+      out.append(String.format("In brighten with value %d.\n", val));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void horizontalFlip() {
-    log.append("In horizontalFlip.\n");
+    try {
+      out.append("In horizontalFlip.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void verticalFlip() {
-    log.append("In verticalFlip.\n");
+    try {
+      out.append("In verticalFlip.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public ImageModel[] splitComponents() {
-    log.append("In splitComponents.\n");
-    return null;
+    try {
+      out.append("In splitComponents.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
+    return new MockImage[]{this, this, this};
   }
 
   @Override
   public void combineComponents(ImageModel img) {
-    log.append("In combineComponents.\n");
+    try {
+      out.append("In combineComponents.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void compress(int ratio) {
-    log.append(String.format("In compress with ratio %d.\n", ratio));
+    try {
+      out.append(String.format("In compress with ratio %d.\n", ratio));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void colorCorrect() {
-    log.append("In colorCorrect.\n");
+    try {
+      out.append("In colorCorrect.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public ImageModel histogram() {
-    log.append("In histogram.\n");
+    try {
+      out.append("In histogram.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
     return null;
   }
 
   @Override
   public void levelsAdjust(int black, int mid, int white) {
-    log.append(String.format("In levelsAdjust with black %d, mid %d, white %d.\n",
-            black, mid, white));
+    try {
+      out.append(String.format("In levelsAdjust with black %d, mid %d, white %d.\n",
+              black, mid, white));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public ImageModel[] splitImage(int ratio) {
-    log.append(String.format("In splitImage with ratio %d.\n", ratio));
-    return null;
+    try {
+      out.append(String.format("In splitImage with ratio %d.\n", ratio));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
+    return new MockImage[]{this, this};
   }
 
   @Override
   public void mergeSplits(ImageModel img) {
-    log.append("In mergeSplits.\n");
+    try {
+      out.append("In mergeSplits.\n");
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
   public void downscale(int newHeight, int newWidth) {
-    log.append(String.format("In downscale with height %d and width %d.\n", newHeight, newWidth));
+    try {
+      out.append(String.format("In downscale with height %d and width %d.\n", newHeight, newWidth));
+    } catch (IOException e) {
+      System.out.println("Unable to append to out!\n");
+    }
   }
 
   @Override
