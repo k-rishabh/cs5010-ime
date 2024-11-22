@@ -1,36 +1,44 @@
-# IME: Image Manipulation and Enhancement
+# GRIME: Graphical Image Manipulation and Enhancement
 
-This assignment implements an image processing system with support for image manipulation, filtering, and pixel operations. The system supports operations such as flipping, brightening, and applying various image filters (blur & sharpen) on an image represented as a grid of pixels. Our design is modular, allowing for easy extension and modification of image processing techniques.
+This assignment implements a graphical image processing application with support for image manipulation, filtering, and pixel operations. The system supports operations such as flipping, brightening, and applying various image filters (blur & sharpen) on an image represented as a grid of pixels. Our design is modular, allowing for easy extension and modification of image processing techniques.
+
+![GRIME_GUI](./res/GRIME-GUI.jpg)
+
 
 ## Changes and Justifications
 ### 1. src/model
-- The filter package has been moved from src/model to src/controller. This was done to give the command package access to the filters. This improved our code abstraction since our model functions are now independent of the type of transformation.
-- As mentioned in the previous point, we abstracted the functions for all color transformations into one function. Hence the functions for blur, red-component, etc. were removed and abstracted as applyColorFilter() (in both Pixel and Image).
-- We added some getter functions in ImageModel, to enable us to perform the new operations with more ease.
+- Added an ImageMap interface and ImageMapModel class which represent a model of our program. It includes a mapping from string names to images. It is used by the controller to store all the current images the user has used.
+- Following feedback from our previous assignment, we removed the getColor methods from the ImageModel interface, since they were redundant.
+- Improved our MockImage class to work better with the view controller testing for GUI. This includes changing the outputs for some of the functions.
 
 ### 2. src/controller
-- Added the filter package to the controller package for the reasons mentioned above.
-- Unified the functioning of ScriptReader, ImageHandler, and CommandInterpreter into a single file ImageController. This was done to incorporate the Command Design Pattern. The movement of functionality is mentioned in the points below.
-- ScriptReader was responsible for parsing the script and passing each command to the CommandInterpreter. The parsing of each line is now performed in the ImageController.
-- CommandInterpreter was responsible for understanding the command and delegating it to the respective function in the ImageHandler. Since we now have a command map, this functioning was redundant.
-- ImageHandler was responsible for applying a transformation on the given image. This is now handled in the individual classes for each transformation in the command package.
+- To add functionality for masking, we had to change some of the commands in the command package to support the new syntax.
+- Added an ImageController interface to abstract the execute (go) method for both controllers.
+- Due to the new interface, we also added a new abstract class to initialize the list of known commands.
+- Improved the error handling of the ScriptController.
 
 ### 3. src/util
-- Added an applySplit() method to the ImageTransformer class. This was done to incorporate split view transformations in our program.
+- Added a function getBufferedImage() to ImageUtil. This was done in order to support visualization in GUI. This function reduced redundancy of this transformation code in multiple places.
+- Removed the ImageTransformer class since its functionality was now implemented in the newly added ImageMap.
 
 ### 4. General
 - Renaming of some files for better readability.
-- Following the feedback from the previous assignment, we removed many static methods. Hence, our ProgramRunner now initializes a controller.
 
 ## Completeness
-All parts of our code are working and complete, except our Controller Test, which has a complete MockImage but incomplete JUnit tests.
+All parts of our code are working and complete. Additionally, we have completed both tasks for extra credits.
 
-## How to Run the Program
+## Usage - How to Run the Program
 
-To run the program in CLI input mode, use the following commands:
+To run the program in GUI mode, use the following commands:
 ```cmd
 javac ProgramRunner.java
 java ProgramRunner
+```
+
+To run the program in CLI mode, use the following commands:
+```cmd
+javac ProgramRunner.java
+java ProgramRunner -text
 ```
 
 To run the program with a script file input, use the following commands:
@@ -39,7 +47,7 @@ javac ProgramRunner.java
 java ProgramRunner -file <script-file-path>
 ```
 
-If an invalid script file is provided, it defaults to CLI mode.
+To know about how to use our application, follow the [USEME.MD](USEME.md)
 
 ## Image Citation
 **We own all the images used in this assignment.**

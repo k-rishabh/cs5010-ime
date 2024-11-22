@@ -1,5 +1,15 @@
 # Using Graphical User Interface
 
+### To Run the Program in GUI Mode:
+`java -jar a6.jar`
+
+### File Menu Panel
+
+- **Load Image:** To load an image, click on File > Load Image button select an image file from the file dialog, and click Open.
+- **Save as:** To save the image, click on File > Save As button, and choose a destination and format for the file (PPM, PNG & JPG supported).
+- **Undo:** To undo an operation, click on File > Undo button.
+- **Exit:** To exit the application, click on File > Exit.
+
 ### Color Operations Panel
 These operations support split preview.
 #### Options provided:
@@ -30,18 +40,18 @@ These operations do not support the split preview.
 
 
 ### GRIME GUI
-![GRIME UI](./res/GRIME-screenshot.jpeg)
+![GRIME UI](./res/GRIME-GUI.jpg)
 
 ### Split Preview
-![GRIME_SPLIT](./res/GRIME-screenshot.jpeg)
+![GRIME_SPLIT](./res/GRIME-SplitPreview.jpg)
 
-# Using Interactive CLI or Script mode:
+# Using Interactive CLI and Script modes:
 
-### To run the script file in command line 
-`java -jar Program.jar -file path-of-script-file` <br>
+### To Run in Script File mode:
+`java -jar a6.jar -file path-of-script-file` <br>
 
-### To run in an interactive text mode
-`java -jar Program.jar -text` <br>
+### To Run in Interactive CLI mode:
+`java -jar a6.jar -text` <br>
 
 Our program supports a split view of an image (to preview an operation). This split view is supported by the commands: blur, sharpen, sepia, grayscale, color-correct, and levels-adjust. For more information, refer to point 22. <br> <br>
 Additionally, we support partial image manipulation for commands: blur, sharpen, grayscale, sepia and component visualizations. Refer point 24.
