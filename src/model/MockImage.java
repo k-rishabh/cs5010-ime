@@ -47,7 +47,8 @@ public class MockImage implements ImageModel {
   @Override
   public void applyColorFilter(Filter filter) {
     try {
-      out.append(String.format("In applyColorFilter with filter %s.\n", filter.getClass().getName()));
+      out.append(String.format("In applyColorFilter with filter %s.\n",
+              filter.getClass().getName()));
     } catch (IOException e) {
       System.out.println("Unable to append to out!\n");
     }

@@ -50,8 +50,8 @@ public class Blur implements ImageCommand {
     if (maskImage == null) {
       return images.apply(source, result, img -> img.applyImageFilter(new BlurFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyImageFilter(new BlurFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyImageFilter(new BlurFilter()));
     }
   }
 }

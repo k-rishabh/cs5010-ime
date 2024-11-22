@@ -48,11 +48,11 @@ public class ComponentIntensity implements ImageCommand {
   @Override
   public int apply(ImageMap images) {
     if (maskImage == null) {
-      return images.apply(source, result,
-              img -> img.applyColorFilter(new IntensityFilter()), split);
+      return images.apply(source,
+              result, img -> img.applyColorFilter(new IntensityFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new IntensityFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyColorFilter(new IntensityFilter()));
     }
   }
 }

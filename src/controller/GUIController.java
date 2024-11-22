@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-import javax.swing.*;
+
+import javax.swing.JOptionPane;
 
 import controller.command.Histogram;
 import controller.command.ImageCommand;

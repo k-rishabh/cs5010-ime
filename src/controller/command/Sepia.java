@@ -49,8 +49,8 @@ public class Sepia implements ImageCommand {
     if (maskImage == null) {
       return images.apply(source, result, img -> img.applyColorFilter(new SepiaFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new SepiaFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyColorFilter(new SepiaFilter()));
     }
   }
 }

@@ -47,11 +47,11 @@ public class ComponentLuma implements ImageCommand {
   @Override
   public int apply(ImageMap images) {
     if (maskImage == null) {
-      return images.apply(source, result,
-              img -> img.applyColorFilter(new LumaFilter()), split);
+      return images.apply(source,
+              result, img -> img.applyColorFilter(new LumaFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new LumaFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyColorFilter(new LumaFilter()));
     }
   }
 }

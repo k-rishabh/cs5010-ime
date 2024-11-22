@@ -49,8 +49,8 @@ public class ComponentBlue implements ImageCommand {
     if (maskImage == null) {
       return images.apply(source, result, img -> img.applyColorFilter(new CompBlueFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new CompBlueFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyColorFilter(new CompBlueFilter()));
     }
   }
 }

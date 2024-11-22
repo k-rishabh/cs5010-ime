@@ -1,12 +1,36 @@
 package view;
 
-import java.awt.*;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.SwingConstants;
+import javax.swing.ButtonGroup;
+import javax.swing.JScrollPane;
+import javax.swing.JDialog;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Features;
@@ -21,13 +45,6 @@ public class GUIView extends JFrame implements ImageView {
 
   // panels
   private final JPanel mainScreen;
-  private final JPanel parentPanel;
-  private final JPanel leftPanel;
-  private final JPanel rightPanel;
-  private final JPanel colorPanel;
-  private final JPanel imageTFPanel;
-  private final JPanel histogramPanel;
-  private final JPanel imagePanel;
   private final JPanel splitPreviewPanel;
 
   // file menu
@@ -125,20 +142,20 @@ public class GUIView extends JFrame implements ImageView {
     // main screen
     mainScreen = new JPanel(new GridBagLayout());
 
-    parentPanel = new JPanel(new GridBagLayout());
+    JPanel parentPanel = new JPanel(new GridBagLayout());
     GUIHelper helper = new GUIHelper(parentPanel, null);
     GridBagConstraints c = helper.createConstraints(-1, GridBagConstraints.BOTH,
             0, 1, 1, 0.95, new Insets(0, 0, 0, 0));
 
     mainScreen.add(parentPanel, c);
 
-    leftPanel = new JPanel();
+    JPanel leftPanel = new JPanel();
     leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-    rightPanel = new JPanel();
+    JPanel rightPanel = new JPanel();
     rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
     // color transformations
-    colorPanel = new JPanel(new GridBagLayout());
+    JPanel colorPanel = new JPanel(new GridBagLayout());
     colorPanel.setBorder(BorderFactory.createTitledBorder("Color Operations"));
     GridBagConstraints colorConstraints = helper.createConstraints(
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, 1, 1, 0, 0,
@@ -162,9 +179,10 @@ public class GUIView extends JFrame implements ImageView {
     splitView.add(standardMode);
 
 
-    greyscaleTypes = new JComboBox<>(new String[]{"Red Component", "Blue Component",
-            "Green Component", "Luma Component",
-            "Intensity Component", "Value Component"});
+    greyscaleTypes = new JComboBox<>(new String[]{
+            "Red Component", "Blue Component", "Green Component",
+            "Luma Component", "Intensity Component", "Value Component"
+    });
     greyscaleTypes.setToolTipText("Select the grayscale filter to be applied.");
     greyscaleTypes.setSelectedItem(null);
     colorConstraints.gridx = 0;
@@ -188,11 +206,11 @@ public class GUIView extends JFrame implements ImageView {
     colorCorrectButton = helper.createButton("Color Correct",
             "Corrects the colors of the image by aligning the peaks", 1, 4);
 
-    blackLevelLabel = helper.createLabel("Black Point",1,5);
+    blackLevelLabel = helper.createLabel("Black Point", 1, 5);
     blackLevelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    midLevelLabel = helper.createLabel("Mid Tones",1,6);
+    midLevelLabel = helper.createLabel("Mid Tones", 1, 6);
     midLevelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    whiteLevelLabel = helper.createLabel("White Point",1,7);
+    whiteLevelLabel = helper.createLabel("White Point", 1, 7);
     whiteLevelLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
     blackLevelSlider = helper.createSlider(0, 255, 0, 50, 25, 0, 5);
@@ -221,7 +239,7 @@ public class GUIView extends JFrame implements ImageView {
 
     // histogram
     histogramLabel = new JLabel();
-    histogramPanel = new JPanel();
+    JPanel histogramPanel = new JPanel();
     histogramPanel.setBorder(BorderFactory.createTitledBorder("Histogram"));
     histogramPanel.setPreferredSize(new Dimension(300, 300));
     histogramPanel.add(histogramLabel);
@@ -231,7 +249,7 @@ public class GUIView extends JFrame implements ImageView {
             0, 0, 0.1, 1, null);
     parentPanel.add(leftPanel, leftConstraints);
 
-    imagePanel = new JPanel();
+    JPanel imagePanel = new JPanel();
     imagePanel.setPreferredSize(new Dimension(1024, 768));
     imagePanel.setBackground(Color.DARK_GRAY);
     imageLabel = new JLabel();
@@ -243,7 +261,7 @@ public class GUIView extends JFrame implements ImageView {
     rightPanel.add(scroller);
 
     // non-split view operations
-    imageTFPanel = new JPanel(new GridBagLayout());
+    JPanel imageTFPanel = new JPanel(new GridBagLayout());
     imageTFPanel.setBorder(BorderFactory.createTitledBorder("Image Operations"));
     GridBagConstraints imageTFConstraints = helper.createConstraints(GridBagConstraints.CENTER,
             GridBagConstraints.HORIZONTAL, 1, 1, 0, 0,
@@ -251,7 +269,7 @@ public class GUIView extends JFrame implements ImageView {
 
     helper.changePanel(imageTFPanel, imageTFConstraints);
 
-    flipsLabel = helper.createLabel("Flip Image",0,0);
+    flipsLabel = helper.createLabel("Flip Image", 0, 0);
     flipsLabel.setHorizontalAlignment(SwingConstants.CENTER);
     horizontalFlipButton = helper.createButton("Flip Horizontally",
             "Flips the image horizontally", 0, 1);
@@ -259,7 +277,7 @@ public class GUIView extends JFrame implements ImageView {
     verticalFlipButton = helper.createButton("Flip Vertically",
             "Flips the image vertically", 0, 2);
 
-    brightenLabel = helper.createLabel("Brightness Value",1,0);
+    brightenLabel = helper.createLabel("Brightness Value", 1, 0);
     brightenLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
     brightnessValueSlider = helper.createSlider(-255, 255, 0, 85, 17, 1, 1);
@@ -271,7 +289,7 @@ public class GUIView extends JFrame implements ImageView {
     brightenButton = helper.createButton("Brighten",
             "Brightens the image by the given amount", 1, 2);
 
-    compressLabel = helper.createLabel("Compression Ratio",2,0);
+    compressLabel = helper.createLabel("Compression Ratio", 2, 0);
     compressLabel.setHorizontalAlignment(SwingConstants.CENTER);
     compressValueSlider = helper.createSlider(0, 100, 0, 20, 10, 2, 1);
     compressValueSlider.addChangeListener(e -> {
@@ -282,9 +300,9 @@ public class GUIView extends JFrame implements ImageView {
     compressButton = helper.createButton("Compress",
             "Compresses the image by the given amount", 2, 2);
 
-    heightLabel = helper.createLabel("Height: ",3,0);
+    heightLabel = helper.createLabel("Height: ", 3, 0);
     heightLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    widthLabel = helper.createLabel("Width: ",3,1);
+    widthLabel = helper.createLabel("Width: ", 3, 1);
     widthLabel.setHorizontalAlignment(SwingConstants.CENTER);
     heightValue = helper.createTextField("", 3, 4, 0);
     widthValue = helper.createTextField("", 3, 4, 1);

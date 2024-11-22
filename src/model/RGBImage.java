@@ -245,7 +245,8 @@ public class RGBImage extends AbstractImage {
 
   @Override
   public void downscale(int newHeight, int newWidth) {
-    if (newHeight > this.getHeight() || newWidth > this.getWidth() || newHeight <= 0 || newWidth <= 0) {
+    if (newHeight > this.getHeight() || newWidth > this.getWidth()
+            || newHeight <= 0 || newWidth <= 0) {
       throw new IllegalArgumentException("Height and width must be greater than the original.");
     }
     int existingHeight = this.getHeight();

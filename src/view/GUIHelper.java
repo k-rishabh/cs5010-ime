@@ -1,8 +1,14 @@
 package view;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.JSlider;
 
 /**
  * Helper class for the View that provides functionality for easily creating java swing visual

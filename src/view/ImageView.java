@@ -36,7 +36,7 @@ public interface ImageView {
 
   /**
    * The parent callback function that waits and listens for user input and acts accordingly by
-   * calling the respective controller/features function
+   * calling the respective controller/features function.
    *
    * @param controller an object of features where a method will be called based on user input
    */

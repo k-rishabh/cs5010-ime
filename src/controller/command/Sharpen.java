@@ -49,8 +49,8 @@ public class Sharpen implements ImageCommand {
     if (maskImage == null) {
       return images.apply(source, result, img -> img.applyImageFilter(new SharpenFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyImageFilter(new SharpenFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyImageFilter(new SharpenFilter()));
     }
   }
 }

@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
  * color component extraction, flipping, brightening, color-correctness, compression, level adjust
  * and histogram generation.
  */
-public class ImageTest {
+public class ImageModelTest {
   ImageModel testImage;
   int[][][] imageArray;
 

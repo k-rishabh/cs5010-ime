@@ -47,11 +47,11 @@ public class ComponentRed implements ImageCommand {
   @Override
   public int apply(ImageMap images) {
     if (maskImage == null) {
-      return images.apply(source, result,
-              img -> img.applyColorFilter(new CompRedFilter()), split);
+      return images.apply(source,
+              result, img -> img.applyColorFilter(new CompRedFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new CompRedFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyColorFilter(new CompRedFilter()));
     }
   }
 }

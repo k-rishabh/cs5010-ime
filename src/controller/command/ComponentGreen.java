@@ -47,11 +47,11 @@ public class ComponentGreen implements ImageCommand {
   @Override
   public int apply(ImageMap images) {
     if (maskImage == null) {
-      return images.apply(source, result,
-              img -> img.applyColorFilter(new CompGreenFilter()), split);
+      return images.apply(source,
+              result, img -> img.applyColorFilter(new CompGreenFilter()), split);
     } else {
-      return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new CompGreenFilter()));
+      return images.applyMask(source, result,
+              maskImage, img -> img.applyColorFilter(new CompGreenFilter()));
     }
   }
 }
