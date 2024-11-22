@@ -35,7 +35,7 @@ These operations do not support the split preview.
 ### Split Preview
 ![GRIME_SPLIT](./res/GRIME-screenshot.jpeg)
 
-# Using Script file and interactive CLI mode :
+# Using Interactive CLI or Script mode:
 
 ### To run the script file in command line 
 `java -jar Program.jar -file path-of-script-file` <br>

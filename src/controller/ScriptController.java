@@ -116,5 +116,7 @@ public class ScriptController extends AbstractController {
         exit(1);
       }
     }
+
+    System.exit(0);
   }
 }

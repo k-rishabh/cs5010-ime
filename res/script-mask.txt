@@ -3,42 +3,42 @@ load res/ex-image.jpg ex-image
 
 # red component
 red-component ex-image ex-image-actual-component-red
-save res/ex-image-actual-component-red.png ex-image-actual-component-red
+save res/ex-image-actual-component-red.jpg ex-image-actual-component-red
 
 # green component
 green-component ex-image ex-image-actual-component-green
-save res/ex-image-actual-component-green.png ex-image-actual-component-green
+save res/ex-image-actual-component-green.jpg ex-image-actual-component-green
 
 # blue component
 blue-component ex-image ex-image-actual-component-blue
-save res/ex-image-actual-component-blue.png ex-image-actual-component-blue
+save res/ex-image-actual-component-blue.jpg ex-image-actual-component-blue
 
 # value component
 value-component ex-image ex-image-actual-component-value
-save res/ex-image-actual-component-value.png ex-image-actual-component-value
+save res/ex-image-actual-component-value.jpg ex-image-actual-component-value
 
 # luma component
 luma-component ex-image ex-image-actual-component-luma
-save res/ex-image-actual-component-luma.png ex-image-actual-component-luma
+save res/ex-image-actual-component-luma.jpg ex-image-actual-component-luma
 
 # intensity component
 intensity-component ex-image ex-image-actual-component-intensity
-save res/ex-image-actual-component-intensity1.png ex-image-actual-component-intensity
+save res/ex-image-actual-component-intensity1.jpg ex-image-actual-component-intensity
 
 # blur
 blur ex-image ex-image-actual-blur
-save res/ex-image-actual-blur.png ex-image-actual-blur
+save res/ex-image-actual-blur.jpg ex-image-actual-blur
 
 # sharpen
 #sharpen ex-image ex-image-actual-sharpen
-#save res/ex-image-actual-sharpen.png ex-image-actual-sharpen
+#save res/ex-image-actual-sharpen.jpg ex-image-actual-sharpen
 
 # sepia
 sepia ex-image ex-image-actual-sepia
-save res/ex-image-actual-sepia.png ex-image-actual-sepia
+save res/ex-image-actual-sepia.jpg ex-image-actual-sepia
 
 # loading mask image
-load res/mask.jpg mask-img
+load res/mask.png mask-img
 
 # red component mask
 red-component ex-image mask-img mask-red
