@@ -33,12 +33,6 @@ public class ScriptControllerTest {
     mockMap.put("mock", mock);
   }
 
-  // TODO
-  @Test
-  public void testScriptParse() {
-
-  }
-
   @Test
   public void testComments() {
     in = new StringReader("# this is a comment");

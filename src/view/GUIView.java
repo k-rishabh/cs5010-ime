@@ -180,8 +180,8 @@ public class GUIView extends JFrame implements ImageView {
 
 
     greyscaleTypes = new JComboBox<>(new String[]{
-            "Red Component", "Blue Component", "Green Component",
-            "Luma Component", "Intensity Component", "Value Component"
+        "Red Component", "Blue Component", "Green Component",
+        "Luma Component", "Intensity Component", "Value Component"
     });
     greyscaleTypes.setToolTipText("Select the grayscale filter to be applied.");
     greyscaleTypes.setSelectedItem(null);

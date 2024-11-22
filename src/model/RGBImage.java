@@ -276,24 +276,24 @@ public class RGBImage extends AbstractImage {
         float yWeight = originalY - y1;
 
         int red = Math.round(
-                (1 - xWeight) * (1 - yWeight) * cA.getRed() +
-                        xWeight * (1 - yWeight) * cB.getRed() +
-                        (1 - xWeight) * yWeight * cC.getRed() +
-                        xWeight * yWeight * cD.getRed()
+                (1 - xWeight) * (1 - yWeight) * cA.getRed()
+                        + xWeight * (1 - yWeight) * cB.getRed()
+                        + (1 - xWeight) * yWeight * cC.getRed()
+                        + xWeight * yWeight * cD.getRed()
         );
 
         int green = Math.round(
-                (1 - xWeight) * (1 - yWeight) * cA.getGreen() +
-                        xWeight * (1 - yWeight) * cB.getGreen() +
-                        (1 - xWeight) * yWeight * cC.getGreen() +
-                        xWeight * yWeight * cD.getGreen()
+                (1 - xWeight) * (1 - yWeight) * cA.getGreen()
+                        + xWeight * (1 - yWeight) * cB.getGreen()
+                        + (1 - xWeight) * yWeight * cC.getGreen()
+                        + xWeight * yWeight * cD.getGreen()
         );
 
         int blue = Math.round(
-                (1 - xWeight) * (1 - yWeight) * cA.getBlue() +
-                        xWeight * (1 - yWeight) * cB.getBlue() +
-                        (1 - xWeight) * yWeight * cC.getBlue() +
-                        xWeight * yWeight * cD.getBlue()
+                (1 - xWeight) * (1 - yWeight) * cA.getBlue()
+                        + xWeight * (1 - yWeight) * cB.getBlue()
+                        + (1 - xWeight) * yWeight * cC.getBlue()
+                        + xWeight * yWeight * cD.getBlue()
         );
 
         downsizedPixels[y][x] = new RGBPixel(red, green, blue);
