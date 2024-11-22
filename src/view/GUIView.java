@@ -304,7 +304,8 @@ public class GUIView extends JFrame implements ImageView {
 
 
     JPanel combinedLabelPanel = new JPanel(new BorderLayout());
-    JLabel topLabel = new JLabel("Click on apply if you would like to apply this operation or else click cancel", JLabel.CENTER);
+    JLabel topLabel = new JLabel("Would you like to apply this transformation?",
+            JLabel.CENTER);
     JScrollPane scrollPane = new JScrollPane(labelWrapperPanel);
     scrollPane.setPreferredSize(new Dimension(600, 600));
     combinedLabelPanel.add(topLabel, BorderLayout.NORTH);
