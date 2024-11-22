@@ -14,6 +14,12 @@ import model.pixel.RGBPixel;
 public class MockImage implements ImageModel {
   private final Appendable out;
 
+  /**
+   * Constructor function for the mock model. Takes in an appendable object to which it will add
+   * the log output for performing the operations.
+   *
+   * @param out the appendable log
+   */
   public MockImage(Appendable out) {
     this.out = out;
   }

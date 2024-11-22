@@ -26,6 +26,14 @@ public class GUIController extends AbstractController implements Features {
   private final Stack<String> recents;
   private boolean isSaved;
 
+  /**
+   * Constructor function for the GUI Controller that initializes itself with the passed in
+   * model and view. It automatically initializes a list of known commands as well as a stack of
+   * recent images that are used for undoing operations.
+   *
+   * @param model a mapping from strings to images on which the controller will operate
+   * @param view the view which is responsible for displaying and getting user input
+   */
   public GUIController(ImageMap model, ImageView view) {
     this.imageMap = model;
     this.view = view;

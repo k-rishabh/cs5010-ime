@@ -301,10 +301,19 @@ public class RGBImage extends AbstractImage {
     this.pixels = downsizedPixels;
   }
 
+  private Pixel blendPixel(Pixel originalPixel, Pixel processedPixel, int maskValue) {
+    if (maskValue == 0) {
+      return processedPixel;
+    } else {
+      return originalPixel;
+    }
+  }
+
   @Override
   public ImageModel applyMasking(ImageModel maskImage, ImageModel operatedImage) {
     if (!(this.getWidth() == maskImage.getWidth() && this.getHeight() == maskImage.getHeight())) {
-      throw new IllegalArgumentException("Original image and mask image must have the same dimensions.");
+      throw new IllegalArgumentException(
+              "Original image and mask image must have the same dimensions.");
     }
 
     int width = this.getWidth();
@@ -321,13 +330,5 @@ public class RGBImage extends AbstractImage {
       }
     }
     return resultMask;
-  }
-
-  private Pixel blendPixel(Pixel originalPixel, Pixel processedPixel, int maskValue) {
-    if (maskValue == 0) {
-      return processedPixel;
-    } else {
-      return originalPixel;
-    }
   }
 }

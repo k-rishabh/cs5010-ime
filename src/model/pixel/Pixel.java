@@ -40,7 +40,7 @@ public interface Pixel {
   int getPacked();
 
   /**
-   * Applies a color filter on the pixel so that it is a greyscale representation of the
+   * Applies a color filter on the pixel so that it is a grayscale representation of the
    * max component value.
    */
   void applyValueFilter();

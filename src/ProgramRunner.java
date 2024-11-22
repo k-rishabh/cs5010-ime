@@ -17,9 +17,10 @@ import view.ImageView;
  */
 public class ProgramRunner {
   /**
-   * Runs the entire program, based on the provided script file. If no script file is provided, or
-   * incorrect script file is provided, it will default to CLI input. It requires the file in the
-   * format "java ProgramRunner -file fileName".
+   * Runs the GRIME program. If no command line arguments are provided, it will run in GUI mode.
+   * If the argument "-text" is provided, it will run in CLI mode.
+   * If the argument "-file filename" is provided, it will run the file in script mode.
+   * Calls the execute() method in the controller.
    *
    * @param args takes in a single String which is the file path of the script file to be run.
    */

@@ -51,14 +51,7 @@ public class ScriptController extends AbstractController {
     commands.put("rgb-combine", args -> new CombineRGB(args));
   }
 
-  /**
-   * The main (go) function of the controller that is responsible for parsing the input command.
-   * Based on the command entered, it gets the function from the command map and delegates the
-   * work to the command package. The command package will in turn use model functions to operate
-   * on the model.
-   * The command package automatically adds the resulting image(s) to the map, since it is
-   * provided as input, along with the parameters of the command.
-   */
+  @Override
   public void execute() {
     Scanner sc = new Scanner(in);
     int lineNo = 0;
@@ -68,10 +61,12 @@ public class ScriptController extends AbstractController {
         lineNo++;
         String cmd = sc.nextLine().trim();
 
-        if (cmd.equals("q") || cmd.equals("quit")) {
+        if (cmd.isEmpty()) {
+          continue;
+        } else if (cmd.equals("q") || cmd.equals("quit")) {
           this.out.append("Exiting program...");
           exit(0);
-        } else if (!cmd.isEmpty() && cmd.charAt(0) == '#') {
+        } else if (cmd.charAt(0) == '#') {
           continue;
         }
 

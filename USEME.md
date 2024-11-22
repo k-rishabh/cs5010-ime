@@ -1,10 +1,50 @@
-# How to Use IME?
+# Using Graphical User Interface
 
-The program can be run with the command "java ProgramRunner" after the code has been compiled. This syntax would default to a CLI mode of input. To use a script file mode of input, the script file path must be specified using the syntax "java ProgramRunner -file /demo/file/path.txt"
+### Color Operations Panel
+These operations support split preview.
+#### Options provided:
 
-This file summarizes the syntax of our application. It states all the commands supported by our along with the conditions (such as bounds, order) placed on these commands.
+- **Preview Mode**: For viewing the effect of color adjustments before applying.
+- **Grayscale**: Choose the grayscale type needed from the dropdown provided. Once apply button is clicked, the grayscale operation is performed.
+- **Blur**: Apply a blur filter to the image by clicking on the button.
+- **Sharpen**: Apply a sharpen filter to the image by clicking on the button.
+- **Sepia**: Apply a sepia filter to the image by clicking on the button.
+- **Color Correct**: Apply a sepia filter to the image by clicking on the button.
+- **Adjust Black, Mid, White**: Adjust the black, mid, and white levels of the image by toggling the sliders provided. Once levels adjust button is clicked, the operation is performed.
 
-Additionally, our program supports a split view of an image (to preview an operation). This split view is supported by the commands: blur, sharpen, sepia, greyscale, color-correct, and levels-adjust. For more information, refer to point 22. 
+### Histogram Panel
+The histogram panel on the bottom left of the application shows the live histogram of the image.
+
+### Image Preview Panel
+The image preview panel on the top right of the application displays the image once loaded. It keeps updating after every operation performed by the user.
+
+### Image Operations Panel
+These operations do not support the split preview.
+#### Options provided:
+
+- **Horizontal Flip**: Horizontal flip performed by clicking the button.
+- **Vertical Flip**: Vertical flip performed by clicking the button.
+- **Brighten**: The value of the brightness can be adjusted with the help of the slider provided. The values are between -255 to 255.
+- **Compress**: The compression ratio can be adjusted with the slider provided. The values are between 0 and 100.
+- **Downscale**: The height and width of the downscaled image can be provided through the text box. After downscale button is clicked, the image is resized.
+
+
+### GRIME GUI
+![GRIME UI](./res/GRIME-screenshot.jpeg)
+
+### Split Preview
+![GRIME_SPLIT](./res/GRIME-screenshot.jpeg)
+
+# Using Script file and interactive CLI mode :
+
+### To run the script file in command line 
+`java -jar Program.jar -file path-of-script-file` <br>
+
+### To run in an interactive text mode
+`java -jar Program.jar -text` <br>
+
+Our program supports a split view of an image (to preview an operation). This split view is supported by the commands: blur, sharpen, sepia, grayscale, color-correct, and levels-adjust. For more information, refer to point 22. <br> <br>
+Additionally, we support partial image manipulation for commands: blur, sharpen, grayscale, sepia and component visualizations. Refer point 24.
 
 ### 1. `load image-path image-name`
 This command is responsible for loading an image into our application. It supports the file formats: png, jpg, ppm. An image with the same image-name will be overwritten. <br>
@@ -119,8 +159,20 @@ Adjusts the black, mid, and white values of the image. The values must be in asc
 `image-name`: the name of the image on which the operation will take place. <br>
 `dest-image-name`: the name of the levels adjusted image.
 
-### 22. `function image-name dest-image split p`
+### 22. `function image-name dest-image-name split p`
 Function can refer to any of the following: blur, sharpen, sepia, greyscale, color-correct, and levels-adjust. This is a command to preview an image transformation using a split view of the image. The left side of the image would show the transformed image and the right side would show the original image. p specifies the ratio of the split, and must lie between 0 and 100. <br>
 `image-name`: the name of the image on which the operation will take place. <br>
 `dest-image-name`: the name of the resulting split view image. <br>
 `p`: an integer between 0 and 100 that represents what proportion of the image will be transformed.
+
+### 23. `downscale new-height new-width image-name dest-image`
+Downscales the image to the specified dimensions given. The method adjusts the pixel data of the current image to match the new height and width. The new dimensions have to be the same as the original image. <br>
+`new-height`: new height to be downscaled. <br>
+`new-width`: new width to be downscaled. <br>
+`image-name`: the name of the image on which the operation will take place. <br>
+`dest-image-name`: the name of the resulting downscaled image. <br>
+
+### 24. `function image-name mask-image dest-image-name`
+`image-name`: the name of the image on which the operation will take place. <br>
+`mask-image`: the name of the mask image. <br>
+`dest-image-name`: the name of the resulting partially manipulated image. <br>

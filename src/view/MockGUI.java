@@ -7,11 +7,23 @@ import java.util.Scanner;
 
 import controller.Features;
 
+/**
+ * Mock class that imitates the GUI view. It is used for testing the GUI (view) controller.
+ * It stores the functions called in a log format using "out" and reads user input from "in".
+ */
 public class MockGUI implements ImageView {
   Scanner sc;
   Readable in;
   Appendable out;
 
+  /**
+   * Constructor function that initializes the Readable and Appendable objects of the class.
+   * The scanner is used to read the user input from Readable.
+   * The Appendable is used to log the working of the program
+   *
+   * @param in the readable to read user input from
+   * @param out the appendable to log functionality
+   */
   public MockGUI(Readable in, Appendable out) {
     this.in = in;
     this.out = out;

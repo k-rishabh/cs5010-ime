@@ -1,7 +1,6 @@
 package controller.command;
 
 import controller.filter.CompRedFilter;
-import controller.filter.IntensityFilter;
 import model.ImageMap;
 
 /**
@@ -32,10 +31,12 @@ public class ComponentRed implements ImageCommand {
       this.maskImage = null;
       this.result = args[2];
       this.split = Integer.parseInt(args[4]);
+
     } else if (args.length == 4) {
       this.maskImage = args[2];
       this.result = args[3];
       this.split = 0;
+
     } else {
       this.result = args[2];
       this.maskImage = null;
@@ -50,7 +51,7 @@ public class ComponentRed implements ImageCommand {
               img -> img.applyColorFilter(new CompRedFilter()), split);
     } else {
       return images.applyMask(source, result, maskImage,
-              img -> img.applyColorFilter(new CompRedFilter()), split);
+              img -> img.applyColorFilter(new CompRedFilter()));
     }
   }
 }

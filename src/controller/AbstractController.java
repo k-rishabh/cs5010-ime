@@ -26,10 +26,18 @@ import controller.command.Save;
 import controller.command.Sepia;
 import controller.command.Sharpen;
 
+/**
+ * An abstract class that is used by the controllers to initialize the list of known commands,
+ * in the form of a command mapping. It also initializes a list of commands that support
+ * image previewing.
+ */
 public abstract class AbstractController implements ImageController {
   protected Map<String, Function<String[], ImageCommand>> commands;
   protected List<String> splitCommands;
 
+  /**
+   * Initializes the map of known commands and a list of commands that support image previewing.
+   */
   protected void initializeCommands() {
     // all known commands
     commands.put("load", args -> new Load(args));

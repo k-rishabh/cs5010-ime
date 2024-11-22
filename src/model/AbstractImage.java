@@ -6,7 +6,7 @@ import model.pixel.Pixel;
 import util.PixelProcessor;
 
 /**
- * This abstract class implements ImageADT and represents an image, which is
+ * This abstract class implements ImageModel and represents an image, which is
  * composed of a 2D array of pixels.
  * It provides methods for various image processing operations such as color transformations,
  * flipping, and applying filters. This class serves as a base for more specific image types
@@ -139,4 +139,10 @@ public abstract class AbstractImage implements ImageModel {
 
   @Override
   public abstract ImageModel[] splitComponents();
+
+  @Override
+  public abstract void downscale(int newHeight, int newWidth);
+
+  @Override
+  public abstract ImageModel applyMasking(ImageModel maskImage,ImageModel operatedImage);
 }

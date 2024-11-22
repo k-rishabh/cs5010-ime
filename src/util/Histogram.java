@@ -16,7 +16,6 @@ import model.pixel.RGBPixel;
  */
 public class Histogram {
 
-
   private final BufferedImage histogram;
 
   /**

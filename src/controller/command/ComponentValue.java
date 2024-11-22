@@ -31,10 +31,12 @@ public class ComponentValue implements ImageCommand {
       this.maskImage = null;
       this.result = args[2];
       this.split = Integer.parseInt(args[4]);
+
     } else if (args.length == 4) {
       this.maskImage = args[2];
       this.result = args[3];
       this.split = 0;
+
     } else {
       this.result = args[2];
       this.maskImage = null;
@@ -47,7 +49,7 @@ public class ComponentValue implements ImageCommand {
     if (maskImage == null) {
       return images.apply(source, result, img -> img.valueComponent(), split);
     } else {
-      return images.applyMask(source, result, maskImage, img -> img.valueComponent(), split);
+      return images.applyMask(source, result, maskImage, img -> img.valueComponent());
     }
   }
 }

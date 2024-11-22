@@ -11,6 +11,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Features;
 
+/**
+ * Class that represents the GUI view of the application. It accepts user input through
+ * mouse and keyboard, using the java swing library. Defines functionality for all operations
+ * that the model and controller can perform, with the help of buttons, labels, sliders, and other
+ * swing objects.
+ */
 public class GUIView extends JFrame implements ImageView {
 
   // panels
@@ -89,6 +95,11 @@ public class GUIView extends JFrame implements ImageView {
   private final JLabel whiteLevelLabel;
 
 
+  /**
+   * Constructor function that initializes the main JPanel which is visible to the user. It defines
+   * the location and behavior of all visual artifacts that are present in the application, using
+   * Java Swing objects. Uses the helper class for ease of creation of objects.
+   */
   public GUIView() {
     super("Graphical Image Manipulation and Enhancement");
 
@@ -177,11 +188,11 @@ public class GUIView extends JFrame implements ImageView {
     colorCorrectButton = helper.createButton("Color Correct",
             "Corrects the colors of the image by aligning the peaks", 1, 4);
 
-    blackLevelLabel = helper.createLabel("Black Value",1,5);
+    blackLevelLabel = helper.createLabel("Black Point",1,5);
     blackLevelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    midLevelLabel = helper.createLabel("Mid Value",1,6);
+    midLevelLabel = helper.createLabel("Mid Tones",1,6);
     midLevelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    whiteLevelLabel = helper.createLabel("White Value",1,7);
+    whiteLevelLabel = helper.createLabel("White Point",1,7);
     whiteLevelLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
     blackLevelSlider = helper.createSlider(0, 255, 0, 50, 25, 0, 5);
@@ -212,7 +223,6 @@ public class GUIView extends JFrame implements ImageView {
     histogramLabel = new JLabel();
     histogramPanel = new JPanel();
     histogramPanel.setBorder(BorderFactory.createTitledBorder("Histogram"));
-    histogramPanel.setSize(300, 300);
     histogramPanel.setPreferredSize(new Dimension(300, 300));
     histogramPanel.add(histogramLabel);
     leftPanel.add(histogramPanel);
@@ -222,8 +232,8 @@ public class GUIView extends JFrame implements ImageView {
     parentPanel.add(leftPanel, leftConstraints);
 
     imagePanel = new JPanel();
-    imagePanel.setPreferredSize(new Dimension(1200, 750));
-    imagePanel.setBorder(BorderFactory.createTitledBorder("Image Preview"));
+    imagePanel.setPreferredSize(new Dimension(1024, 768));
+    imagePanel.setBackground(Color.DARK_GRAY);
     imageLabel = new JLabel();
     imagePanel.add(imageLabel);
 
@@ -241,7 +251,7 @@ public class GUIView extends JFrame implements ImageView {
 
     helper.changePanel(imageTFPanel, imageTFConstraints);
 
-    flipsLabel = helper.createLabel("Flips",0,0);
+    flipsLabel = helper.createLabel("Flip Image",0,0);
     flipsLabel.setHorizontalAlignment(SwingConstants.CENTER);
     horizontalFlipButton = helper.createButton("Flip Horizontally",
             "Flips the image horizontally", 0, 1);
@@ -391,7 +401,8 @@ public class GUIView extends JFrame implements ImageView {
     return ret.get();
   }
 
-  private void dialogButtonEnabling(JDialog dialogConfirmation, AtomicBoolean ret, JButton apply, JButton cancel) {
+  private void dialogButtonEnabling(JDialog dialogConfirmation, AtomicBoolean ret,
+                                    JButton apply, JButton cancel) {
     apply.addActionListener(e -> {
       dialogConfirmation.setEnabled(false);
       dialogConfirmation.setVisible(false);

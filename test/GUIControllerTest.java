@@ -15,6 +15,10 @@ import view.MockGUI;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test class for the GUI (view) controller. Tests the functionality of all public functions
+ * present in features. Uses a mock view and model.
+ */
 public class GUIControllerTest {
   private ImageMap mockMap;
   private ImageController controller;

@@ -21,7 +21,7 @@ public class FlipHorizontal implements ImageCommand {
       src = args[1];
       dest = args[2];
     } else {
-      throw new IllegalArgumentException("Unknown number of arguments for horizontalflip!");
+      throw new IllegalArgumentException("Unknown number of arguments for horizontal-flip!");
     }
   }
 

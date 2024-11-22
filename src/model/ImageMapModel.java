@@ -68,7 +68,7 @@ public class ImageMapModel implements ImageMap {
 
   @Override
   public int applyMask(String srcName, String destName, String maskImage,
-                       Consumer<ImageModel> func, int ratio) {
+                       Consumer<ImageModel> func) {
     if (images.get(srcName) == null) {
       System.out.println("Image " + srcName + " not found!");
       return 1;

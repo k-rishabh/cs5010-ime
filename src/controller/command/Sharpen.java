@@ -1,6 +1,5 @@
 package controller.command;
 
-import controller.filter.SepiaFilter;
 import controller.filter.SharpenFilter;
 import model.ImageMap;
 
@@ -32,10 +31,12 @@ public class Sharpen implements ImageCommand {
       this.maskImage = null;
       this.result = args[2];
       this.split = Integer.parseInt(args[4]);
+
     } else if (args.length == 4) {
       this.maskImage = args[2];
       this.result = args[3];
       this.split = 0;
+
     } else {
       this.result = args[2];
       this.maskImage = null;
@@ -49,7 +50,7 @@ public class Sharpen implements ImageCommand {
       return images.apply(source, result, img -> img.applyImageFilter(new SharpenFilter()), split);
     } else {
       return images.applyMask(source, result, maskImage,
-              img -> img.applyImageFilter(new SharpenFilter()), split);
+              img -> img.applyImageFilter(new SharpenFilter()));
     }
   }
 }

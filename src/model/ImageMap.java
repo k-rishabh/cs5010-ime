@@ -2,9 +2,11 @@ package model;
 
 import java.util.function.Consumer;
 
+/**
+ * Represents a model of our program. It includes a mapping from string names to images. It is
+ * used by the controller to store all the current images the user has used.
+ */
 public interface ImageMap {
-  int apply(String srcName, String destName, Consumer<ImageModel> func, int ratio);
-
   /**
    * Higher order function that takes a source and destination images.
    * Applies a transformation on the source image and saves it as the destination image.
@@ -17,7 +19,22 @@ public interface ImageMap {
    * @param ratio    the fraction of pixels from the left, to be operated on
    * @return 0 if success, 1 if failure
    */
-  int applyMask(String srcName, String destName, String maskImage, Consumer<ImageModel> func, int ratio);
+  int apply(String srcName, String destName, Consumer<ImageModel> func, int ratio);
+
+  /**
+   * Higher order function that takes a source and destination images.
+   * Applies a transformation on the source image and saves it as the destination image, by
+   * using the mask image. It only applies the transformation on those pixels that are black
+   * in the mask image. Hence, mask and source image must be the same dimension.
+   *`
+   * @param srcName  variable name of source image
+   * @param destName variable name of destination image
+   * @param maskImage variable name of the mask image
+   * @param func     the function/transformation to be applied on the image
+   * @return 0 if success, 1 if failure
+   */
+  int applyMask(String srcName, String destName, String maskImage,
+                Consumer<ImageModel> func);
 
   /**
    * Retrieves the ImageModel by its image name.
