@@ -122,7 +122,7 @@ public interface ImageModel {
   /**
    * Method which creates the histogram from the RGB Image.
    *
-   * @return  returns an image which represents the histogram.
+   * @return returns an image which represents the histogram.
    */
   ImageModel histogram();
 
@@ -177,5 +177,5 @@ public interface ImageModel {
    * @throws IllegalArgumentException if the dimensions of the mask image and the
    *                                  original image do not match.
    */
-  ImageModel applyMasking(ImageModel maskImage,ImageModel operatedImage);
+  ImageModel applyMasking(ImageModel maskImage, ImageModel operatedImage);
 }

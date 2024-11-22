@@ -1,0 +1,77 @@
+# loading a JPG image
+load res/ex-image.jpg ex-image
+
+# red component
+red-component ex-image ex-image-actual-component-red
+save res/ex-image-actual-component-red.png ex-image-actual-component-red
+
+# green component
+green-component ex-image ex-image-actual-component-green
+save res/ex-image-actual-component-green.png ex-image-actual-component-green
+
+# blue component
+blue-component ex-image ex-image-actual-component-blue
+save res/ex-image-actual-component-blue.png ex-image-actual-component-blue
+
+# value component
+value-component ex-image ex-image-actual-component-value
+save res/ex-image-actual-component-value.png ex-image-actual-component-value
+
+# luma component
+luma-component ex-image ex-image-actual-component-luma
+save res/ex-image-actual-component-luma.png ex-image-actual-component-luma
+
+# intensity component
+intensity-component ex-image ex-image-actual-component-intensity
+save res/ex-image-actual-component-intensity1.png ex-image-actual-component-intensity
+
+# blur
+blur ex-image ex-image-actual-blur
+save res/ex-image-actual-blur.png ex-image-actual-blur
+
+# sharpen
+#sharpen ex-image ex-image-actual-sharpen
+#save res/ex-image-actual-sharpen.png ex-image-actual-sharpen
+
+# sepia
+sepia ex-image ex-image-actual-sepia
+save res/ex-image-actual-sepia.png ex-image-actual-sepia
+
+# loading mask image
+load res/mask.jpg mask-img
+
+# red component mask
+red-component ex-image mask-img mask-red
+save res/mask-red.jpg mask-red
+
+# green component mask
+green-component ex-image mask-img mask-green
+save res/mask-green.jpg mask-green
+
+# blue component mask
+blue-component ex-image mask-img mask-blue
+save res/mask-blue.jpg mask-blue
+
+# value component mask
+value-component ex-image mask-img mask-value
+save res/mask-value.jpg mask-value
+
+# luma component mask
+luma-component ex-image mask-img mask-luma
+save res/mask-luma.jpg mask-luma
+
+# intensity component mask
+intensity-component ex-image mask-img mask-intensity
+save res/mask-intensity.jpg mask-intensity
+
+# blur component mask
+blur ex-image mask-img mask-blur
+save res/mask-blur.jpg mask-blur
+
+# sharpen mask
+#sharpen ex-image mask-img mask-sharpen
+#save res/mask-sharpen.jpg mask-sharpen
+
+# sepia mask
+sepia ex-image mask-img mask-sepia
+save res/mask-sepia.jpg mask-sepia
